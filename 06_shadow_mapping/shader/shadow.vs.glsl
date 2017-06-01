@@ -21,6 +21,7 @@ varying vec3 v_lightVec;
 varying vec3 v_eyeVec;
 varying vec2 v_texCoord;
 varying vec4 v_shadowMapTexCoord;
+varying vec3 v_lightPos;
 
 void main() {
 	//compute vertex position in eye space
@@ -32,6 +33,7 @@ void main() {
 	//compute variables for light computation
   v_eyeVec = -eyePosition.xyz;
 	v_lightVec = u_lightPos - eyePosition.xyz;
+	v_lightPos = u_lightPos;
 
 	//TASK 2.2: calculate vertex position in light clip space coordinates using u_eyeToLightMatrix (assign result to v_shadowMapTexCoord)
 	v_shadowMapTexCoord = u_eyeToLightMatrix*eyePosition;

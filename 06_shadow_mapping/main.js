@@ -71,7 +71,6 @@ function init(resources) {
   gl = createContext(400, 400);
   cameraPosition = vec3.set(vec3.create(), 1, -3, -10)
 
-
   floorTexture = initTextures(resources.floorTexture, gl.REPEAT);
   lavaTexture  = initTextures(resources.lavaTexture , gl.REPEAT);
   diceTexture = initTextures(resources.diceTexture, gl.CLAMP_TO_EDGE);
@@ -108,14 +107,14 @@ function createSceneGraph(gl, resources) {
   {
     //initialize light
     lightNode = new LightSGNode(); //use now framework implementation of light node
-    lightNode.ambient = [0.2, 0.2, 0.2, 1];
-    lightNode.diffuse = [0.8, 0.8, 0.8, 1];
+    lightNode.ambient = [0.0,0.0,0.0,1];//[0.2, 0.2, 0.2, 1];
+    lightNode.diffuse = [0.9, 0.8, 0.6, 1];
     lightNode.specular = [1, 1, 1, 1];
     lightNode.position = [0, 0, 0];
 
 
     rotateLight = new TransformationSGNode(mat4.create());
-    translateLight = new TransformationSGNode(glm.translate(0,15,7)); //translating the light is the same as setting the light position
+    translateLight = new TransformationSGNode(glm.translate(0,5,7)); //translating the light is the same as setting the light position
 
     rotateLight.append(translateLight);
     translateLight.append(lightNode);
@@ -209,13 +208,13 @@ function createSceneGraph(gl, resources) {
     wall.specular = [0.5, 0.5, 0.5, 1];
     wall.shininess = 50.0;
 
-    shadowNode.append(new TransformationSGNode(glm.transform({ translate: [0,2,15], rotateX: 0, scale: 3}), [
+    shadowNode.append(new TransformationSGNode(glm.transform({ translate: [0,2,15], rotateX: 180, scale: 3}), [
       wall
     ]));
     shadowNode.append(new TransformationSGNode(glm.transform({ translate: [0,2,-15], rotateX: 0, scale: 3}), [
       wall
     ]));
-    shadowNode.append(new TransformationSGNode(glm.transform({ translate: [15,2,0], rotateX: 0, rotateY:90, scale: 3}), [
+    shadowNode.append(new TransformationSGNode(glm.transform({ translate: [15,2,0], rotateX: 0, rotateY:-90, scale: 3}), [
       wall
     ]));
     shadowNode.append(new TransformationSGNode(glm.transform({ translate: [-15,2,0], rotateX: 0, rotateY:90, scale: 3}), [
