@@ -99,7 +99,8 @@ vec4 calculateSimplePointLight(Light light, Material material, vec3 lightVec, ve
 	{
 		for(float dy=-1.0; dy <= 1.0; dy++)
 		{
-			float subShadowCoeff = 1.0; //set to 1 if no shadow!
+    //TODO was 1 before -> 0.5 helps with finding shadow problem. it can be seen that the semi transparent trapezoid is sometimes partially filled
+			float subShadowCoeff = 0.5; //set to 1 if no shadow!
 			float zShadowMap = texture2D(u_depthMap, shadowMapTexCoord3D.xy+vec2(dx/u_shadowMapWidth,dy/u_shadowMapHeight)).r;
 			if(shadowMapTexCoord3D.z > zShadowMap)
 				subShadowCoeff = 0.0;
