@@ -57,9 +57,9 @@ vec4 calculateSimplePointLight(Light light, Material material, vec3 lightVec, ve
 	distanceToLight /= 17.0;
 
 	//do texture space transformation (-1 to 1 -> 0 to 1)
-	shadowMapTexCoord3D = vec3(0.5,0.5,0.5) + shadowMapTexCoord3D*0.5;
+	//shadowMapTexCoord3D = vec3(0.5,0.5,0.5) + shadowMapTexCoord3D*0.5;
 	//substract small amount from z to get rid of self shadowing (TRY: disable to see difference)
-	shadowMapTexCoord3D.z -= 0.003;
+	//shadowMapTexCoord3D.z -= 0.003;
 
 	//compute diffuse term
 	float diffuse = max(dot(normalVec,lightVec),0.0)/distanceToLight;
@@ -76,7 +76,7 @@ vec4 calculateSimplePointLight(Light light, Material material, vec3 lightVec, ve
 		//Note: an alternative to replacing the material color is to multiply it with the texture color
   }
 
-	vec4 c_amb  = vec4(0,0,0,1);//clamp(light.ambient * material.ambient, 0.0, 1.0);
+	vec4 c_amb  = clamp(light.ambient * material.ambient, 0.0, 1.0);
 	vec4 c_diff = clamp(diffuse * light.diffuse * material.diffuse, 0.0, 1.0);
 	vec4 c_spec = clamp(spec * light.specular * material.specular, 0.0, 1.0);
 	vec4 c_em   = material.emission;
@@ -86,42 +86,42 @@ vec4 calculateSimplePointLight(Light light, Material material, vec3 lightVec, ve
 
 
 
-  float shadowCoeff = 1.0; //set to 1 if no shadow!
-	//TASK 2.4: look up depth in u_depthMap and set shadow coefficient (shadowCoeff) to 0 based on depth comparison
-	/*float zShadowMap = texture2D(u_depthMap, shadowMapTexCoord3D.xy).r;
-	if(shadowMapTexCoord3D.z > zShadowMap)
-		shadowCoeff = 0.0;*/
-
-  //EXTRA TASK: Improve shadow quality by sampling multiple shadow coefficients (a.k.a. PCF)
-	float sumShadowCoeff = 0.0;
-	if(shadowMapTexCoord3D.x < 1.0 && shadowMapTexCoord3D.x > -1.0  && shadowMapTexCoord3D.y < 1.0 && shadowMapTexCoord3D.y > -1.0) {
-	for(float dx=-1.0; dx <= 1.0; dx++)
-	{
-		for(float dy=-1.0; dy <= 1.0; dy++)
-		{
-    //TODO was 1 before -> 0.5 helps with finding shadow problem. it can be seen that the semi transparent trapezoid is sometimes partially filled
-			float subShadowCoeff = 0.5; //set to 1 if no shadow!
-			float zShadowMap = texture2D(u_depthMap, shadowMapTexCoord3D.xy+vec2(dx/u_shadowMapWidth,dy/u_shadowMapHeight)).r;
-			if(shadowMapTexCoord3D.z > zShadowMap)
-				subShadowCoeff = 0.0;
-
-			sumShadowCoeff += subShadowCoeff;
-		}
-	}
-	shadowCoeff = sumShadowCoeff/9.0;
-}
-else {
-	shadowCoeff = 1.0;
-}
+//   float shadowCoeff = 1.0; //set to 1 if no shadow!
+// 	//TASK 2.4: look up depth in u_depthMap and set shadow coefficient (shadowCoeff) to 0 based on depth comparison
+// 	/*float zShadowMap = texture2D(u_depthMap, shadowMapTexCoord3D.xy).r;
+// 	if(shadowMapTexCoord3D.z > zShadowMap)
+// 		shadowCoeff = 0.0;*/
+//
+//   //EXTRA TASK: Improve shadow quality by sampling multiple shadow coefficients (a.k.a. PCF)
+// 	float sumShadowCoeff = 0.0;
+// 	if(shadowMapTexCoord3D.x < 1.0 && shadowMapTexCoord3D.x > -1.0  && shadowMapTexCoord3D.y < 1.0 && shadowMapTexCoord3D.y > -1.0) {
+// 	for(float dx=-1.0; dx <= 1.0; dx++)
+// 	{
+// 		for(float dy=-1.0; dy <= 1.0; dy++)
+// 		{
+//     //TODO was 1 before -> 0.5 helps with finding shadow problem. it can be seen that the semi transparent trapezoid is sometimes partially filled
+// 			float subShadowCoeff = 1.0; //set to 1 if no shadow!
+// 			float zShadowMap = texture2D(u_depthMap, shadowMapTexCoord3D.xy+vec2(dx/u_shadowMapWidth,dy/u_shadowMapHeight)).r;
+// 			if(shadowMapTexCoord3D.z > zShadowMap)
+// 				subShadowCoeff = 0.0;
+//
+// 			sumShadowCoeff += subShadowCoeff;
+// 		}
+// 	}
+// 	shadowCoeff = sumShadowCoeff/9.0;
+// }
+// else {
+// 	shadowCoeff = 1.0;
+// }
   //TASK 2.5: apply shadow coefficient to diffuse and specular part
-  return c_amb + shadowCoeff * (c_diff + c_spec) + c_em;
+  return c_amb + (c_diff + c_spec) + c_em;
 	//return c_amb + c_diff + c_spec + c_em;
 }
 
 void main (void) {
 
   vec4 textureColor = vec4(0,0,0,1);
-  //if(u_enableObjectTexture)
+  if(u_enableObjectTexture)
   {
     textureColor = texture2D(u_tex,v_texCoord);
   }

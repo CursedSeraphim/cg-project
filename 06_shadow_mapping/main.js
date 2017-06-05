@@ -81,7 +81,7 @@ function init(resources) {
   lavaTexture  = initTextures(resources.lavaTexture , gl.REPEAT);
   diceTexture = initTextures(resources.diceTexture, gl.CLAMP_TO_EDGE);
   stoneTexture = initTextures(resources.stoneTexture, gl.REPEAT);
-  initRenderToTexture();
+  //initRenderToTexture();
 
   gl.enable(gl.DEPTH_TEST);
 
@@ -113,14 +113,13 @@ function createSceneGraph(gl, resources) {
   {
     //initialize light
     lightNode = new LightSGNode(); //use now framework implementation of light node
-    lightNode.ambient = [0.0,0.0,0.0,1];//[0.2, 0.2, 0.2, 1];
+    lightNode.ambient = [0.2,0.2,0.2,1];//[0.2, 0.2, 0.2, 1];
     lightNode.diffuse = [0.9, 0.8, 0.6, 1];
     lightNode.specular = [1, 1, 1, 1];
     lightNode.position = [0, 0, 0];
 
-
     rotateLight = new TransformationSGNode(mat4.create());
-    translateLight = new TransformationSGNode(glm.translate(0,5,10)); //translating the light is the same as setting the light position
+    translateLight = new TransformationSGNode(glm.translate(0,0,0)); //translating the light is the same as setting the light position
 
     //TODO
     rotateCamera = new TransformationSGNode(mat4.create());
@@ -128,16 +127,16 @@ function createSceneGraph(gl, resources) {
 
     translateTorch = new TransformationSGNode(glm.translate(0, 0, 0));
     torchNode = new LightSGNode();
-    torchNode.ambient = [0.0,0.0,0.0,1];//[0.2, 0.2, 0.2, 1];
+    torchNode.ambient = [0.2,0.2,0.2,1];//[0.2, 0.2, 0.2, 1];
     torchNode.diffuse = [0.9, 0.8, 0.6, 1];
     torchNode.specular = [1, 1, 1, 1];
     torchNode.position = [0, 0, 0];
 
     //rotateCamera.append(translateCamera;
     //translateCamera.append(translateTorch);
-    rotateCamera.append(translateTorch);
+    //rotateCamera.append(translateTorch);
     translateCamera.append(rotateCamera);
-    translateTorch.append(createLightSphere()); //for debugging
+    //translateTorch.append(createLightSphere()); //for debugging
     shadowNode.append(translateCamera);
 
     //rotateLight.append(translateLight);
@@ -177,7 +176,7 @@ function createSceneGraph(gl, resources) {
   d4.ambient = [0.24725, 0.1995, 0.0745, 1];
   d4.diffuse = [0.75164, 0.60648, 0.22648, 1];
   d4.specular = [0.628281, 0.555802, 0.366065, 1];
-  d4.shininess = 0.4;
+  d4.shininess = 1;
 
   //initialize cube
   let cube = new MaterialSGNode([ //use now framework implementation of material node
@@ -189,7 +188,7 @@ function createSceneGraph(gl, resources) {
   cube.diffuse = [0.75164, 0.60648, 0.22648, 1];
   cube.specular = [0.628281, 0.555802, 0.366065, 1];
   //cube.specular = [0.3, 0.3, 0.3, 1];
-  cube.shininess = 0.4;
+  cube.shininess = 1;
 
   rotateNode = new TransformationSGNode(mat4.create(), [
     new TransformationSGNode(glm.translate(0, 0, 0),  [
@@ -212,8 +211,8 @@ function createSceneGraph(gl, resources) {
     //dark
     floor.ambient = [0, 0, 0, 1];
     floor.diffuse = [0.7, 0.7, 0.7, 1];
-    floor.specular = [0.5, 0.5, 0.5, 1];
-    floor.shininess = 50.0;
+    floor.specular = [0.0, 0.0, 0.0, 1];
+    floor.shininess = 0;
 
     shadowNode.append(new TransformationSGNode(glm.transform({ translate: [0,-1,0], rotateX: -90, scale: 3}), [
       floor
@@ -230,8 +229,8 @@ function createSceneGraph(gl, resources) {
     //dark
     wall.ambient = [0.6, 0.6, 0.6, 1];
     wall.diffuse = [0.5, 0.5, 0.5, 1];
-    wall.specular = [0.5, 0.5, 0.5, 1];
-    wall.shininess = 50.0;
+    wall.specular = [0.1, 0.1, 0.1, 1];
+    wall.shininess = 100.0;
 
     shadowNode.append(new TransformationSGNode(glm.transform({ translate: [0,2,15], rotateX: 180, scale: 3}), [
       wall
@@ -412,7 +411,7 @@ function renderToTexture(timeInMilliseconds)
   //setup context and camera matrices
   const context = createSGContext(gl);
   //setup a projection matrix for the light camera which is large enough to capture our scene
-  context.projectionMatrix = mat4.perspective(mat4.create(), glm.deg2rad(30), framebufferWidth / framebufferHeight, 2, 20);
+  context.projectionMatrix = mat4.perspective(mat4.create(), glm.deg2rad(180), framebufferWidth / framebufferHeight, 2, 20);
   //compute the light's position in world space
   //let lightModelMatrix = mat4.multiply(mat4.create(), rotateLight.matrix, translateLight.matrix);
 
@@ -476,7 +475,7 @@ function render(timeInMilliseconds) {
   rotateLight.matrix = glm.rotateY(timeInMilliseconds*0.05);
 
   //draw scene for shadow map into texture
-  renderToTexture(timeInMilliseconds);
+  //renderToTexture(timeInMilliseconds);
 
   //setup viewport
   gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
@@ -522,7 +521,7 @@ function render(timeInMilliseconds) {
   context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
 
   translateCamera.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.05, -0.2, 0));
-  translateLight.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.05, -0.2, 0));
+  translateLight.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.05, -0.2, -10.0));
   //render scenegraph
   root.render(context);
 
