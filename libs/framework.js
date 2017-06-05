@@ -960,8 +960,6 @@ class LightSGNode extends TransformationSGNode {
     if (!context.shader || !isValidUniformLocation(gl.getUniformLocation(context.shader, this.uniform+'['+ this.nr + ']'+'.ambient'))) {
       return;
    }
-
-   console.log(this.nr);
     gl.uniform4fv(gl.getUniformLocation(context.shader, this.uniform+'['+this.nr + ']'+'.ambient'), this.ambient);
     gl.uniform4fv(gl.getUniformLocation(context.shader, this.uniform+'['+this.nr + ']'+'.diffuse'), this.diffuse);
     gl.uniform4fv(gl.getUniformLocation(context.shader, this.uniform+'['+this.nr + ']'+'.specular'), this.specular);
@@ -969,7 +967,8 @@ class LightSGNode extends TransformationSGNode {
 
   setLightPosition(context) {
     const gl = context.gl;
-    if (!context.shader || !isValidUniformLocation(gl.getUniformLocation(context.shader, this.uniform+'Pos'+'['+ this.nr + ']'))) {
+    if (!context.shader || !isValidUniformLocation(gl.getUniformLocation(context.shader, this.uniform+'Pos'+'['+ this.nr + ']'
+  ))) {
       return;
     }
     const position = this._worldPosition || this.position;
