@@ -62,6 +62,7 @@ loadResources({
   model: 'models/C-3PO.obj',
   modelCube: 'models/cube.obj',
   modeld4: 'models/d4.obj',
+  modelFloor20x20: 'models/floor_20x20.obj',
   lavaTexture: 'models/lava.jpg',
   diceTexture: 'models/diemap.jpg',
   floorTexture: 'models/floor_cobble.jpg',
@@ -216,7 +217,7 @@ function createSceneGraph(gl, resources) {
     ])))
 }
 
-  {
+  /*{
     //initialize floor
     let floor = new MaterialSGNode(
       new TextureSGNode(floorTexture, 0, new RenderSGNode(makeFloor(5, 5, 5))
@@ -230,6 +231,24 @@ function createSceneGraph(gl, resources) {
     floor.shininess = 0;
 
     shadowNode.append(new TransformationSGNode(glm.transform({ translate: [0,-1,0], rotateX: -90, scale: 3}), [
+      floor
+    ]));
+  }*/
+
+  {
+    //initialize floor
+    let floor = new MaterialSGNode(
+      new TextureSGNode(floorTexture, 0, new RenderSGNode(resources.modelFloor20x20)
+                )
+              );
+
+    //dark
+    floor.ambient = [0, 0, 0, 1];
+    floor.diffuse = [0.7, 0.7, 0.7, 1];
+    floor.specular = [0.0, 0.0, 0.0, 1];
+    floor.shininess = 0;
+
+    shadowNode.append(new TransformationSGNode(glm.transform({ translate: [0,-1,0], rotateX: 0, scale: 3}), [
       floor
     ]));
   }
