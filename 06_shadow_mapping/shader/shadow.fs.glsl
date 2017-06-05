@@ -51,10 +51,8 @@ vec4 calculateSimplePointLight(Light light, Material material, vec3 lightVec, ve
 	eyeVec = normalize(eyeVec);
 
 	//TASK 2.3: apply perspective division to v_shadowMapTexCoord and save to shadowMapTexCoord3D
-  vec3 shadowMapTexCoord3D = v_shadowMapTexCoord.xyz/v_shadowMapTexCoord.w; //do perspective division
+//  vec3 shadowMapTexCoord3D = v_shadowMapTexCoord.xyz/v_shadowMapTexCoord.w; //do perspective division
 	//vec3 shadowMapTexCoord3D = vec3(0,0,0);
-	float distanceToLight = length(v_lightPos - v_shadowMapTexCoord.xyz);
-	distanceToLight /= 17.0;
 
 	//do texture space transformation (-1 to 1 -> 0 to 1)
 	//shadowMapTexCoord3D = vec3(0.5,0.5,0.5) + shadowMapTexCoord3D*0.5;
@@ -62,7 +60,7 @@ vec4 calculateSimplePointLight(Light light, Material material, vec3 lightVec, ve
 	//shadowMapTexCoord3D.z -= 0.003;
 
 	//compute diffuse term
-	float diffuse = max(dot(normalVec,lightVec),0.0)/distanceToLight;
+	float diffuse = max(dot(normalVec,lightVec),0.0);
 
 	//compute specular term
 	vec3 reflectVec = reflect(-lightVec,normalVec);
@@ -114,8 +112,8 @@ vec4 calculateSimplePointLight(Light light, Material material, vec3 lightVec, ve
 // 	shadowCoeff = 1.0;
 // }
   //TASK 2.5: apply shadow coefficient to diffuse and specular part
-  return c_amb + (c_diff + c_spec) + c_em;
-	//return c_amb + c_diff + c_spec + c_em;
+  //return c_amb + (c_diff + c_spec) + c_em;
+	return c_amb + c_diff + c_spec + c_em;
 }
 
 void main (void) {
