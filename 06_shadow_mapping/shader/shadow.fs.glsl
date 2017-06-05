@@ -30,8 +30,6 @@ varying vec3 v_normalVec;
 varying vec3 v_eyeVec;
 varying vec3 v_lightVec;
 
-varying vec3 v_lightPos;
-
 //texture related variables
 uniform bool u_enableObjectTexture;
 varying vec2 v_texCoord;
@@ -46,28 +44,21 @@ varying vec4 v_shadowMapTexCoord;
 uniform sampler2D u_depthMap;
 
 vec4 calculateSimplePointLight(Light light, Material material, vec3 lightVec, vec3 normalVec, vec3 eyeVec, vec4 textureColor) {
+	float distanceToLight = max(length(lightVec)/10.0,1.0);
+
 	lightVec = normalize(lightVec);
 	normalVec = normalize(normalVec);
 	eyeVec = normalize(eyeVec);
 
-	//TASK 2.3: apply perspective division to v_shadowMapTexCoord and save to shadowMapTexCoord3D
-//  vec3 shadowMapTexCoord3D = v_shadowMapTexCoord.xyz/v_shadowMapTexCoord.w; //do perspective division
-	//vec3 shadowMapTexCoord3D = vec3(0,0,0);
-
-	//do texture space transformation (-1 to 1 -> 0 to 1)
-	//shadowMapTexCoord3D = vec3(0.5,0.5,0.5) + shadowMapTexCoord3D*0.5;
-	//substract small amount from z to get rid of self shadowing (TRY: disable to see difference)
-	//shadowMapTexCoord3D.z -= 0.003;
-
 	//compute diffuse term
-	float diffuse = max(dot(normalVec,lightVec),0.0);
+	float diffuse = max(dot(normalVec,lightVec),0.0) / (distanceToLight*distanceToLight);
 
 	//compute specular term
 	vec3 reflectVec = reflect(-lightVec,normalVec);
 	float spec = pow( max( dot(reflectVec, eyeVec), 0.0) , material.shininess);
 
   if(u_enableObjectTexture)
-  {
+	{
 		//replace diffuse and ambient matrial with texture color if texture is available
     material.diffuse = textureColor;
     material.ambient = textureColor;
