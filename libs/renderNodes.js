@@ -16,6 +16,7 @@ class TorchSGNode extends LightSGNode {
   }
 
   render(context) {
+    this.flicker *= 1.0 + Math.random()/10;
     this.ambient = vec4.scale(vec4.create(), this.ambientOrig, this.flicker);
     this.diffuse = vec4.scale(vec4.create(), this.diffuseOrig, this.flicker);
     this.specular = vec4.scale(vec4.create(), this.specularOrig, this.flicker);
