@@ -1,5 +1,7 @@
 // Phong Vertex Shader
 
+#define LIGHT_NODES 16
+
 attribute vec3 a_position;
 attribute vec3 a_normal;
 attribute vec2 a_texCoord;
@@ -9,19 +11,18 @@ uniform mat3 u_normalMatrix;
 uniform mat4 u_projection;
 uniform mat4 u_invView;
 
-uniform vec3 u_lightPos;
-uniform mat4 u_eyeToLightMatrix;
+uniform vec3 u_lightPos[LIGHT_NODES];
 
 //TODO
 uniform bool u_enableObjectTexture;
-
 //output of this shader
 varying vec3 v_normalVec;
-varying vec3 v_lightVec;
+varying vec3 v_lightVec[LIGHT_NODES];
 varying vec3 v_eyeVec;
 varying vec2 v_texCoord;
 
 void main() {
+
 	//compute vertex position in eye space
 	vec4 eyePosition = u_modelView * vec4(a_position,1);
 
@@ -30,10 +31,9 @@ void main() {
 
 	//compute variables for light computation
   v_eyeVec = -eyePosition.xyz;
-	v_lightVec = u_lightPos - eyePosition.xyz;
 
-	//TASK 2.2: calculate vertex position in light clip space coordinates using u_eyeToLightMatrix (assign result to v_shadowMapTexCoord)
-	//v_shadowMapTexCoord = vec4(0,0,0,0);
+	for(int i = 0; i < LIGHT_NODES; i++)
+		v_lightVec[i] = u_lightPos[i] - eyePosition.xyz;
 
 	//pass on texture coordinates
 	v_texCoord = a_texCoord;

@@ -947,27 +947,33 @@ class LightSGNode extends TransformationSGNode {
     //uniform name
     this.uniform = 'u_light';
 
+    LightSGNode.nr = (LightSGNode.nr + 1 || 0);
+
+    this.nr = LightSGNode.nr;
+
     this._worldPosition = null;
   }
 
   setLightUniforms(context) {
     const gl = context.gl;
     //no materials in use
-    if (!context.shader || !isValidUniformLocation(gl.getUniformLocation(context.shader, this.uniform+'.ambient'))) {
+    if (!context.shader || !isValidUniformLocation(gl.getUniformLocation(context.shader, this.uniform+'['+ this.nr + ']'+'.ambient'))) {
       return;
-    }
-    gl.uniform4fv(gl.getUniformLocation(context.shader, this.uniform+'.ambient'), this.ambient);
-    gl.uniform4fv(gl.getUniformLocation(context.shader, this.uniform+'.diffuse'), this.diffuse);
-    gl.uniform4fv(gl.getUniformLocation(context.shader, this.uniform+'.specular'), this.specular);
+   }
+
+   console.log(this.nr);
+    gl.uniform4fv(gl.getUniformLocation(context.shader, this.uniform+'['+this.nr + ']'+'.ambient'), this.ambient);
+    gl.uniform4fv(gl.getUniformLocation(context.shader, this.uniform+'['+this.nr + ']'+'.diffuse'), this.diffuse);
+    gl.uniform4fv(gl.getUniformLocation(context.shader, this.uniform+'['+this.nr + ']'+'.specular'), this.specular);
   }
 
   setLightPosition(context) {
     const gl = context.gl;
-    if (!context.shader || !isValidUniformLocation(gl.getUniformLocation(context.shader, this.uniform+'Pos'))) {
+    if (!context.shader || !isValidUniformLocation(gl.getUniformLocation(context.shader, this.uniform+'Pos'+'['+ this.nr + ']'))) {
       return;
     }
     const position = this._worldPosition || this.position;
-    gl.uniform3f(gl.getUniformLocation(context.shader, this.uniform+'Pos'), position[0], position[1], position[2]);
+    gl.uniform3f(gl.getUniformLocation(context.shader, this.uniform+'Pos'+'['+ this.nr + ']'), position[0], position[1], position[2]);
   }
 
   computeLightPosition(context) {

@@ -26,11 +26,13 @@ var rotateLight;
 var lightNode;
 var rotateNode;
 var shadowNode;
+var lightTest;
 //TODO
 var rotateCamera;
 var translateCamera;
 var torchNode;
 var translateTorch;
+var translateLightTest;
 
 var translate;
 var renderFloor;
@@ -113,13 +115,13 @@ function createSceneGraph(gl, resources) {
   {
     //initialize light
     lightNode = new LightSGNode(); //use now framework implementation of light node
-    lightNode.ambient = [0.2,0.2,0.2,1];//[0.2, 0.2, 0.2, 1];
-    lightNode.diffuse = [0.9, 0.8, 0.6, 1];
+    lightNode.ambient = [0.0,0.0,0.0,1];//[0.2, 0.2, 0.2, 1];
+    lightNode.diffuse = [0.5, 0.5, 0.5, 1];
     lightNode.specular = [1, 1, 1, 1];
     lightNode.position = [0, 0, 0];
 
     rotateLight = new TransformationSGNode(mat4.create());
-    translateLight = new TransformationSGNode(glm.translate(0,0,0)); //translating the light is the same as setting the light position
+    translateLight = new TransformationSGNode(glm.translate(0,3,10)); //translating the light is the same as setting the light position
 
     //TODO
     rotateCamera = new TransformationSGNode(mat4.create());
@@ -127,23 +129,37 @@ function createSceneGraph(gl, resources) {
 
     translateTorch = new TransformationSGNode(glm.translate(0, 0, 0));
     torchNode = new LightSGNode();
-    torchNode.ambient = [0.2,0.2,0.2,1];//[0.2, 0.2, 0.2, 1];
+    torchNode.ambient = [0.01,0.01,0.01,1];//[0.2, 0.2, 0.2, 1];
     torchNode.diffuse = [0.9, 0.8, 0.6, 1];
-    torchNode.specular = [1, 1, 1, 1];
+    torchNode.specular = [0.9, 0.8, 0.6, 1];
     torchNode.position = [0, 0, 0];
+
+    translateLightTest = new TransformationSGNode(glm.translate(0, 2, 14.5));
+    lightTest = new LightSGNode();
+    lightTest.ambient = [0.0,0.0,0.0,1];//[0.2, 0.2, 0.2, 1];
+    lightTest.diffuse = [0.5, 0.25, 0.05, 1];
+    lightTest.specular = [0, 0, 0, 1];
+    lightTest.position = [0, 0, 0];
 
     //rotateCamera.append(translateCamera;
     //translateCamera.append(translateTorch);
     //rotateCamera.append(translateTorch);
-    translateCamera.append(rotateCamera);
-    //translateTorch.append(createLightSphere()); //for debugging
+    //translateCamera.append(rotateCamera);
+    translateTorch.append(torchNode);
+    translateTorch.append(createLightSphere()); //for debugging
     shadowNode.append(translateCamera);
+    shadowNode.append(translateTorch);
 
-    //rotateLight.append(translateLight);
+    rotateLight.append(translateLight);
     translateLight.append(lightNode);
     translateLight.append(createLightSphere()); //add sphere for debugging: since we use 0,0,0 as our light position the sphere is at the same position as the light source
-    //shadowNode.append(rotateLight);
-    shadowNode.append(translateLight);
+    shadowNode.append(rotateLight);
+
+    translateLightTest.append(lightTest);
+    translateLightTest.append(createLightSphere());
+    shadowNode.append(translateLightTest);
+
+    //shadowNode.append(translateLight);
   }
 
   /*
@@ -299,6 +315,9 @@ class TextureSGNode extends SGNode {
     //tell shader to use our texture
     gl.uniform1i(gl.getUniformLocation(context.shader, 'u_enableObjectTexture'), 1);
 
+    /*defines number of lightsources*/
+    gl.uniform1i(gl.getUniformLocation(context.shader, 'u_nrOfLights'), LightSGNode.nr);
+
     //set additional shader parameters
     gl.uniform1i(gl.getUniformLocation(context.shader, 'u_tex'), this.textureunit);
 
@@ -357,73 +376,73 @@ class ShadowSGNode extends SGNode {
   }
 }
 
-//draw scene for shadow map
-function renderToTexture(timeInMilliseconds)
-{
-  //bind framebuffer to draw scene into texture
-  gl.bindFramebuffer(gl.FRAMEBUFFER, renderTargetFramebuffer);
-
-  //setup viewport
-  gl.viewport(0, 0, framebufferWidth, framebufferHeight);
-  gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
-
-  //setup context and camera matrices
-  const context = createSGContext(gl);
-  //setup a projection matrix for the light camera which is large enough to capture our scene
-  context.projectionMatrix = mat4.perspective(mat4.create(), glm.deg2rad(180), framebufferWidth / framebufferHeight, 2, 20);
-  //compute the light's position in world space
-  //let lightModelMatrix = mat4.multiply(mat4.create(), rotateLight.matrix, translateLight.matrix);
-
-  /*
-  let lightModelMatrix = mat4.multiply(mat4.create(), mat4.create(), translateLight.matrix);
-  let lightPositionVector = vec4.fromValues(lightNode.position[0], lightNode.position[1], lightNode.position[2], 1);
-  let worldLightPos = vec4.transformMat4(vec4.create(), lightPositionVector, lightModelMatrix);
-  //let the light "shine" towards the scene center (i.e. towards C3PO)
-  let worldLightLookAtPos = [0,0,0];
-  let upVector = [0,1,0];
-  //TASK 1.1: setup camera to look at the scene from the light's perspective
-  let lookAtMatrix = mat4.lookAt(mat4.create(), worldLightPos, worldLightLookAtPos, upVector);
-  //let lookAtMatrix = mat4.lookAt(mat4.create(), [0,1,-10], [0,0,0], [0,1,0]); //replace me for TASK 1.1
-  context.viewMatrix = lookAtMatrix;
-*/
-
-let mouseRotateMatrix = mat4.multiply(mat4.create(),
-                        glm.rotateX(-camera.rotation.y),
-                        glm.rotateY(-camera.rotation.x));
-let inverseRotateMatrix = mat4.invert(mat4.create(), mouseRotateMatrix);
-let lookAtVector = vec3.transformMat4(vec3.create(), [0, 0, -1], inverseRotateMatrix);
-let crossLookAtVector = vec3.cross(vec3.create(), lookAtVector, [0, 1, 0]);
-if(camera.movement.forward == 1) {
-  cameraPosition = vec3.subtract(vec3.create(), cameraPosition, vec3.scale(vec3.create(), lookAtVector, 0.25));
-}
-if(camera.movement.backward == 1) {
-  cameraPosition = vec3.scaleAndAdd(vec3.create(), cameraPosition, lookAtVector, 0.25);
-}
-if(camera.movement.left == 1) {
-  cameraPosition = vec3.scaleAndAdd(vec3.create(), cameraPosition, crossLookAtVector, 0.25);
-}
-if(camera.movement.right == 1) {
-  cameraPosition = vec3.subtract(vec3.create(), cameraPosition, vec3.scale(vec3.create(), crossLookAtVector, 0.25));
-}
-//rotateCamera.matrix = mouseRotateMatrix;
-//translateCamera.matrix = mat4.multiply(mat4.create(), rotateCamera.matrix, glm.translate(cameraPosition[0], cameraPosition[1], cameraPosition[2]));
-//context.viewMatrix = translateCamera.matrix;
-//translateTorch.matrix = mat4.invert(mat4.create(), translateCamera.matrix);
-context.viewMatrix = mat4.multiply(mat4.create(), mouseRotateMatrix, glm.translate(cameraPosition[0], cameraPosition[1], cameraPosition[2]));
-
-//get inverse view matrix to allow computing eye-to-light matrix
-context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
-
-
-  //multiply and save light projection and view matrix for later use in shadow mapping shader!
-  shadowNode.lightViewProjectionMatrix = mat4.multiply(mat4.create(),context.projectionMatrix,context.viewMatrix);
-
-  //render scenegraph
-  rootnofloor.render(context); //scene graph without floor to avoid reading from the same texture as we write to...
-
-  //disable framebuffer (render to screen again)
-  gl.bindFramebuffer(gl.FRAMEBUFFER, null);
-}
+// //draw scene for shadow map
+// function renderToTexture(timeInMilliseconds)
+// {
+//   //bind framebuffer to draw scene into texture
+//   gl.bindFramebuffer(gl.FRAMEBUFFER, renderTargetFramebuffer);
+//
+//   //setup viewport
+//   gl.viewport(0, 0, framebufferWidth, framebufferHeight);
+//   gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
+//
+//   //setup context and camera matrices
+//   const context = createSGContext(gl);
+//   //setup a projection matrix for the light camera which is large enough to capture our scene
+//   context.projectionMatrix = mat4.perspective(mat4.create(), glm.deg2rad(180), framebufferWidth / framebufferHeight, 2, 20);
+//   //compute the light's position in world space
+//   //let lightModelMatrix = mat4.multiply(mat4.create(), rotateLight.matrix, translateLight.matrix);
+//
+//   /*
+//   let lightModelMatrix = mat4.multiply(mat4.create(), mat4.create(), translateLight.matrix);
+//   let lightPositionVector = vec4.fromValues(lightNode.position[0], lightNode.position[1], lightNode.position[2], 1);
+//   let worldLightPos = vec4.transformMat4(vec4.create(), lightPositionVector, lightModelMatrix);
+//   //let the light "shine" towards the scene center (i.e. towards C3PO)
+//   let worldLightLookAtPos = [0,0,0];
+//   let upVector = [0,1,0];
+//   //TASK 1.1: setup camera to look at the scene from the light's perspective
+//   let lookAtMatrix = mat4.lookAt(mat4.create(), worldLightPos, worldLightLookAtPos, upVector);
+//   //let lookAtMatrix = mat4.lookAt(mat4.create(), [0,1,-10], [0,0,0], [0,1,0]); //replace me for TASK 1.1
+//   context.viewMatrix = lookAtMatrix;
+// */
+//
+// let mouseRotateMatrix = mat4.multiply(mat4.create(),
+//                         glm.rotateX(-camera.rotation.y),
+//                         glm.rotateY(-camera.rotation.x));
+// let inverseRotateMatrix = mat4.invert(mat4.create(), mouseRotateMatrix);
+// let lookAtVector = vec3.transformMat4(vec3.create(), [0, 0, -1], inverseRotateMatrix);
+// let crossLookAtVector = vec3.cross(vec3.create(), lookAtVector, [0, 1, 0]);
+// if(camera.movement.forward == 1) {
+//   cameraPosition = vec3.subtract(vec3.create(), cameraPosition, vec3.scale(vec3.create(), lookAtVector, 0.25));
+// }
+// if(camera.movement.backward == 1) {
+//   cameraPosition = vec3.scaleAndAdd(vec3.create(), cameraPosition, lookAtVector, 0.25);
+// }
+// if(camera.movement.left == 1) {
+//   cameraPosition = vec3.scaleAndAdd(vec3.create(), cameraPosition, crossLookAtVector, 0.25);
+// }
+// if(camera.movement.right == 1) {
+//   cameraPosition = vec3.subtract(vec3.create(), cameraPosition, vec3.scale(vec3.create(), crossLookAtVector, 0.25));
+// }
+// //rotateCamera.matrix = mouseRotateMatrix;
+// //translateCamera.matrix = mat4.multiply(mat4.create(), rotateCamera.matrix, glm.translate(cameraPosition[0], cameraPosition[1], cameraPosition[2]));
+// //context.viewMatrix = translateCamera.matrix;
+// //translateTorch.matrix = mat4.invert(mat4.create(), translateCamera.matrix);
+// context.viewMatrix = mat4.multiply(mat4.create(), mouseRotateMatrix, glm.translate(cameraPosition[0], cameraPosition[1], cameraPosition[2]));
+//
+// //get inverse view matrix to allow computing eye-to-light matrix
+// context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
+//
+//
+//   //multiply and save light projection and view matrix for later use in shadow mapping shader!
+//   shadowNode.lightViewProjectionMatrix = mat4.multiply(mat4.create(),context.projectionMatrix,context.viewMatrix);
+//
+//   //render scenegraph
+//   rootnofloor.render(context); //scene graph without floor to avoid reading from the same texture as we write to...
+//
+//   //disable framebuffer (render to screen again)
+//   gl.bindFramebuffer(gl.FRAMEBUFFER, null);
+// }
 
 function render(timeInMilliseconds) {
   checkForWindowResize(gl);
@@ -480,7 +499,7 @@ function render(timeInMilliseconds) {
   context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
 
   translateCamera.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.05, -0.2, 0));
-  translateLight.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.05, -0.2, -10.0));
+  translateTorch.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.05, -0.2, -10.0));
   //render scenegraph
   root.render(context);
 

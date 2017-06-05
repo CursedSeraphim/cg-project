@@ -3,6 +3,8 @@
 // It shows the basic priciples in a simple way and is sufficient for our lab exercises.
 precision mediump float;
 
+#define LIGHT_NODES 16
+
 /**
  * definition of a material structure containing common properties
  */
@@ -25,49 +27,63 @@ struct Light {
 
 //illumination related variables
 uniform Material u_material;
-uniform Light u_light;
+uniform Light u_light[LIGHT_NODES];
+uniform Light u_torch;
 varying vec3 v_normalVec;
 varying vec3 v_eyeVec;
-varying vec3 v_lightVec;
+varying vec3 v_lightVec[LIGHT_NODES];
 
 //texture related variables
 uniform bool u_enableObjectTexture;
+uniform int u_nrOfLights;
+
 varying vec2 v_texCoord;
 uniform sampler2D u_tex;
 
-//shadow map resolution (required for extra task)
-uniform float u_shadowMapWidth;
-uniform float u_shadowMapHeight;
+vec4 calculateSimplePointLight(Light light[LIGHT_NODES], Material material, vec3 lightVec[LIGHT_NODES], vec3 normalVec, vec3 eyeVec, vec4 textureColor, int numberOfLights) {
+	vec3 lVec[LIGHT_NODES];
 
-//shadow related variables
-varying vec4 v_shadowMapTexCoord;
-uniform sampler2D u_depthMap;
+	for(int i = 0; i < LIGHT_NODES; i++) {
+		if(i > numberOfLights)
+			break;
+		lVec[i] = lightVec[i];
+		lightVec[i] = normalize(lightVec[i]);
+	}
 
-vec4 calculateSimplePointLight(Light light, Material material, vec3 lightVec, vec3 normalVec, vec3 eyeVec, vec4 textureColor) {
-	float distanceToLight = max(length(lightVec)/10.0,1.0);
-
-	lightVec = normalize(lightVec);
 	normalVec = normalize(normalVec);
 	eyeVec = normalize(eyeVec);
 
-	//compute diffuse term
-	float diffuse = max(dot(normalVec,lightVec),0.0) / (distanceToLight*distanceToLight);
+	vec4 c_amb  = vec4(0.0,0.0,0.0,0.0);
+	vec4 c_diff = vec4(0.0,0.0,0.0,0.0);
+	vec4 c_spec = vec4(0.0,0.0,0.0,0.0);
 
-	//compute specular term
-	vec3 reflectVec = reflect(-lightVec,normalVec);
-	float spec = pow( max( dot(reflectVec, eyeVec), 0.0) , material.shininess);
-
-  if(u_enableObjectTexture)
+	if(u_enableObjectTexture)
 	{
 		//replace diffuse and ambient matrial with texture color if texture is available
-    material.diffuse = textureColor;
-    material.ambient = textureColor;
+		material.diffuse = textureColor;
+		material.ambient = textureColor;
 		//Note: an alternative to replacing the material color is to multiply it with the texture color
-  }
+	}
+	//compute diffuse term
+	for(int i = 0; i < LIGHT_NODES; i++) {
+		if(i > u_nrOfLights)
+			break;
+		float distanceToLight = max(length(lVec[i])/10.0,1.0);
+		float diffuse = max(dot(normalVec,lightVec[i]),0.0) / (distanceToLight*distanceToLight);
+		//compute specular term
+		vec3 reflectVec = reflect(-lightVec[i], normalVec);
+		float spec = pow( max( dot(reflectVec, eyeVec), 0.0) , material.shininess);
 
-	vec4 c_amb  = clamp(light.ambient * material.ambient, 0.0, 1.0);
-	vec4 c_diff = clamp(diffuse * light.diffuse * material.diffuse, 0.0, 1.0);
-	vec4 c_spec = clamp(spec * light.specular * material.specular, 0.0, 1.0);
+		c_amb  += clamp(light[i].ambient * material.ambient, 0.0, 1.0);
+		c_diff += clamp(diffuse * light[i].diffuse * material.diffuse, 0.0, 1.0);
+		c_spec += clamp(spec * light[i].specular * material.specular, 0.0, 1.0);
+	}
+
+
+
+	c_amb  = clamp(c_amb, 0.0, 1.0);
+	c_diff = clamp(c_diff, 0.0, 1.0);
+	c_spec = clamp(c_spec, 0.0, 1.0);
 	vec4 c_em   = material.emission;
 
 	//Note: You can directly use the shadow related varying/uniform variables in this example since we only have 1 light source.
@@ -108,6 +124,11 @@ vec4 calculateSimplePointLight(Light light, Material material, vec3 lightVec, ve
 }
 
 void main (void) {
+	/*Check if array gets too small*/
+	if(u_nrOfLights >= LIGHT_NODES) {
+		gl_FragColor = vec4(1,0,0,1);
+		return;
+	}
 
   vec4 textureColor = vec4(0,0,0,1);
   if(u_enableObjectTexture)
@@ -115,6 +136,6 @@ void main (void) {
     textureColor = texture2D(u_tex,v_texCoord);
   }
 
-	gl_FragColor = calculateSimplePointLight(u_light, u_material, v_lightVec, v_normalVec, v_eyeVec, textureColor);
+	gl_FragColor = calculateSimplePointLight(u_light, u_material, v_lightVec, v_normalVec, v_eyeVec, textureColor, u_nrOfLights);
 
 }
