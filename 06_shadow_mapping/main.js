@@ -34,6 +34,8 @@ var torchNode;
 var translateTorch;
 var translateLightTest;
 
+var fireNode;
+
 var translate;
 var renderFloor;
 
@@ -59,6 +61,8 @@ loadResources({
   fs_shadow: 'shader/shadow.fs.glsl',
   vs_single: 'shader/single.vs.glsl',
   fs_single: 'shader/single.fs.glsl',
+  vs_fire:  'shader/fire.vs.glsl',
+  fs_fire:  'shader/fire.fs.glsl',
   model: 'models/C-3PO.obj',
   modelCube: 'models/cube.obj',
   modeld4: 'models/d4.obj',
@@ -137,7 +141,7 @@ function createSceneGraph(gl, resources) {
     torchNode.specular = [0.0,0.0,0.0,1];//[0.9, 0.8, 0.6, 1];
     torchNode.position = [0, 0, 0];
 
-    translateLightTest = new TransformationSGNode(glm.translate(0, 2, -14.5));
+    translateLightTest = new TransformationSGNode(glm.translate(0, 1, 5));
     lightTest = new TorchSGNode();
     lightTest.ambientOrig = [0.0,0.0,0.0,1];//[0.2, 0.2, 0.2, 1];
     lightTest.diffuseOrig = [0.6, 0.3, 0.05, 1];
@@ -158,8 +162,15 @@ function createSceneGraph(gl, resources) {
     shadowNode.append(rotateLight);
 
     translateLightTest.append(lightTest);
-    translateLightTest.append(createLightSphere());
+    //translateLightTest.append(createLightSphere());
     shadowNode.append(translateLightTest);
+
+    fireNode = new FireSGNode(500, 30, [0.10,0.10,0.10], [0.2,0.002,0.2]);
+    var fireTransNode = new TransformationSGNode(glm.translate(0, 1, 5));
+    var fireShaderNode = new ShaderSGNode(createProgram(gl, resources.vs_fire, resources.fs_fire));
+    fireShaderNode.append(fireTransNode);
+    fireTransNode.append(fireNode);
+    root.append(fireShaderNode);
 
     //shadowNode.append(translateLight);
   }
@@ -355,7 +366,7 @@ function render(timeInMilliseconds) {
   rotateNode.matrix = glm.rotateY(timeInMilliseconds*-0.01);
   rotateLight.matrix = glm.rotateY(timeInMilliseconds*0.05);
 
-  lightTest.flicker = 1.0 + (Math.cos(timeInMilliseconds/100)) / 10;
+  //lightTest.flicker = 1.0 + (Math.cos(timeInMilliseconds/100)) / 10;
 
   //draw scene for shadow map into texture
   //renderToTexture(timeInMilliseconds);

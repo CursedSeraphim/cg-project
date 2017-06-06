@@ -12,15 +12,19 @@ class TorchSGNode extends LightSGNode {
     this.diffuseOrig = this.diffuse;
     this.specularOrig = this.specular;
 
-    this.flicker = (this.flicker || 1.0);
+    this.counter = 0;
   }
 
   render(context) {
-    this.flicker *= 1.0 + Math.random()/10;
-    this.ambient = vec4.scale(vec4.create(), this.ambientOrig, this.flicker);
-    this.diffuse = vec4.scale(vec4.create(), this.diffuseOrig, this.flicker);
-    this.specular = vec4.scale(vec4.create(), this.specularOrig, this.flicker);
+    /*get some random flickering into this*/
+    var flicker = 1 + Math.cos(this.counter)/10;
+    flicker *= (1.0 + Math.random()/10);
+    this.ambient = vec4.scale(vec4.create(), this.ambientOrig, flicker);
+    this.diffuse = vec4.scale(vec4.create(), this.diffuseOrig, flicker);
+    this.specular = vec4.scale(vec4.create(), this.specularOrig, flicker);
 
+    //this.counter+=0.16;
+    this.counter+=Math.random()/2;
     super.render(context);
   }
 }
@@ -95,5 +99,121 @@ class ShadowSGNode extends SGNode {
     //clean up
     gl.activeTexture(gl.TEXTURE0 + this.textureunit);
     gl.bindTexture(gl.TEXTURE_2D, null);
+  }
+}
+
+class FireSGNode extends TransformationSGNode {
+
+  constructor(partCnt, partSize, fuelWidth, velocity, position, children) {
+    super(position, children);
+
+    this.partCnt = partCnt;
+    this.partSize = partSize;
+    this.initializes = false;
+
+    this.scalefactor = partSize/100
+
+    this.fuelWidth = vec3.scale(vec3.create(), fuelWidth, this.scalefactor);
+    this.velocity = vec3.scale(vec3.create(), velocity, this.scalefactor);
+
+    var particles = [];
+    var position = [];
+    var color = [];
+    var freePart = [];
+
+    for(var i = 0; i < this.partCnt; i++) {
+      particles[i] = {};
+      particles[i].translate = [0.0,0.0,0.0];
+      particles[i].velocity = [0.0,0.0,0.0];
+      particles[i].heat = Math.random()*this.partSize;
+      /*get a small random start-position*/
+      position.push(this.fuelWidth[0]*Math.random()-this.fuelWidth[0]/2,
+                    this.fuelWidth[1]*Math.random()-this.fuelWidth[1]/2,
+                    this.fuelWidth[2]*Math.random()-this.fuelWidth[2]/2);
+      //position.push(0.0,3.0,5.0);
+      color.push(Math.random()*0.5+0.5, Math.random()*0.5, Math.random()*0.1, 1);
+      //color.push(1.0,0.0,0.0, 1.0);
+      freePart[i] = i;
+    }
+    this.particles = particles;
+    this.position = position;
+    this.color = color;
+    this.freePart = freePart;
+    this.active = [];
+  }
+
+  render(context) {
+    gl.depthFunc(gl.LEQUAL);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+
+    var posShader = gl.getAttribLocation(context.shader, 'a_position');
+    gl.bindBuffer(gl.ARRAY_BUFFER, null);
+    var pos = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, pos);
+    var arr = new Float32Array(this.position);
+    gl.bufferData(gl.ARRAY_BUFFER, arr, gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(posShader);
+    gl.vertexAttribPointer(posShader, 3, gl.FLOAT, false, 0, 0);
+
+    var colShader = gl.getAttribLocation(context.shader, 'a_color');
+    var col = gl.createBuffer();
+    gl.bindBuffer(gl.ARRAY_BUFFER, col);
+    var arr2 = new Float32Array(this.color);
+    gl.bufferData(gl.ARRAY_BUFFER, arr2, gl.STATIC_DRAW);
+    gl.enableVertexAttribArray(colShader);
+    gl.vertexAttribPointer(colShader, 4, gl.FLOAT, false, 0, 0);
+
+    var modelViewMatrix = mat4.multiply(mat4.create(), context.viewMatrix, context.sceneMatrix);
+    gl.uniformMatrix4fv(gl.getUniformLocation(context.shader, 'u_projection'), false, context.projectionMatrix);
+    gl.uniformMatrix4fv(gl.getUniformLocation(context.shader, 'u_modelView'), false, modelViewMatrix);
+    /*get some free particles*/
+    for(var i = 0; i < 15; i++){
+        if(this.freePart.length > 0)
+        var index = this.freePart.pop();
+
+        this.active.push(index);
+        this.particles[index].translate = [0.0, 0.0, 0.0];
+        this.particles[index].velocity = [Math.random()*this.velocity[0]-this.velocity[0]/2,
+                                          Math.random()*0.1*this.scalefactor-0.07*this.scalefactor,
+                                          Math.random()*this.velocity[2]-this.velocity[0]/2];
+        this.particles[index].heat = Math.random()*this.partSize + this.partSize*0.4;
+    }
+
+    var partHeat = gl.getUniformLocation(context.shader, 'v_heat');
+    var veloMat = gl.getUniformLocation(context.shader, 'u_veloMat');
+
+    var i = this.active.length;
+    while(i--){
+        var index = this.active[i];
+        var particle = this.particles[index];
+        particle.translate[0] += particle.velocity[0];
+        particle.translate[1] += particle.velocity[1];
+        particle.translate[2] += particle.velocity[2];
+
+        particle.velocity[0] += -(this.position[index*3]+particle.translate[0])/(particle.heat);
+        particle.velocity[1] += this.velocity[1];
+        particle.velocity[2] += -(this.position[index*3+2]+particle.translate[2])/(particle.heat);
+        particle.heat -= 2.5*this.scalefactor;
+
+        if(particle.heat < 0){
+            this.active.splice(i,1);
+            this.freePart.push(index);
+            continue;
+        }
+
+
+        var velo = mat4.translate(mat4.create(), mat4.create(), particle.translate);
+        //var finalViewMatrix = mat4.multiply(mat4.create(), modelViewMatrix, velo);
+
+        gl.uniform1f(partHeat, particle.heat);
+        gl.uniformMatrix4fv(veloMat, false, velo);
+
+        gl.drawArrays(gl.POINTS, 0, this.particles.length);
+    }
+
+    gl.disable(gl.BLEND);
+    super.render(context);
+
   }
 }
