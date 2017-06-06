@@ -63,6 +63,8 @@ loadResources({
   modelCube: 'models/cube.obj',
   modeld4: 'models/d4.obj',
   modelFloor20x20: 'models/floor_20x20.obj',
+  modelMapCobble: 'models/MapCobble.obj',
+  modelMapFloor: 'models/MapFloor.obj',
   lavaTexture: 'models/lava.jpg',
   diceTexture: 'models/diemap.jpg',
   floorTexture: 'models/floor_cobble.jpg',
@@ -131,7 +133,7 @@ function createSceneGraph(gl, resources) {
     translateTorch = new TransformationSGNode(glm.translate(0, 0, 0));
     torchNode = new LightSGNode();
     torchNode.ambient = [0.01,0.01,0.01,1];//[0.2, 0.2, 0.2, 1];
-    torchNode.diffuse = [0.0,0.0,0.0,1];//[0.9, 0.8, 0.6, 1];
+    torchNode.diffuse = [0.6,0.3,0.05,1];//[0.9, 0.8, 0.6, 1];
     torchNode.specular = [0.0,0.0,0.0,1];//[0.9, 0.8, 0.6, 1];
     torchNode.position = [0, 0, 0];
 
@@ -206,15 +208,37 @@ function createSceneGraph(gl, resources) {
   //cube.specular = [0.3, 0.3, 0.3, 1];
   cube.shininess = 1;
 
+  //initialize map floor
+  let mapFloor = new MaterialSGNode([ //use now framework implementation of material node
+    new TextureSGNode(floorTexture, 0, new RenderSGNode(resources.modelMapFloor))
+
+  ]);
+  mapFloor.ambient = [0.24725, 0.1995, 0.0745, 1];
+  mapFloor.diffuse = [0.75164, 0.60648, 0.22648, 1];
+  mapFloor.specular = [0.628281, 0.555802, 0.366065, 1];
+  mapFloor.shininess = 1;
+
+  //initialize map floor
+  let mapCobble = new MaterialSGNode([ //use now framework implementation of material node
+    new TextureSGNode(stoneTexture, 0, new RenderSGNode(resources.modelMapCobble))
+
+  ]);
+  mapCobble.ambient = [0.24725, 0.1995, 0.0745, 1];
+  mapCobble.diffuse = [0.75164, 0.60648, 0.22648, 1];
+  mapCobble.specular = [0.628281, 0.555802, 0.366065, 1];
+  mapCobble.shininess = 1;
+
   rotateNode = new TransformationSGNode(mat4.create(), [
     new TransformationSGNode(glm.translate(0, 0, 0),  [
-      cube
+
     ])
   ]);
   shadowNode.append(rotateNode);
+  shadowNode.append(mapFloor);
+  shadowNode.append(mapCobble);
   rotateNode.append(  new TransformationSGNode(glm.rotateY(15) , new TransformationSGNode(glm.translate(0, 2, 0),  [
       d4
-    ])))
+    ])));
 }
 
   /*{
@@ -235,6 +259,7 @@ function createSceneGraph(gl, resources) {
     ]));
   }*/
 
+/*
   {
     //initialize floor
     let floor = new MaterialSGNode(
@@ -252,7 +277,8 @@ function createSceneGraph(gl, resources) {
       floor
     ]));
   }
-
+*/
+/*
   {
     //initialize wall
     let wall = new MaterialSGNode(
@@ -279,7 +305,7 @@ function createSceneGraph(gl, resources) {
       wall
     ]));
   }
-
+*/
   return root;
 }
 
@@ -378,7 +404,7 @@ function render(timeInMilliseconds) {
   context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
 
   translateCamera.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.05, -0.2, 0));
-  translateTorch.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.05, -0.2, -10.0));
+  translateTorch.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.05, -0.2, -5.0));
   //render scenegraph
   root.render(context);
 
