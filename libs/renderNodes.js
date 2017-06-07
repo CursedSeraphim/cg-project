@@ -168,8 +168,9 @@ class FireSGNode extends TransformationSGNode {
     gl.uniformMatrix4fv(gl.getUniformLocation(context.shader, 'u_projection'), false, context.projectionMatrix);
     gl.uniformMatrix4fv(gl.getUniformLocation(context.shader, 'u_modelView'), false, modelViewMatrix);
     /*get some free particles*/
-    for(var i = 0; i < 15; i++){
-        if(this.freePart.length > 0)
+    for(var i = 0; i < 100; i++){
+        if(this.freePart.length <= 0)
+         break;
         var index = this.freePart.pop();
 
         this.active.push(index);
@@ -194,7 +195,7 @@ class FireSGNode extends TransformationSGNode {
         particle.velocity[0] += -(this.position[index*3]+particle.translate[0])/(particle.heat);
         particle.velocity[1] += this.velocity[1];
         particle.velocity[2] += -(this.position[index*3+2]+particle.translate[2])/(particle.heat);
-        particle.heat -= 2.5*this.scalefactor;
+        particle.heat -= 3.5*this.scalefactor;
 
         if(particle.heat < 0){
             this.active.splice(i,1);

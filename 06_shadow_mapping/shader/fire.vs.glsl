@@ -19,5 +19,5 @@ void main(void) {
 	gl_Position = u_projection * eyePosition;
   //gl_Position = eyePosition;
   //gl_Position  = mvpMatrix * vec4(a_position, 1.0);
-  gl_PointSize = v_heat;
+  gl_PointSize = v_heat / abs(length(eyePosition.xyz)/5.0);
 }

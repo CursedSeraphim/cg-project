@@ -128,6 +128,7 @@ function createSceneGraph(gl, resources) {
     lightNode.position = [0, 0, 0];
 
     rotateLight = new TransformationSGNode(mat4.create());
+
     translateLight = new TransformationSGNode(glm.translate(0,3,10)); //translating the light is the same as setting the light position
 
     //TODO
@@ -136,7 +137,7 @@ function createSceneGraph(gl, resources) {
 
     translateTorch = new TransformationSGNode(glm.translate(0, 0, 0));
     torchNode = new LightSGNode();
-    torchNode.ambient = [0.01,0.01,0.01,1];//[0.2, 0.2, 0.2, 1];
+    torchNode.ambient = [0.5,0.5,0.5,1];//[0.2, 0.2, 0.2, 1];
     torchNode.diffuse = [0.6,0.3,0.05,1];//[0.9, 0.8, 0.6, 1];
     torchNode.specular = [0.0,0.0,0.0,1];//[0.9, 0.8, 0.6, 1];
     torchNode.position = [0, 0, 0];
@@ -159,18 +160,20 @@ function createSceneGraph(gl, resources) {
     rotateLight.append(translateLight);
     translateLight.append(lightNode);
     translateLight.append(createLightSphere()); //add sphere for debugging: since we use 0,0,0 as our light position the sphere is at the same position as the light source
-    shadowNode.append(rotateLight);
+    //shadowNode.append(rotateLight);
+    root.append(rotateLight);
 
     translateLightTest.append(lightTest);
     //translateLightTest.append(createLightSphere());
     shadowNode.append(translateLightTest);
 
-    fireNode = new FireSGNode(500, 30, [0.10,0.10,0.10], [0.2,0.002,0.2]);
-    var fireTransNode = new TransformationSGNode(glm.translate(0, 1, 5));
+    fireNode = new FireSGNode(500, 50, [0.20,0.20,0.20], [0.2,0.004,0.2]);
+    //var fireTransNode = new TransformationSGNode(glm.translate(0, 1, 5));
     var fireShaderNode = new ShaderSGNode(createProgram(gl, resources.vs_fire, resources.fs_fire));
-    fireShaderNode.append(fireTransNode);
-    fireTransNode.append(fireNode);
-    root.append(fireShaderNode);
+    //fireTransNode.append(fireNode);
+    fireShaderNode.append(fireNode);
+    translateLight.append(fireShaderNode);
+    //root.append(fireShaderNode);
 
     //shadowNode.append(translateLight);
   }
