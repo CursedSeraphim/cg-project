@@ -27,6 +27,7 @@ var lightNode;
 var rotateNode;
 var shadowNode;
 var lightTest;
+var cobbleTextNode;
 //TODO
 var rotateCamera;
 var translateCamera;
@@ -45,7 +46,7 @@ var renderTargetColorTexture;
 var renderTargetDepthTexture;
 var diceTexture;
 var floorTexture;
-var stoneTexture;
+var cobbleTexture;
 var lavaTexture;
 
 //framebuffer variables
@@ -73,7 +74,7 @@ loadResources({
   diceTexture: 'models/diemap.jpg',
   floorTexture: 'models/floor_cobble.jpg',
   stoaqTexture: 'models/stoaquad.jpg',
-  stoneTexture: 'models/black_cobble.jpg'
+  cobbleTexture: 'models/black_cobble_rotated.jpg'
 }).then(function (resources /*an object containing our keys with the loaded resources*/) {
   init(resources);
 
@@ -89,7 +90,7 @@ function init(resources) {
   floorTexture = initTextures(resources.floorTexture, gl.REPEAT);
   lavaTexture  = initTextures(resources.lavaTexture , gl.REPEAT);
   diceTexture = initTextures(resources.diceTexture, gl.CLAMP_TO_EDGE);
-  stoneTexture = initTextures(resources.stoneTexture, gl.REPEAT);
+  cobbleTexture = initTextures(resources.cobbleTexture, gl.REPEAT);
   //initRenderToTexture();
 
   gl.enable(gl.DEPTH_TEST);
@@ -233,8 +234,9 @@ function createSceneGraph(gl, resources) {
   mapFloor.shininess = 1;
 
   //initialize map floor
+  let cobbleTextNode = new TextureSGNode(cobbleTexture, 0, new RenderSGNode(resources.modelMapCobble));
   let mapCobble = new MaterialSGNode([ //use now framework implementation of material node
-    new TextureSGNode(stoneTexture, 0, new RenderSGNode(resources.modelMapCobble))
+    cobbleTextNode
 
   ]);
   mapCobble.ambient = [0.24725, 0.1995, 0.0745, 1];
@@ -296,7 +298,7 @@ function createSceneGraph(gl, resources) {
   {
     //initialize wall
     let wall = new MaterialSGNode(
-                new TextureSGNode(stoneTexture, 0, new RenderSGNode(makeFloor(5, 1, 3))
+                new TextureSGNode(cobbleTexture, 0, new RenderSGNode(makeFloor(5, 1, 3))
                 )
               );
 
