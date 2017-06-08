@@ -50,6 +50,8 @@ var diceTexture;
 var floorTexture;
 var cobbleTexture;
 var lavaTexture;
+var diabloImage;
+var diabloSGNode;
 
 //framebuffer variables
 var renderTargetFramebuffer;
@@ -76,7 +78,8 @@ loadResources({
   diceTexture: 'models/diemap.jpg',
   floorTexture: 'models/floor_cobble.jpg',
   stoaqTexture: 'models/stoaquad.jpg',
-  cobbleTexture: 'models/black_cobble_rotated.jpg'
+  cobbleTexture: 'models/black_cobble_rotated.jpg',
+  diabloImage: 'models/diablo.png'
 }).then(function (resources /*an object containing our keys with the loaded resources*/) {
   init(resources);
 
@@ -94,6 +97,7 @@ function init(resources) {
   lavaTexture  = initTextures(resources.lavaTexture , gl.REPEAT);
   diceTexture = initTextures(resources.diceTexture, gl.CLAMP_TO_EDGE);
   cobbleTexture = initTextures(resources.cobbleTexture, gl.REPEAT);
+  diabloImage = initTextures(resources.diabloImage, gl.CLAMP_TO_EDGE);
   //initRenderToTexture();
 
   gl.enable(gl.DEPTH_TEST);
@@ -258,7 +262,7 @@ function createSceneGraph(gl, resources) {
   shadowNode.append(rotateNode);
   shadowNode.append(mapFloor);
   shadowNode.append(mapCobble);
-  rotateNode.append(  new TransformationSGNode(glm.rotateY(15) , new TransformationSGNode(glm.translate(0, 1, 0),  [
+  rotateNode.append(  new TransformationSGNode(glm.rotateY(15) , new TransformationSGNode(glm.translate(0, 1.25, 0),  [
       cube
     ])));
 }
@@ -300,6 +304,19 @@ function createSceneGraph(gl, resources) {
     ]));
   }
 */
+
+{
+  let diablo = new MaterialSGNode(new TextureSGNode(diabloImage, 0, new RenderSGNode(makeFloor(2, 2, 1))));//asdasdasd
+  diablo.ambient = [0.6, 0.6, 0.6, 1];
+  diablo.diffuse = [0.5, 0.5, 0.5, 1];
+  diablo.specular = [0.1, 0.1, 0.1, 1];
+  diablo.shininess = 1.0;
+
+  diabloSGNode = new TransformationSGNode(glm.transform({ translate: [-9.5,3,0], rotateY: 90, rotateX: 180, scale: 1.5}), [
+    diablo
+  ]);
+  shadowNode.append(diabloSGNode);
+}
 /*
   {
     //initialize wall
@@ -425,9 +442,13 @@ function render(timeInMilliseconds) {
   //get inverse view matrix to allow computing eye-to-light matrix
   context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
 
+  diabloSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.5, -2.5));
+  diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));
+
   translateCamera.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.05, -0.2, 0));
   translateTorch.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.05, -0.2, -5.0));
   //render scenegraph
+
   root.render(context);
 
   //animate
