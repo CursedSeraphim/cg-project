@@ -280,7 +280,7 @@ class FireSGNode extends TransformationSGNode {
 
       //if particle gets invisible e.g. all its energy is used, remove it
       if(particle.color[3] <= 0.0 || particle.size <= 0.0) {
-        this.fireParticles.splice(i, 0.5);
+        this.fireParticles.splice(i, 1);
       }else {
         this.addToGlBuffer(particle, partPosGlBuffer, colorGlBuffer, sizeGlBuffer);
       }

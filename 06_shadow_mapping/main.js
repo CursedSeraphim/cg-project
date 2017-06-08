@@ -48,6 +48,7 @@ var diceTexture;
 var floorTexture;
 var cobbleTexture;
 var lavaTexture;
+var diabloImage;
 
 //framebuffer variables
 var renderTargetFramebuffer;
@@ -74,7 +75,8 @@ loadResources({
   diceTexture: 'models/diemap.jpg',
   floorTexture: 'models/floor_cobble.jpg',
   stoaqTexture: 'models/stoaquad.jpg',
-  cobbleTexture: 'models/black_cobble_rotated.jpg'
+  cobbleTexture: 'models/black_cobble_rotated.jpg',
+  diabloImage: 'models/diablo.png'
 }).then(function (resources /*an object containing our keys with the loaded resources*/) {
   init(resources);
 
@@ -91,6 +93,7 @@ function init(resources) {
   lavaTexture  = initTextures(resources.lavaTexture , gl.REPEAT);
   diceTexture = initTextures(resources.diceTexture, gl.CLAMP_TO_EDGE);
   cobbleTexture = initTextures(resources.cobbleTexture, gl.REPEAT);
+  diabloImage = initTextures(resources.diabloImage, gl.CLAMP_TO_EDGE);
   //initRenderToTexture();
 
   gl.enable(gl.DEPTH_TEST);
@@ -295,6 +298,18 @@ function createSceneGraph(gl, resources) {
     ]));
   }
 */
+
+{
+  let diablo = new MaterialSGNode(new TextureSGNode(diabloImage, 0, new RenderSGNode(makeFloor(2, 2, 1))));//asdasdasd
+  diablo.ambient = [0.6, 0.6, 0.6, 1];
+  diablo.diffuse = [0.5, 0.5, 0.5, 1];
+  diablo.specular = [0.1, 0.1, 0.1, 1];
+  diablo.shininess = 1.0;
+
+  shadowNode.append(new TransformationSGNode(glm.transform({ translate: [-9.5,3,0], rotateY: 90, rotateX: 180, scale: 1.5}), [
+    diablo
+  ]));
+}
 /*
   {
     //initialize wall
