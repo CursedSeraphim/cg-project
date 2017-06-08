@@ -102,119 +102,249 @@ class ShadowSGNode extends SGNode {
   }
 }
 
+function time() {
+  var d = new Date();
+  var n = d.getTime();
+  return n;
+}
+
 class FireSGNode extends TransformationSGNode {
 
-  constructor(partCnt, partSize, fuelWidth, velocity, position, children) {
+  constructor(partSize, fuelSize, position, children) {
     super(position, children);
 
-    this.partCnt = partCnt;
     this.partSize = partSize;
-    this.initializes = false;
 
-    this.scalefactor = partSize/100
+    //this.scalefactor = partSize/100
+    // this.fuelSize = vec3.scale(vec3.create(), fuelSize, this.scalefactor);
+    this.fuelSize = fuelSize;
+    this.fireParticles = [];
+    this.sparkParticles = [];
+    this.isInit = false;
+    this.lastTime = time();
+    this.emmitAngle = 2;
+    this.sparkEmmitAngle = 1;
+    this.fireSpeed = 2.5;
+    this.sparkSpeed = 2.5;
+    this.speedVariance = 0.2;
+    this.sizeVariance = 0.5;
+    this.sparkEmmitRate = 0.97;
+    this.fireHeatDegreeRate = 0.015;
+    this.sparkHeatDegreeRate = 0.01;
+    this.fireCenterHeatDegreeRate = 0.09;
+    this.particleSizeReduction = 50.0;
+    this.fireRiseFactor = 0.1;
+    this.sparkRiseFactor = 0.005;
+  }
 
-    this.fuelWidth = vec3.scale(vec3.create(), fuelWidth, this.scalefactor);
-    this.velocity = vec3.scale(vec3.create(), velocity, this.scalefactor);
+  getRandomColor() {
+    return [Math.random()*0.5+0.5, Math.random()*0.5, Math.random()*0.1, 1.0];
+  }
 
-    var particles = [];
-    var position = [];
-    var color = [];
-    var freePart = [];
+  getRandomPosition(limits) {
+    return [limits[0]*Math.random()-limits[0]/2,
+            limits[1]*Math.random()-limits[1]/2,
+            limits[2]*Math.random()-limits[2]/2];
+  }
 
-    for(var i = 0; i < this.partCnt; i++) {
-      particles[i] = {};
-      particles[i].translate = [0.0,0.0,0.0];
-      particles[i].velocity = [0.0,0.0,0.0];
-      particles[i].heat = Math.random()*this.partSize;
-      /*get a small random start-position*/
-      position.push(this.fuelWidth[0]*Math.random()-this.fuelWidth[0]/2,
-                    this.fuelWidth[1]*Math.random()-this.fuelWidth[1]/2,
-                    this.fuelWidth[2]*Math.random()-this.fuelWidth[2]/2);
-      //position.push(0.0,3.0,5.0);
-      color.push(Math.random()*0.5+0.5, Math.random()*0.5, Math.random()*0.1, 1);
-      //color.push(1.0,0.0,0.0, 1.0);
-      freePart[i] = i;
+  getRandomVec3Upward(emmitAngle, scale) {
+    /*get a minimum uprising vector*/
+    var out = vec3.create();
+    out[0] = Math.random() * 2 - 1;
+    out[1] = emmitAngle + Math.random();
+    out[2] = Math.random() * 2 - 1;
+
+    vec3.normalize(out, out);
+    vec3.scale(out, out, scale);
+    return out;
+  }
+
+  createParticle(limits, size, sizeVariance, speed, emmitAngle) {
+    var particle = {};
+    var speed = speed + Math.random() * speed * this.speedVariance;
+    particle.size = size + Math.random() * size * sizeVariance;
+    particle.color = this.getRandomColor();
+    particle.position = this.getRandomPosition(limits);
+    particle.velocity = this.getRandomVec3Upward(emmitAngle, speed);
+
+    return particle;
+  }
+
+  getPosition(sceneMatrix) {
+    var pos = vec4.transformMat4(vec4.create(), vec4.fromValues(0.0,0.0,0.0,1.0), sceneMatrix);
+    return vec3.fromValues(pos[0], pos[1], pos[2]);
+  }
+
+  riseVectorUp(vector, factor) {
+    var oldSize = vec3.length(vector);
+    vector[1] += (vector[1]*factor);
+    var newSize = vec3.length(vector);
+    vec3.scale(vector, vector, oldSize/newSize);
+
+    return vector;
+  }
+
+  init(context) {
+    if(!this.isInit) {
+        this.isInit = true;
+        this.posBuffer = gl.createBuffer();
+        this.colorBuffer = gl.createBuffer();
+        this.sizeBuffer = gl.createBuffer();
+        this.a_position =  gl.getAttribLocation(context.shader, 'a_position');
+        this.a_color =  gl.getAttribLocation(context.shader, 'a_color');
+        this.a_size =  gl.getAttribLocation(context.shader, 'a_size');
+        this.u_modelView = gl.getUniformLocation(context.shader, 'u_modelView');
+        this.u_projection = gl.getUniformLocation(context.shader, 'u_projection');
+
+        this.u_moveCompensation = gl.getUniformLocation(context.shader, 'u_moveCompensation');
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
+        gl.enableVertexAttribArray(this.a_color);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.posBuffer);
+        gl.enableVertexAttribArray(this.a_position);
+
+        gl.bindBuffer(gl.ARRAY_BUFFER, this.sizeBuffer);
+        gl.enableVertexAttribArray(this.a_size);
+
+        this.moveVec = vec3.create();
+        this.oldPos = this.getPosition(context.sceneMatrix);
     }
-    this.particles = particles;
-    this.position = position;
-    this.color = color;
-    this.freePart = freePart;
-    this.active = [];
+  }
+
+  addToGlBuffer(particle, posBuffer, colorBuffer, sizeBuffer) {
+    posBuffer.push(particle.position[0],particle.position[1],particle.position[2]);
+    colorBuffer.push(particle.color[0],particle.color[1],particle.color[2],particle.color[3]);
+    sizeBuffer.push(particle.size);
   }
 
   render(context) {
-    gl.depthFunc(gl.LEQUAL);
-    gl.enable(gl.BLEND);
+    this.init(context);
+
+    //gl.depthFunc(gl.LEQUAL);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
+    gl.disable(gl.DEPTH_TEST);
+    gl.enable(gl.BLEND);
 
-    var posShader = gl.getAttribLocation(context.shader, 'a_position');
-    gl.bindBuffer(gl.ARRAY_BUFFER, null);
-    var pos = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, pos);
-    var arr = new Float32Array(this.position);
-    gl.bufferData(gl.ARRAY_BUFFER, arr, gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(posShader);
-    gl.vertexAttribPointer(posShader, 3, gl.FLOAT, false, 0, 0);
+    var timeDiff = (time() - this.lastTime);
 
-    var colShader = gl.getAttribLocation(context.shader, 'a_color');
-    var col = gl.createBuffer();
-    gl.bindBuffer(gl.ARRAY_BUFFER, col);
-    var arr2 = new Float32Array(this.color);
-    gl.bufferData(gl.ARRAY_BUFFER, arr2, gl.STATIC_DRAW);
-    gl.enableVertexAttribArray(colShader);
-    gl.vertexAttribPointer(colShader, 4, gl.FLOAT, false, 0, 0);
+    if(timeDiff > 100)
+      timeDiff = 100;
 
-    var modelViewMatrix = mat4.multiply(mat4.create(), context.viewMatrix, context.sceneMatrix);
-    gl.uniformMatrix4fv(gl.getUniformLocation(context.shader, 'u_projection'), false, context.projectionMatrix);
-    gl.uniformMatrix4fv(gl.getUniformLocation(context.shader, 'u_modelView'), false, modelViewMatrix);
-    /*get some free particles*/
-    for(var i = 0; i < 100; i++){
-        if(this.freePart.length <= 0)
-         break;
-        var index = this.freePart.pop();
+    var timeS = timeDiff/1000.0;
 
-        this.active.push(index);
-        this.particles[index].translate = [0.0, 0.0, 0.0];
-        this.particles[index].velocity = [Math.random()*this.velocity[0]-this.velocity[0]/2,
-                                          Math.random()*0.1*this.scalefactor-0.07*this.scalefactor,
-                                          Math.random()*this.velocity[2]-this.velocity[0]/2];
-        this.particles[index].heat = Math.random()*this.partSize + this.partSize*0.4;
+    var partPosGlBuffer = [];
+    var colorGlBuffer = [];
+    var sizeGlBuffer = [];
+
+    /*create new particles*/
+    for(var i = 0; i < 500*timeS; i++){
+      this.fireParticles.push(this.createParticle(this.fuelSize ,this.partSize, this.sizeVariance, this.fireSpeed, this.emmitAngle));
     }
 
-    var partHeat = gl.getUniformLocation(context.shader, 'v_heat');
-    var veloMat = gl.getUniformLocation(context.shader, 'u_veloMat');
+    if(Math.random() > this.sparkEmmitRate)
+      this.sparkParticles.push(this.createParticle(this.fuelSize, this.partSize/5, this.sizeVariance, this.sparkSpeed, this.sparkEmmitAngle));
 
-    var i = this.active.length;
-    while(i--){
-        var index = this.active[i];
-        var particle = this.particles[index];
-        particle.translate[0] += particle.velocity[0];
-        particle.translate[1] += particle.velocity[1];
-        particle.translate[2] += particle.velocity[2];
+    //calculate the center of the fire, so particles far away from the center
+    //die sooner, since there is less "heat"
+    var center = vec3.create();
+    for(var i = 0; i<this.fireParticles.length;i++) {
+      vec3.add(center, center, this.fireParticles[i].position);
+    }
+    vec3.scale(center, center, 1.0/this.fireParticles.length);
 
-        particle.velocity[0] += -(this.position[index*3]+particle.translate[0])/(particle.heat);
-        particle.velocity[1] += this.velocity[1];
-        particle.velocity[2] += -(this.position[index*3+2]+particle.translate[2])/(particle.heat);
-        particle.heat -= 3.5*this.scalefactor;
+    //move all particles in der direction
+    for(var i = 0; i<this.fireParticles.length;i++) {
+      var particle = this.fireParticles[i];
 
-        if(particle.heat < 0){
-            this.active.splice(i,1);
-            this.freePart.push(index);
-            continue;
-        }
+      //TODO generate some random wind for each particle
+      var wind = vec3.create();
+      vec3.add(particle.velocity, particle.velocity, wind);
 
+      //add constant uprising but speed stays the same (length)
+      particle.velocity = this.riseVectorUp(particle.velocity, this.fireRiseFactor);
 
-        var velo = mat4.translate(mat4.create(), mat4.create(), particle.translate);
-        //var finalViewMatrix = mat4.multiply(mat4.create(), modelViewMatrix, velo);
+      var vel = vec3.add(vec3.create(), particle.velocity, this.moveVec);
+      //change position of the particle
+      vec3.add(particle.position, particle.position, vec3.scale(vec3.create(), vel, timeS));
 
-        gl.uniform1f(partHeat, particle.heat);
-        gl.uniformMatrix4fv(veloMat, false, velo);
+      var xDistance = particle.position[0] - center[0];
+      var zDistance = particle.position[2] - center[2];
 
-        gl.drawArrays(gl.POINTS, 0, this.particles.length);
+      //when the particle distances itself from the center, it gets less bright
+      //correct solution
+      var distanceToCenter = Math.sqrt((xDistance*xDistance + zDistance*zDistance));
+      //fast solution
+      //var distanceToCenter = xDistance + zDistance;
+      particle.color[3] -= (this.fireHeatDegreeRate + Math.abs(distanceToCenter)*this.fireCenterHeatDegreeRate);
+      particle.size -= (particle.size/this.particleSizeReduction + Math.abs(distanceToCenter)*particle.size/(this.particleSizeReduction*2));
+
+      //if particle gets invisible e.g. all its energy is used, remove it
+      if(particle.color[3] <= 0.0 || particle.size <= 0.0) {
+        this.fireParticles.splice(i, 0.5);
+      }else {
+        this.addToGlBuffer(particle, partPosGlBuffer, colorGlBuffer, sizeGlBuffer);
+      }
     }
 
-    gl.disable(gl.BLEND);
+    //move all particles in der direction
+    for(var i = 0; i<this.sparkParticles.length;i++) {
+      var particle = this.sparkParticles[i];
+
+      //TODO generate some random wind for each particle
+      var wind = vec3.fromValues(0,0,0);
+      //add wind to velocity
+      vec3.add(particle.velocity, particle.velocity, wind);
+
+      particle.velocity = this.riseVectorUp(particle.velocity, this.sparkRiseFactor);
+
+      //let the particles randomly flicker around a bit
+      //vec3.add(particle.velocity, particle.velocity, vec3.random(vec3.create(), 0.001));
+      vec3.add(particle.position, particle.position, vec3.scale(vec3.create(), particle.velocity, timeS));
+
+      particle.color[3] -= (this.sparkHeatDegreeRate + this.sparkHeatDegreeRate * Math.random());
+
+      //if particle gets invisible e.g. all its energy is used, remove it
+      if(particle.color[3] <= 0.0) {
+        this.sparkParticles.splice(i, 1);
+      }else {
+        this.addToGlBuffer(particle, partPosGlBuffer, colorGlBuffer, sizeGlBuffer);
+      }
+    }
+
+    //calculate the movement since last
+    var actPosition = this.getPosition(context.sceneMatrix);
+    var moveVec = vec3.subtract(vec3.create(), this.oldPos, actPosition);
+    vec3.scale(moveVec, moveVec, 1);
+
+    this.oldPos = actPosition;
+    this.moveVec = moveVec;
+
+    //Bind buffers used
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.posBuffer);
+    gl.vertexAttribPointer(this.a_position, 3, gl.FLOAT, false, 0, 0);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(partPosGlBuffer), gl.STATIC_DRAW);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
+    gl.vertexAttribPointer(this.a_color, 4, gl.FLOAT, false, 0, 0);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colorGlBuffer), gl.STATIC_DRAW);
+
+    gl.bindBuffer(gl.ARRAY_BUFFER, this.sizeBuffer);
+    gl.vertexAttribPointer(this.a_size, 1, gl.FLOAT, false, 0, 0);
+    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(sizeGlBuffer), gl.STATIC_DRAW);
+
+    var modelViewMatrix = mat4.multiply(mat4.create(),mat4.create()/* glm.translate(moveVec[0],moveVec[1], moveVec[2])*/, context.sceneMatrix);
+    modelViewMatrix = mat4.multiply(modelViewMatrix, context.viewMatrix, modelViewMatrix);
+    gl.uniformMatrix4fv(this.u_projection, false, context.projectionMatrix);
+    gl.uniformMatrix4fv(this.u_modelView, false, modelViewMatrix);
+
+    gl.drawArrays(gl.POINTS, 0, sizeGlBuffer.length);
+
+    this.lastTime = time();
+
     super.render(context);
 
+    gl.disable(gl.BLEND);
+    gl.enable(gl.DEPTH_TEST);
   }
 }
