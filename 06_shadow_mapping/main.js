@@ -172,11 +172,10 @@ function createSceneGraph(gl, resources) {
     fireShaderNode.append(staticFireNode);
     fireTransNode.append(fireShaderNode);
 
-
+    root.append(shadowNode);
     root.append(fireTransNode);
     root.append(rotateLight);
-    
-    root.append(shadowNode);
+
 
     //shadowNode.append(translateLight);
   }

@@ -221,10 +221,9 @@ class FireSGNode extends TransformationSGNode {
   render(context) {
     this.init(context);
 
-    gl.depthFunc(gl.ALWAYS);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
-    //gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
+    gl.depthMask(false);
 
     var timeDiff = (time() - this.lastTime);
 
@@ -242,7 +241,7 @@ class FireSGNode extends TransformationSGNode {
       this.fireParticles.push(this.createParticle(this.fuelSize ,this.partSize, this.sizeVariance, this.fireSpeed, this.emmitAngle));
     }
 
-    if(Math.random() > this.sparkEmmitRate)
+    if(this.sparkParticles.length < 100 && Math.random() > this.sparkEmmitRate)
       this.sparkParticles.push(this.createParticle(this.fuelSize, this.partSize/5, this.sizeVariance, this.sparkSpeed, this.sparkEmmitAngle));
 
     //calculate the center of the fire, so particles far away from the center
@@ -345,7 +344,7 @@ class FireSGNode extends TransformationSGNode {
     super.render(context);
 
     gl.disable(gl.BLEND);
+    gl.depthMask(true);
     //gl.enable(gl.DEPTH_TEST);
-    gl.depthFunc(gl.LESS);
   }
 }
