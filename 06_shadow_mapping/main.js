@@ -174,7 +174,8 @@ function createSceneGraph(gl, resources) {
     //root.append(fireShaderNode);
     translateLight.append(new ShaderSGNode(fireShaderProgram, fireNode));
 
-    torchNode.append(new ShaderSGNode(fireShaderProgram, new FireSGNode(60, [0.5,0.2,0.5])));
+    var fn = new FireSGNode(20, [0.1,0.05,0.1]);
+    torchNode.append(new ShaderSGNode(fireShaderProgram, fn));
 
     fireTransNode.append(lightTest);
     fireShaderNode.append(staticFireNode);

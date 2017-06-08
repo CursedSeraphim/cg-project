@@ -115,7 +115,8 @@ class FireSGNode extends TransformationSGNode {
 
     this.partSize = partSize;
 
-    //this.scalefactor = partSize/100
+    this.scalefactor = 60/partSize;
+    this.invScalefactor = partSize/60;
     // this.fuelSize = vec3.scale(vec3.create(), fuelSize, this.scalefactor);
     this.fuelSize = fuelSize;
     this.fireParticles = [];
@@ -124,13 +125,13 @@ class FireSGNode extends TransformationSGNode {
     this.lastTime = time();
     this.emmitAngle = 2;
     this.sparkEmmitAngle = 1;
-    this.fireSpeed = 2.5;
-    this.sparkSpeed = 2.5;
+    this.fireSpeed = 2.5*this.invScalefactor;
+    this.sparkSpeed = 2.5*this.invScalefactor;
     this.speedVariance = 0.2;
     this.sizeVariance = 0.5;
     this.sparkEmmitRate = 0.97;
-    this.fireHeatDegreeRate = 0.015;
-    this.sparkHeatDegreeRate = 0.01;
+    this.fireHeatDegreeRate = 0.015*this.scalefactor;
+    this.sparkHeatDegreeRate = 0.01*this.scalefactor;
     this.fireCenterHeatDegreeRate = 0.09;
     this.particleSizeReduction = 50.0;
     this.fireRiseFactor = 0.1;
