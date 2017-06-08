@@ -257,7 +257,7 @@ function createSceneGraph(gl, resources) {
   shadowNode.append(rotateNode);
   shadowNode.append(mapFloor);
   shadowNode.append(mapCobble);
-  rotateNode.append(  new TransformationSGNode(glm.rotateY(15) , new TransformationSGNode(glm.translate(0, 1, 0),  [
+  rotateNode.append(  new TransformationSGNode(glm.rotateY(15) , new TransformationSGNode(glm.translate(0, 1.25, 0),  [
       cube
     ])));
 }
