@@ -124,13 +124,13 @@ class FireSGNode extends TransformationSGNode {
     this.lastTime = time();
     this.emmitAngle = 2;
     this.sparkEmmitAngle = 1;
-    this.fireSpeed = 2;
-    this.sparkSpeed = 1.5;
+    this.fireSpeed = 2.5;
+    this.sparkSpeed = 2.5;
     this.speedVariance = 0.2;
     this.sizeVariance = 0.5;
     this.sparkEmmitRate = 0.97;
-    this.fireHeatDegreeRate = 0.01;
-    this.sparkHeatDegreeRate = 0.005;
+    this.fireHeatDegreeRate = 0.015;
+    this.sparkHeatDegreeRate = 0.01;
     this.fireCenterHeatDegreeRate = 0.09;
     this.particleSizeReduction = 50.0;
     this.fireRiseFactor = 0.1;
