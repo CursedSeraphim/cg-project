@@ -35,6 +35,8 @@ var torchNode;
 var translateTorch;
 var translateLightTest;
 
+var fireShaderProgram;
+
 var fireNode;
 
 var translate;
@@ -85,6 +87,7 @@ function init(resources) {
   //create a GL context
   gl = createContext(400, 400);
   cameraPosition = vec3.set(vec3.create(), 3, -1, -10);
+  fireShaderProgram = createProgram(gl, resources.vs_fire, resources.fs_fire);
   //cameraPosition = vec3.set(vec3.create(), 0, 0, 0);
 
   floorTexture = initTextures(resources.floorTexture, gl.REPEAT);
@@ -150,7 +153,6 @@ function createSceneGraph(gl, resources) {
     translateTorch.append(torchNode);
     //translateTorch.append(createLightSphere()); //for debugging
     shadowNode.append(translateCamera);
-    shadowNode.append(translateTorch);
 
     rotateLight.append(translateLight);
     translateLight.append(lightNode);
@@ -158,15 +160,17 @@ function createSceneGraph(gl, resources) {
     //shadowNode.append(rotateLight);
 
     fireNode = new FireSGNode(60, [0.5,0.2,0.5]);
-    var fireShaderNode = new ShaderSGNode(createProgram(gl, resources.vs_fire, resources.fs_fire));
+    var fireShaderNode = new ShaderSGNode();
 
     var staticFireNode = new FireSGNode(60, [0.5,0.2,0.5]);
     var fireTransNode = new TransformationSGNode(glm.translate(-3, 1, 2));
-    var fireShaderNode = new ShaderSGNode(createProgram(gl, resources.vs_fire, resources.fs_fire));
+    var fireShaderNode = new ShaderSGNode(fireShaderProgram);
     //fireTransNode.append(fireNode);
     //fireShaderNode.append(fireTransNode);
     //root.append(fireShaderNode);
-    translateLight.append(new ShaderSGNode(createProgram(gl, resources.vs_fire, resources.fs_fire),fireNode));
+    translateLight.append(new ShaderSGNode(fireShaderProgram, fireNode));
+
+    torchNode.append(new ShaderSGNode(fireShaderProgram, new FireSGNode(60, [0.5,0.2,0.5])));
 
     fireTransNode.append(lightTest);
     fireShaderNode.append(staticFireNode);
@@ -175,6 +179,7 @@ function createSceneGraph(gl, resources) {
     root.append(shadowNode);
     root.append(fireTransNode);
     root.append(rotateLight);
+    root.append(translateTorch);
 
 
     //shadowNode.append(translateLight);

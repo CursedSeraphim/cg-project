@@ -135,6 +135,7 @@ class FireSGNode extends TransformationSGNode {
     this.particleSizeReduction = 50.0;
     this.fireRiseFactor = 0.1;
     this.sparkRiseFactor = 0.005;
+    this.movementScaling = 20;
   }
 
   getRandomColor() {
@@ -175,10 +176,38 @@ class FireSGNode extends TransformationSGNode {
     return vec3.fromValues(pos[0], pos[1], pos[2]);
   }
 
+  getMovement(posVec, oldPosVec, sceneMatrix) {
+    /*we need negative direction (wind)*/
+    var moveVec = vec4.fromValues(oldPosVec[0] - posVec[0],
+                                  oldPosVec[1] - posVec[1],
+                                  oldPosVec[2] - posVec[2],
+                                  1);
+
+    /*multiply the vector with the inverse scene matrix
+      doing this will result in the movement from the pixel point of view
+      but this also includes the translations*/
+    var invSceneMatrix = mat4.invert(mat4.create(), sceneMatrix);
+
+    /*convert moveVec to objectViewVector containing translations*/
+    vec4.transformMat4(moveVec, moveVec, invSceneMatrix);
+
+    /*get the translations out of the inverseMatrix*/
+    var translations = vec4.fromValues(invSceneMatrix[12],invSceneMatrix[13],invSceneMatrix[14],1);
+
+    /*subtract the translation-part from the movevector*/
+    vec4.subtract(moveVec, moveVec, translations);
+
+    /*do some scaling, this values are pretty small*/
+    vec3.scale(moveVec, moveVec, this.movementScaling);
+    return vec3.fromValues(moveVec[0],moveVec[1],moveVec[2]);
+  }
+
   riseVectorUp(vector, factor) {
     var oldSize = vec3.length(vector);
     vector[1] += (vector[1]*factor);
     var newSize = vec3.length(vector);
+
+    /*dont let the speed increase*/
     vec3.scale(vector, vector, oldSize/newSize);
 
     return vector;
@@ -250,20 +279,24 @@ class FireSGNode extends TransformationSGNode {
     for(var i = 0; i<this.fireParticles.length;i++) {
       vec3.add(center, center, this.fireParticles[i].position);
     }
-    vec3.scale(center, center, 1.0/this.fireParticles.length);
+    vec3.scale(center, center, 1.0 / this.fireParticles.length);
+
+    //calculate the movement since last
+    var actPosition = this.getPosition(context.sceneMatrix);
+    var moveVec = this.getMovement(actPosition, this.oldPos, context.sceneMatrix);
 
     //move all particles in der direction
     for(var i = 0; i<this.fireParticles.length;i++) {
       var particle = this.fireParticles[i];
 
       //TODO generate some random wind for each particle
-      var wind = vec3.create();
+      var wind = vec3.fromValues(0,0,0);
       vec3.add(particle.velocity, particle.velocity, wind);
 
       //add constant uprising but speed stays the same (length)
       particle.velocity = this.riseVectorUp(particle.velocity, this.fireRiseFactor);
 
-      var vel = vec3.add(vec3.create(), particle.velocity, this.moveVec);
+      var vel = vec3.add(vec3.create(), particle.velocity, moveVec);
       //change position of the particle
       vec3.add(particle.position, particle.position, vec3.scale(vec3.create(), vel, timeS));
 
@@ -280,7 +313,7 @@ class FireSGNode extends TransformationSGNode {
 
       //if particle gets invisible e.g. all its energy is used, remove it
       if(particle.color[3] <= 0.0 || particle.size <= 0.0) {
-        this.fireParticles.splice(i, 0.5);
+        this.fireParticles.splice(i, 1);
       }else {
         this.addToGlBuffer(particle, partPosGlBuffer, colorGlBuffer, sizeGlBuffer);
       }
@@ -311,13 +344,7 @@ class FireSGNode extends TransformationSGNode {
       }
     }
 
-    //calculate the movement since last
-    var actPosition = this.getPosition(context.sceneMatrix);
-    var moveVec = vec3.subtract(vec3.create(), this.oldPos, actPosition);
-    vec3.scale(moveVec, moveVec, 1);
-
     this.oldPos = actPosition;
-    this.moveVec = moveVec;
 
     //Bind buffers used
     gl.bindBuffer(gl.ARRAY_BUFFER, this.posBuffer);
@@ -332,12 +359,14 @@ class FireSGNode extends TransformationSGNode {
     gl.vertexAttribPointer(this.a_size, 1, gl.FLOAT, false, 0, 0);
     gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(sizeGlBuffer), gl.STATIC_DRAW);
 
-    var modelViewMatrix = mat4.multiply(mat4.create(),mat4.create()/* glm.translate(moveVec[0],moveVec[1], moveVec[2])*/, context.sceneMatrix);
-    modelViewMatrix = mat4.multiply(modelViewMatrix, context.viewMatrix, modelViewMatrix);
+    var modelViewMatrix = mat4.multiply(mat4.create(), context.viewMatrix, context.sceneMatrix);
+
     gl.uniformMatrix4fv(this.u_projection, false, context.projectionMatrix);
     gl.uniformMatrix4fv(this.u_modelView, false, modelViewMatrix);
 
     gl.drawArrays(gl.POINTS, 0, sizeGlBuffer.length);
+
+    console.log(sizeGlBuffer.length + ' | ' + this.sparkParticles.length + ' | ' + this.fireParticles.length);
 
     this.lastTime = time();
 
