@@ -221,9 +221,9 @@ class FireSGNode extends TransformationSGNode {
   render(context) {
     this.init(context);
 
-    //gl.depthFunc(gl.LEQUAL);
+    gl.depthFunc(gl.ALWAYS);
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
-    gl.disable(gl.DEPTH_TEST);
+    //gl.disable(gl.DEPTH_TEST);
     gl.enable(gl.BLEND);
 
     var timeDiff = (time() - this.lastTime);
@@ -345,6 +345,7 @@ class FireSGNode extends TransformationSGNode {
     super.render(context);
 
     gl.disable(gl.BLEND);
-    gl.enable(gl.DEPTH_TEST);
+    //gl.enable(gl.DEPTH_TEST);
+    gl.depthFunc(gl.LESS);
   }
 }

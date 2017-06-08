@@ -97,10 +97,6 @@ function init(resources) {
   //create scenegraph
   root = createSceneGraph(gl, resources);
 
-  //create scenegraph without floor and simple shader
-  rootnofloor = new ShaderSGNode(createProgram(gl, resources.vs_single, resources.fs_single));
-  rootnofloor.append(rotateNode); //reuse model part
-
   initInteraction(gl.canvas);
 }
 
@@ -109,8 +105,8 @@ function createSceneGraph(gl, resources) {
   const root = new ShaderSGNode(createProgram(gl, resources.vs_shadow, resources.fs_shadow));
   //const root = new ShaderSGNode(createProgram(gl, resources.vs_single, resources.fs_single));
   //add node for setting shadow parameters
-  shadowNode = new ShadowSGNode(renderTargetDepthTexture,3,framebufferWidth,framebufferHeight);
-  root.append(shadowNode);
+  shadowNode = new TransformationSGNode(mat4.create());
+
   //light debug helper function
   function createLightSphere() {
     return new ShaderSGNode(createProgram(gl, resources.vs_single, resources.fs_single), [
@@ -120,10 +116,10 @@ function createSceneGraph(gl, resources) {
 
   {
     //initialize light
-    lightNode = new LightSGNode(); //use now framework implementation of light node
-    lightNode.ambient = [0.0,0.0,0.0,1];//[0.2, 0.2, 0.2, 1];
-    lightNode.diffuse = [0.0,0.0,0.0,1];//[0.5, 0.5, 0.5, 1];
-    lightNode.specular = [0.0,0.0,0.0,1];//[1, 1, 1, 1];
+    lightNode = new TorchSGNode(); //use now framework implementation of light node
+    lightNode.ambientOrig = [0.0,0.0,0.0,1];//[0.2, 0.2, 0.2, 1];
+    lightNode.diffuseOrig = [0.6,0.3,0.05,1];//[0.5, 0.5, 0.5, 1];
+    lightNode.specularOrig = [0.0,0.0,0.0,1];//[1, 1, 1, 1];
     lightNode.position = [0, 0, 0];
 
     rotateLight = new TransformationSGNode(mat4.create());
@@ -135,13 +131,12 @@ function createSceneGraph(gl, resources) {
     translateCamera = new TransformationSGNode(glm.translate(0, 0, 0));
 
     translateTorch = new TransformationSGNode(glm.translate(0, 0, 0));
-    torchNode = new LightSGNode();
-    torchNode.ambient = [0.01,0.01,0.01,1];//[0.2, 0.2, 0.2, 1];
-    torchNode.diffuse = [0.6,0.3,0.05,1];//[0.9, 0.8, 0.6, 1];
-    torchNode.specular = [0.0,0.0,0.0,1];//[0.9, 0.8, 0.6, 1];
+    torchNode = new TorchSGNode();
+    torchNode.ambientOrig = [0.01,0.01,0.01,1];//[0.2, 0.2, 0.2, 1];
+    torchNode.diffuseOrig = [0.6,0.3,0.05,1];//[0.9, 0.8, 0.6, 1];
+    torchNode.specularOrig = [0.0,0.0,0.0,1];//[0.9, 0.8, 0.6, 1];
     torchNode.position = [0, 0, 0];
 
-    translateLightTest = new TransformationSGNode(glm.translate(-3, 1, 2));
     lightTest = new TorchSGNode();
     lightTest.ambientOrig = [0.0,0.0,0.0,1];//[0.2, 0.2, 0.2, 1];
     lightTest.diffuseOrig = [0.6, 0.3, 0.05, 1];
@@ -160,14 +155,8 @@ function createSceneGraph(gl, resources) {
     translateLight.append(lightNode);
     //translateLight.append(createLightSphere()); //add sphere for debugging: since we use 0,0,0 as our light position the sphere is at the same position as the light source
     //shadowNode.append(rotateLight);
-    root.append(rotateLight);
-
-    translateLightTest.append(lightTest);
-    //translateLightTest.append(createLightSphere());
-    shadowNode.append(translateLightTest);
 
     fireNode = new FireSGNode(60, [0.5,0.2,0.5]);
-    var fireTransNode = new TransformationSGNode(glm.translate(-3, 1, 2));
     var fireShaderNode = new ShaderSGNode(createProgram(gl, resources.vs_fire, resources.fs_fire));
 
     var staticFireNode = new FireSGNode(60, [0.5,0.2,0.5]);
@@ -176,10 +165,18 @@ function createSceneGraph(gl, resources) {
     //fireTransNode.append(fireNode);
     //fireShaderNode.append(fireTransNode);
     //root.append(fireShaderNode);
-    translateLight.append(fireShaderNode);
-    fireShaderNode.append(fireNode);
+    translateLight.append(new ShaderSGNode(createProgram(gl, resources.vs_fire, resources.fs_fire),fireNode));
 
-    root.append(new ShaderSGNode(createProgram(gl, resources.vs_fire, resources.fs_fire), new TransformationSGNode(glm.translate(-3, 1, 2), staticFireNode)));
+    fireTransNode.append(lightTest);
+    fireShaderNode.append(staticFireNode);
+    fireTransNode.append(fireShaderNode);
+
+
+    root.append(fireTransNode);
+    root.append(rotateLight);
+    
+    root.append(shadowNode);
+
     //shadowNode.append(translateLight);
   }
 
