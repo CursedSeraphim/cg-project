@@ -304,7 +304,7 @@ class FireSGNode extends TransformationSGNode {
 
       particle.color[3] -= (this.sparkHeatDegreeRate + this.sparkHeatDegreeRate * Math.random());
 
-      //if particle gets invisible e.g. all its energy is used, remove it
+      //if particle becomes invisible e.g. all its energy is used, remove it
       if(particle.color[3] <= 0.0) {
         this.sparkParticles.splice(i, 1);
       }else {
