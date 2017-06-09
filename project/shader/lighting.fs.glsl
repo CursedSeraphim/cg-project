@@ -94,5 +94,6 @@ void main (void) {
   }
 
 	gl_FragColor = calculateSimplePointLight(u_light, u_material, v_lightVec, v_normalVec, v_eyeVec, textureColor, u_nrOfLights);
+	gl_FragColor[3] = textureColor.a;
 
 }

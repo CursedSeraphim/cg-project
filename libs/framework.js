@@ -763,6 +763,9 @@ class AdvancedTextureSGNode extends SGNode {
   }
 
   render(context) {
+    gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
+    gl.enable(gl.BLEND);
+
     if (this.textureId < 0) {
       this.init(context.gl);
     }
@@ -779,6 +782,7 @@ class AdvancedTextureSGNode extends SGNode {
     //clean up
     gl.activeTexture(gl.TEXTURE0 + this.textureunit);
     gl.bindTexture(gl.TEXTURE_2D, null);
+    gl.disable(gl.BLEND);
   }
 }
 

@@ -138,24 +138,24 @@ function createSceneGraph(gl, resources) {
 
     /*Init Light*/
     let torchNode = new TorchSGNode();
-    torchNode.ambientOrig = [0.01,0.01,0.01,1];
-    torchNode.diffuseOrig = [0.6,0.3,0.05,1];
-    torchNode.specularOrig = [0,0,0,1];
+    torchNode.ambientOrig = [0.01,0.01,0.01,1.0];
+    torchNode.diffuseOrig = [0.6,0.3,0.05,1.0];
+    torchNode.specularOrig = [0,0,0,1.0];
     torchNode.position = [0, 0, 0];
     torchNode.shininess = 0;
 
 
     /*LIGHT TEST NODES*/
     let lightNode = new TorchSGNode();
-    lightNode.ambientOrig = [0.0,0.0,0.0,1];//[0.2, 0.2, 0.2, 1];
-    lightNode.diffuseOrig = [0.6,0.3,0.05,1];//[0.5, 0.5, 0.5, 1];
-    lightNode.specularOrig = [0.0,0.0,0.0,1];//[1, 1, 1, 1];
+    lightNode.ambientOrig = [0.0,0.0,0.0,1.0];//[0.2, 0.2, 0.2, 1];
+    lightNode.diffuseOrig = [0.6,0.3,0.05,1.0];//[0.5, 0.5, 0.5, 1];
+    lightNode.specularOrig = [0.0,0.0,0.0,1.0];//[1, 1, 1, 1];
     lightNode.position = [0, 0, 0];
 
     let lightTest = new TorchSGNode();
-    lightTest.ambientOrig = [0.0,0.0,0.0,1];//[0.2, 0.2, 0.2, 1];
-    lightTest.diffuseOrig = [0.6, 0.3, 0.05, 1];
-    lightTest.specularOrig = [0, 0, 0, 1];
+    lightTest.ambientOrig = [0.0,0.0,0.0,1.0];//[0.2, 0.2, 0.2, 1];
+    lightTest.diffuseOrig = [0.6, 0.3, 0.05, 1.0];
+    lightTest.specularOrig = [0, 0, 0, 1.0];
 
     /*Init Light Positions*/
     translateTorch = new TransformationSGNode(glm.translate(0, 0, 0));
