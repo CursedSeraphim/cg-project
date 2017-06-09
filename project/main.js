@@ -24,6 +24,10 @@ var lightingNodes;
 var translateTorch;
 var diabloSGNode;
 
+//waypoints
+var cubeWaypoints;
+var cubeWaypointIndex;
+
 /*DEBUG NODES*/
 var rotateNode;
 var rotateLight;
@@ -73,6 +77,15 @@ function init(resources) {
 
   /*set camera Start position*/
   cameraPosition = vec3.fromValues(3, -1, -10);
+
+  /*set waypoints*/
+  let waypoint1 = mat4.create();
+  waypoint1[12] = 7;
+  waypoint1[14] = 7;
+  let waypoint2 = mat4.create();
+  waypoint2[12] = -7;
+  cubeWaypointIndex = 0;
+  cubeWaypoints = [waypoint1, waypoint2, mat4.create()];
 
   /*initialize the shaderPrograms*/
   particleShaderProgram = createProgram(gl, resources.vs_particle, resources.fs_particle);
@@ -186,7 +199,7 @@ function createSceneGraph(gl, resources) {
           new RenderSGNode(resources.modelCube)
     ])));
   diabloTextureNode.append(rotateNode);
-  
+
   lightingNodes.append(cube)
 }
 
@@ -267,14 +280,62 @@ function initTextures(resources, clampType)
 
 }
 
+/*
+changes the objectMatrix towards a waypointMatrix of the waypointMatrixArray using the waypointIndex and a specified speed
+returns the current waypointIndex which might be incremented by the function when the current waypoint has been reached
+*/
+function moveUsingWaypoints(objectMatrix, waypointMatrixArray, waypointIndex, speed) {
+  var x = objectMatrix[12];
+  var y = objectMatrix[13];
+  var z = objectMatrix[14];
+
+  var waypointMatrix = waypointMatrixArray[waypointIndex];
+  var wx = waypointMatrix[12];
+  var wy = waypointMatrix[13];
+  var wz = waypointMatrix[14];
+
+  //distances
+  var dx = wx - x;
+  var dy = wy - y;
+  var dz = wz - z;
+  var distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
+
+  var f = Math.sqrt((speed * speed) / (dx * dx + dy * dy + dz * dz));
+  if(distance < speed) {
+    //if waypoint is reached
+    objectMatrix[12] = wx;
+    objectMatrix[13] = wy;
+    objectMatrix[14] = wz;
+    waypointIndex++;
+  } else {
+    //console.log("x changed from "+objectMatrix[12]);
+    objectMatrix[12] += dx*f;
+    //console.log("to "+objectMatrix[12]);
+    objectMatrix[13] += dy*f;
+    objectMatrix[14] += dz*f;
+  }
+  return waypointIndex;
+}
+
+function deg2rad(degrees) {
+  return degrees * Math.PI / 180;
+}
+
 //a scene graph node for setting texture parameters
 function render(timeInMilliseconds) {
   checkForWindowResize(gl);
 
   //update animations
-  rotateNode.matrix = glm.rotateY(timeInMilliseconds*-0.01);
+  //rotateNode.matrix = glm.rotateY(timeInMilliseconds*-0.01);
+  rotateNode.matrix = mat4.rotateY(mat4.create(), rotateNode.matrix, deg2rad(10));
   rotateLight.matrix = glm.rotateY(timeInMilliseconds*0.05);
-
+  //rotateNode.matrix[13] = 5;
+  //console.log("before: "+rotateNode.matrix[12]);
+  cubeWaypointIndex = moveUsingWaypoints(rotateNode.matrix, cubeWaypoints, cubeWaypointIndex, 0.1);
+  if(cubeWaypointIndex == cubeWaypoints.length) {
+    cubeWaypointIndex = 0;
+  }
+  //console.log("after: "+rotateNode.matrix[12]);
   //setup viewport
   gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
   gl.clearColor(0.9, 0.9, 0.9, 1.0);
@@ -318,8 +379,8 @@ function render(timeInMilliseconds) {
   diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));
 
   translateTorch.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.05, -0.2, -5.0));
-  //render scenegraph
 
+  //render scenegraph
   root.render(context);
 
   //animate
