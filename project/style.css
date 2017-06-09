@@ -1,6 +1,7 @@
 canvas {
     width: 98vw;
     height: 98vh;
+    background-color: #000000;
 }
 
 p {
