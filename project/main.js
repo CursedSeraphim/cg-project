@@ -302,7 +302,7 @@ function moveUsingWaypoints(objectMatrix, waypointMatrixArray, waypointIndex, sp
 
   var f = Math.sqrt((speed * speed) / (dx * dx + dy * dy + dz * dz));
   if(distance < speed) {
-    //if waypoint is reached
+    //if waypoint is reached (last step will only walk remaining distance and therefore might be slightly slower)
     objectMatrix[12] = wx;
     objectMatrix[13] = wy;
     objectMatrix[14] = wz;
