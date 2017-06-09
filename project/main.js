@@ -308,9 +308,7 @@ function moveUsingWaypoints(objectMatrix, waypointMatrixArray, waypointIndex, sp
     objectMatrix[14] = wz;
     waypointIndex++;
   } else {
-    //console.log("x changed from "+objectMatrix[12]);
     objectMatrix[12] += dx*f;
-    //console.log("to "+objectMatrix[12]);
     objectMatrix[13] += dy*f;
     objectMatrix[14] += dz*f;
   }
@@ -329,10 +327,9 @@ function render(timeInMilliseconds) {
   //rotateNode.matrix = glm.rotateY(timeInMilliseconds*-0.01);
   rotateNode.matrix = mat4.rotateY(mat4.create(), rotateNode.matrix, deg2rad(10));
   rotateLight.matrix = glm.rotateY(timeInMilliseconds*0.05);
-  //rotateNode.matrix[13] = 5;
-  //console.log("before: "+rotateNode.matrix[12]);
   cubeWaypointIndex = moveUsingWaypoints(rotateNode.matrix, cubeWaypoints, cubeWaypointIndex, 0.1);
   if(cubeWaypointIndex == cubeWaypoints.length) {
+    //makes the object patrol back to first waypoint
     cubeWaypointIndex = 0;
   }
   //console.log("after: "+rotateNode.matrix[12]);
