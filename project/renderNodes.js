@@ -92,19 +92,24 @@ function time() {
 }
 
 class BillboardSGNode extends TransformationSGNode {
-/*  cosntructor (matrix, children) {
+  constructor (matrix, children) {
     super(matrix, children);
-  }*/
+  }
 
   render(context) {
+    var prevMat = this.matrix;
 
     //var lookAt = mat4.lookAt(mat4.create(), [this.matrix[12], 0, this.matrix[14]], [context.invViewMatrix[12], 0, context.invViewMatrix[14]], [0, 1, 0]);
     var lookAt = mat4.lookAt(mat4.create(), [this.matrix[12], 0, this.matrix[14]], [context.invViewMatrix[12], 0, context.invViewMatrix[14]], [0, -1, 0]);
-    //var lookAt = mat4.lookAt(mat4.create(), [0, 0, 0], [0, 0, 0], [0, 1, 0]);
-    for(var i = 0; i < 12; i++){
+        //var lookAt = mat4.lookAt(mat4.create(), [0, 0, 0], [0, 0, 0], [0, 1, 0]);
+
+    for(var i = 0; i < 12; i++) {
       this.matrix[i] = lookAt[i];
     }
+    //mat4.multiply(this.matrix, this.matrix, lookAt);
     super.render(context);
+
+    this.matrix = prevMat;
   }
 }
 
@@ -173,8 +178,8 @@ class FireSGNode extends SGNode {
   }
 
   getPosition(sceneMatrix) {
-    var pos = vec4.transformMat4(vec4.create(), vec4.fromValues(0.0,0.0,0.0,1.0), sceneMatrix);
-    return vec3.fromValues(pos[0], pos[1], pos[2]);
+    var pos = vec3.transformMat4(vec3.create(), vec3.create(), sceneMatrix);
+    return pos;
   }
 
   getMovement(posVec, oldPosVec, sceneMatrix) {
@@ -248,16 +253,13 @@ class FireSGNode extends SGNode {
 
   render(context) {
     var sceneMatrix;
-    if(this.posSGNode != null) {
+    if(this.posSGNode != null)
       sceneMatrix = this.posSGNode.matrix;
-    }
     else
       sceneMatrix = context.sceneMatrix;
 
     this.init(context, sceneMatrix);
 
-    gl.blendFunc(gl.SRC_ALPHA, gl.ONE);
-    gl.enable(gl.BLEND);
     gl.depthMask(false);
 
     var timeDiff = (time() - this.lastTime);
@@ -376,7 +378,6 @@ class FireSGNode extends SGNode {
 
     super.render(context);
 
-    gl.disable(gl.BLEND);
     gl.depthMask(true);
   }
 
@@ -384,5 +385,99 @@ class FireSGNode extends SGNode {
     let posNode = new ParticlePositionSGNode();
     this.posSGNode = posNode;
     return posNode;
+  }
+}
+
+
+class Back2FrontSGNode extends SGNode {
+  constructor(children) {
+    super(children);
+  }
+
+  getRenderOrder(context, children) {
+    var renderListSort = [];
+
+    for(var i = 0; i < children.length; i++) {
+      renderListSort.push({
+        distance: this.getDistanceToCamera(context, children[i]),
+        child: children[i]
+      });
+    }
+
+    renderListSort.sort(function(a,b) {
+      return b.distance - a.distance;
+    });
+
+    return renderListSort;
+  }
+
+  getDistanceToCamera(context, child) {
+    var matrix = mat4.copy(mat4.create(), context.sceneMatrix);
+
+    this.getChildSceneMatrix(child, matrix);
+
+    var pos = vec3.fromValues(    matrix[12],
+                                  matrix[13],
+                                  matrix[14]);
+    var camPos = vec3.fromValues( context.invViewMatrix[12],
+                                  context.invViewMatrix[13],
+                                  context.invViewMatrix[14]);
+
+    vec3.subtract(pos, pos, camPos);
+    var distance = vec3.length(pos);
+
+    console.log(distance);
+
+    if(vec3.dot(context.lookAtVector, pos) < 0.0)
+      distance *= -1;
+
+    return distance;
+  }
+
+  getChildSceneMatrix(child, matrix) {
+    if(child.matrix != null) {
+      mat4.multiply(matrix, matrix, child.matrix);
+    }
+    parent = this;
+    child.children.forEach(function(c) {
+      parent.getChildSceneMatrix(c, matrix);
+    });
+  }
+
+  render(context) {
+    var renderList = this.getRenderOrder(context, this.children);
+    this.children = [];
+    var parent = this;
+    renderList.forEach(function(c) {
+      parent.children.push(c.child);
+    });
+
+    console.log(renderList);
+    super.render(context);
+  }
+}
+
+class BlendSgNode extends SGNode {
+  constructor(srcFunc, destFunc, children) {
+    super(children);
+    this.srcFunc = srcFunc;
+    this.destFunc = destFunc;
+  }
+
+  render(context) {
+    const gl = context.gl;
+
+    var enaDis = gl.getParameter(gl.BLEND);
+    var src = gl.getParameter(gl.BLEND_SRC_ALPHA);
+    var dest = gl.getParameter(gl.BLEND_DST_ALPHA);
+
+    gl.enable(gl.BLEND);
+    gl.blendFunc(this.srcFunc, this.destFunc);
+    super.render(context);
+    gl.blendFunc(src, dest);
+
+    if(!enaDis)
+      gl.disable(gl.BLEND);
+
   }
 }

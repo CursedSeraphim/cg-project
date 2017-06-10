@@ -22,6 +22,7 @@ var root = null;
 var particleNodes;
 var lightingNodes;
 var translateTorch;
+var b2fNodes;
 var diabloSGNode;
 
 //waypoints
@@ -134,10 +135,11 @@ function createSceneGraph(gl, resources) {
   //create scenegraph
   const root = new ShaderSGNode(createProgram(gl, resources.vs_lighting, resources.fs_lighting));
 
-  particleNodes = new ShaderSGNode(particleShaderProgram);
+  //particleNodes = new ShaderSGNode(particleShaderProgram);
   lightingNodes = new LightingSGNode();
+  b2fNodes = new Back2FrontSGNode();
 
-  root.append(lightingNodes);
+  root.append(new BlendSgNode(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, lightingNodes));
 
   //light debug helper function
   function createLightSphere() {
@@ -146,16 +148,22 @@ function createSceneGraph(gl, resources) {
     ]);
   }
 
+
+  function createParticleNode(size, area) {
+    return new ShaderSGNode(particleShaderProgram,
+      new BlendSgNode(gl.SRC_ALPHA, gl.ONE,
+        new FireSGNode(size, area))
+    );
+  }
+
   {
     /*Init Particles*/
-    let torchFireParticleNode  = new FireSGNode(100, [0.1,0.05,0.1]);
-    particleNodes.append(torchFireParticleNode);
+    let torchFireParticleNode  = createParticleNode(100, [0.1,0.05,0.1]);
+
 
     /*PARTICLE TEST NODES*/
-    let fireNode = new FireSGNode(300, [0.5,0.2,0.5]);
-    particleNodes.append(fireNode);
-    let staticFireNode = new FireSGNode(300, [0.5,0.2,0.5]);
-    particleNodes.append(staticFireNode);
+    let fireNode = createParticleNode(300, [0.5,0.2,0.5]);
+    let staticFireNode = createParticleNode(300, [0.5,0.2,0.5]);
 
     /*Init Light*/
     let torchNode = new TorchSGNode();
@@ -181,22 +189,22 @@ function createSceneGraph(gl, resources) {
     /*Init Light Positions*/
     translateTorch = new TransformationSGNode(glm.translate(0, 0, 0));
     translateTorch.append(torchNode);
-    translateTorch.append(torchFireParticleNode.getPositionSGNode());
-    lightingNodes.append(translateTorch);
+    translateTorch.append(torchFireParticleNode);
+    b2fNodes.append(translateTorch);
 
     /*POSITION TEST NODES*/
     rotateLight = new TransformationSGNode(mat4.create());
     let translateLight = new TransformationSGNode(glm.translate(0,3,8)); //translating the light is the same as setting the light position
     translateLight.append(lightNode);
-    translateLight.append(fireNode.getPositionSGNode());
+    translateLight.append(fireNode);
+    //translateLight.append(fireNode);
     rotateLight.append(translateLight);
-    lightingNodes.append(rotateLight);
+    b2fNodes.append(rotateLight);
 
     let fireTransNode = new TransformationSGNode(glm.translate(-3, 1, 2));
-    translateLight.append(new ShaderSGNode(particleShaderProgram, fireNode));
-    fireTransNode.append(staticFireNode.getPositionSGNode());
+    fireTransNode.append(staticFireNode);
     fireTransNode.append(lightTest);
-    lightingNodes.append(fireTransNode);
+    b2fNodes.append(fireTransNode);
 }
 
 /*Place the interior of the dungeon*/
@@ -219,9 +227,9 @@ function createSceneGraph(gl, resources) {
         new TransformationSGNode(glm.translate(0, 1.25, 0),  [
           new RenderSGNode(resources.modelCube)
     ])));
-  diabloTextureNode.append(rotateNode);
+  b2fNodes.append(rotateNode);
 
-  lightingNodes.append(cube)
+  //lightingNodes.append(cube)
 }
 
 /*Place the Dungeon Layout, e.g. walls, floor,...*/
@@ -247,24 +255,26 @@ function createSceneGraph(gl, resources) {
 
 /*Add diablo*/
 {
-  let diablo = new MaterialSGNode(diabloTextureNode);
-  diablo.ambient = [0.6, 0.6, 0.6, 1];
-  diablo.diffuse = [0.5, 0.5, 0.5, 1];
-  diablo.specular = [0.1, 0.1, 0.1, 1];
-  diablo.shininess = 1.0;
+  // let diablo = new MaterialSGNode(diabloSGNode);
+  // diablo.ambient = [0.6, 0.6, 0.6, 1];
+  // diablo.diffuse = [0.5, 0.5, 0.5, 1];
+  // diablo.specular = [0.1, 0.1, 0.1, 1];
+  // diablo.shininess = 1.0;
 
   var rect = makeFloor(2, 2, 1)
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
-  diabloSGNode = new BillboardSGNode(glm.transform({ translate: [2,3,2], scale: 1.5}), [
+  diabloSGNode = new BillboardSGNode(glm.transform({translate: [2,3,2]}), [
     new RenderSGNode(rect)
   ]);
-  diabloTextureNode.append(diabloSGNode);
-  lightingNodes.append(diablo);
+  b2fNodes.append(diabloSGNode);
+  diabloTextureNode.append(b2fNodes);
 }
 
-  root.append(particleNodes);
+lightingNodes.append(diabloTextureNode);
+  //lightingNodes.append(b2fNodes);
+  //root.append(particleNodes);
   return root;
 }
 
@@ -357,7 +367,7 @@ function render(timeInMilliseconds) {
     //makes the object patrol back to first waypoint
     cubeWaypointIndex = 0;
   }
-  diabloWaypointIndex = moveUsingWaypoints(diabloSGNode.matrix, diabloWaypoints, diabloWaypointIndex, 0.1);
+   diabloWaypointIndex = moveUsingWaypoints(diabloSGNode.matrix, diabloWaypoints, diabloWaypointIndex, 0.1);
   if(diabloWaypointIndex == diabloWaypoints.length) {
     //makes the object patrol back to first waypoint
     diabloWaypointIndex = 0;
@@ -398,7 +408,7 @@ function render(timeInMilliseconds) {
     cameraPosition = vec3.subtract(vec3.create(), cameraPosition, vec3.scale(vec3.create(), crossLookAtVector, 0.25));
   }
   context.viewMatrix = mat4.multiply(mat4.create(), mouseRotateMatrix, glm.translate(cameraPosition[0], cameraPosition[1], cameraPosition[2]));
-
+  context.lookAtVector = lookAtVector;
   //get inverse view matrix to allow computing eye-to-light matrix
   context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
 
