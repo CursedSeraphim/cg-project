@@ -232,7 +232,7 @@ function createSceneGraph(gl, resources) {
   diablo.specular = [0.1, 0.1, 0.1, 1];
   diablo.shininess = 1.0;
 
-  diabloSGNode = new TransformationSGNode(glm.transform({ translate: [-9.5,3,0], rotateY: 90, rotateX: 180, scale: 1.5}), [
+  diabloSGNode = new BillboardSGNode(glm.transform({ translate: [2,3,2], scale: 1.5}), [
     new RenderSGNode(makeFloor(2, 2, 1))
   ]);
   diabloTextureNode.append(diabloSGNode);
@@ -372,11 +372,12 @@ function render(timeInMilliseconds) {
   //get inverse view matrix to allow computing eye-to-light matrix
   context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
 
+/* moving diablo to camera
   diabloSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.5, -2.5));
   diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));
+*/
 
   translateTorch.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.05, -0.2, -5.0));
-
   //render scenegraph
   root.render(context);
 
