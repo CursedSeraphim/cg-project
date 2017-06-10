@@ -27,6 +27,8 @@ var diabloSGNode;
 //waypoints
 var cubeWaypoints;
 var cubeWaypointIndex;
+var diabloWaypoints;
+var diabloWaypointIndex;
 
 /*DEBUG NODES*/
 var rotateNode;
@@ -86,6 +88,25 @@ function init(resources) {
   waypoint2[12] = -7;
   cubeWaypointIndex = 0;
   cubeWaypoints = [waypoint1, waypoint2, mat4.create()];
+
+  let waypointd1 = mat4.create();
+  waypointd1[12] = -3;
+  waypointd1[13] = 3;
+  waypointd1[14] = -3;
+  let waypointd2 = mat4.create();
+  waypointd2[12] = 3;
+  waypointd2[13] = 3;
+  waypointd2[14] = -3;
+  let waypointd3 = mat4.create();
+  waypointd3[12] = 3;
+  waypointd3[13] = 3;
+  waypointd3[14] = 3;
+  let waypointd4 = mat4.create();
+  waypointd4[12] = -3;
+  waypointd4[13] = 3;
+  waypointd4[14] = 3;
+  diabloWaypointIndex = 0;
+  diabloWaypoints = [waypointd1, waypointd2, waypointd3, waypointd4];
 
   /*initialize the shaderPrograms*/
   particleShaderProgram = createProgram(gl, resources.vs_particle, resources.fs_particle);
@@ -232,8 +253,12 @@ function createSceneGraph(gl, resources) {
   diablo.specular = [0.1, 0.1, 0.1, 1];
   diablo.shininess = 1.0;
 
+  var rect = makeFloor(2, 2, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
   diabloSGNode = new BillboardSGNode(glm.transform({ translate: [2,3,2], scale: 1.5}), [
-    new RenderSGNode(makeFloor(2, 2, 1))
+    new RenderSGNode(rect)
   ]);
   diabloTextureNode.append(diabloSGNode);
   lightingNodes.append(diablo);
@@ -331,6 +356,11 @@ function render(timeInMilliseconds) {
   if(cubeWaypointIndex == cubeWaypoints.length) {
     //makes the object patrol back to first waypoint
     cubeWaypointIndex = 0;
+  }
+  diabloWaypointIndex = moveUsingWaypoints(diabloSGNode.matrix, diabloWaypoints, diabloWaypointIndex, 0.1);
+  if(diabloWaypointIndex == diabloWaypoints.length) {
+    //makes the object patrol back to first waypoint
+    diabloWaypointIndex = 0;
   }
   //console.log("after: "+rotateNode.matrix[12]);
   //setup viewport

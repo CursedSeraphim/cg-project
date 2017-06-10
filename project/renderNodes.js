@@ -97,8 +97,9 @@ class BillboardSGNode extends TransformationSGNode {
   }*/
 
   render(context) {
-    var lookAt = mat4.lookAt(mat4.create(), [this.matrix[12], 0, this.matrix[14]], [context.invViewMatrix[12], 0, context.invViewMatrix[14]], [0, 1, 0]);
-    //var lookAt = mat4.lookAt(mat4.create(), [this.matrix[12], this.matrix[13], this.matrix[14]], [context.invViewMatrix[12], context.invViewMatrix[13], context.invViewMatrix[14]], [0, 1, 0]);
+
+    //var lookAt = mat4.lookAt(mat4.create(), [this.matrix[12], 0, this.matrix[14]], [context.invViewMatrix[12], 0, context.invViewMatrix[14]], [0, 1, 0]);
+    var lookAt = mat4.lookAt(mat4.create(), [this.matrix[12], 0, this.matrix[14]], [context.invViewMatrix[12], 0, context.invViewMatrix[14]], [0, -1, 0]);
     //var lookAt = mat4.lookAt(mat4.create(), [0, 0, 0], [0, 0, 0], [0, 1, 0]);
     for(var i = 0; i < 12; i++){
       this.matrix[i] = lookAt[i];
