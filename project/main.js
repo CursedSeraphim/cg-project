@@ -166,7 +166,7 @@ function createSceneGraph(gl, resources) {
     let staticFireNode = createParticleNode(300, [0.5,0.2,0.5]);
 
     /*Init Light*/
-    let torchNode = new AdvancedLightSGNode(true);
+    let torchNode = new AdvancedLightSGNode(true, 5, [0,0,1]);
     torchNode.ambient = [0.01,0.01,0.01,1.0];
     torchNode.diffuse = [0.6,0.3,0.05,1.0];
     torchNode.specular = [0,0,0,1.0];

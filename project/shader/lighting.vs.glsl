@@ -12,7 +12,6 @@ uniform mat4 u_projection;
 uniform mat3 u_normalViewMatrix;
 
 uniform vec3 u_lightPos[LIGHT_NODES];
-uniform vec3 u_lightDir[LIGHT_NODES];
 
 //output of this shader
 varying vec3 v_normalVec;
@@ -27,7 +26,6 @@ void main() {
 	vec4 eyePosition = u_modelView * vec4(a_position,1);
 
 	for(int i = 0; i < LIGHT_NODES; i++) {
-		v_lightDir[i] = normalize(u_normalViewMatrix * u_lightDir[i]);
 		v_lightVec[i] = u_lightPos[i] - eyePosition.xyz;
 	}
 

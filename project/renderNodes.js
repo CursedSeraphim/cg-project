@@ -44,10 +44,13 @@ class AdvancedLightSGNode extends LightSGNode {
       this.specular = vec4.scale(vec4.create(), this.specularOrig, flicker);
     }
 
-    const viewNormalMatrix = mat3.normalFromMat4(mat3.create(), context.viewMatrix);
-    gl.uniformMatrix3fv(gl.getUniformLocation(context.shader, 'u_normalViewMatrix'), false, viewNormalMatrix);
+    const modelViewMatrix = mat4.multiply(mat4.create(), context.viewMatrix, context.sceneMatrix);
+    const viewNormalMatrix = mat3.normalFromMat4(mat3.create(), modelViewMatrix);
+
+    var lookAt = vec3.transformMat3(vec3.create(), this.lookAt, viewNormalMatrix);
+
     gl.uniform1f(gl.getUniformLocation(context.shader, this.uniform+ '[' + this.nr + ']'+'.spotAngle'), this.spotAngle);
-    gl.uniform3fv(gl.getUniformLocation(context.shader, this.uniform+ 'Dir' +'[' + this.nr + ']'), this.lookAt);
+    gl.uniform3fv(gl.getUniformLocation(context.shader, this.uniform+ '[' + this.nr + ']' + '.lookAt'), lookAt);
     console.log(this.lookAt);
 
     this.counter+=Math.random()/2;
