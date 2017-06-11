@@ -221,7 +221,7 @@ function createSceneGraph(gl, resources) {
 
     /*PARTICLE TEST NODES*/
     let fireNode = createParticleNode(300, [0.5,0.2,0.5]);
-    let staticFireNode = createParticleNode(300, [0.5,0.2,0.5]);
+    let staticFireNode = createParticleNode(600, [2,0.4,2]);
 
     /*Init Light*/
     let torchNode = new AdvancedLightSGNode(true, 10, [0,0,1]);
@@ -253,8 +253,7 @@ function createSceneGraph(gl, resources) {
     /*POSITION TEST NODES*/
     rotateLight = new TransformationSGNode(mat4.create());
     let translateLight = new TransformationSGNode(glm.translate(0,3,8)); //translating the light is the same as setting the light position
-    //translateLight.append(lightNode);
-    translateLight.append(fireNode);
+    translateLight.append(lightNode);
     translateLight.append(fireNode);
     rotateLight.append(translateLight);
     b2fNodes.append(rotateLight);

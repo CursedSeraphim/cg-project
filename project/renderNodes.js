@@ -28,7 +28,24 @@ class AdvancedLightSGNode extends LightSGNode {
     vec3.normalize(this.lookAt, this.lookAt);
     this.spotAngle *= Math.PI/180;
 
+
+    LightSGNode.nr = (LightSGNode.nr + 1 || 0);
+    this.nr = LightSGNode.nr;
+
+    this.origUniform = this.uniform;
+    this.uniform = this.uniform + '['+ this.nr + ']';
+
     this.counter = 0;
+  }
+
+  /*override Original call so the array gets used properly*/
+  setLightPosition(context) {
+    const gl = context.gl;
+    if (!context.shader || !isValidUniformLocation(gl.getUniformLocation(context.shader, this.origUniform+'Pos'+'[' + this.nr + ']'))) {
+      return;
+    }
+    const position = this._worldPosition || this.position;
+    gl.uniform3f(gl.getUniformLocation(context.shader, this.origUniform+'Pos'+'[' + this.nr + ']'), position[0], position[1], position[2]);
   }
 
   render(context) {
@@ -48,9 +65,10 @@ class AdvancedLightSGNode extends LightSGNode {
     const viewNormalMatrix = mat3.normalFromMat4(mat3.create(), modelViewMatrix);
 
     var lookAt = vec3.transformMat3(vec3.create(), this.lookAt, viewNormalMatrix);
+    vec3.normalize(lookAt, lookAt);
 
-    gl.uniform1f(gl.getUniformLocation(context.shader, this.uniform+ '[' + this.nr + ']'+'.spotAngle'), this.spotAngle);
-    gl.uniform3fv(gl.getUniformLocation(context.shader, this.uniform+ '[' + this.nr + ']' + '.lookAt'), lookAt);
+    gl.uniform1f(gl.getUniformLocation(context.shader, this.uniform+'.spotAngle'), this.spotAngle);
+    gl.uniform3fv(gl.getUniformLocation(context.shader, this.uniform+'.lookAt'), lookAt);
     console.log(this.lookAt);
 
     this.counter+=Math.random()/2;
