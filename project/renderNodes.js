@@ -65,10 +65,15 @@ class AdvancedLightSGNode extends LightSGNode {
 }
 
 class TextureSGNode extends SGNode {
-  constructor(texture, textureunit, children ) {
+  constructor(texture, textureunit, animationSpeed, children) {
       super(children);
       this.texture = texture;
+      //this.texture.push([].concat(texture));
       this.textureunit = textureunit;
+      this.lastTime = time();
+      this.currentTime = time();
+      this.animationIndex = 0;
+      this.animationSpeed = animationSpeed;
   }
 
   render(context)
@@ -79,10 +84,19 @@ class TextureSGNode extends SGNode {
     //set additional shader parameters
     gl.uniform1i(gl.getUniformLocation(context.shader, 'u_tex'), this.textureunit);
 
+    this.currentTime = time();
+
     //activate and bind texture
     gl.activeTexture(gl.TEXTURE0 + this.textureunit);
-    gl.bindTexture(gl.TEXTURE_2D, this.texture);
-
+    if(this.lastTime + this.animationSpeed <= this.currentTime) {
+      this.animationIndex++;
+      this.lastTime = this.currentTime;
+      if(this.animationIndex >= this.texture.length) {
+        this.animationIndex = 0;
+      }
+    }
+    var tex = this.texture[this.animationIndex]
+    gl.bindTexture(gl.TEXTURE_2D, tex);
     //render children
     super.render(context);
 

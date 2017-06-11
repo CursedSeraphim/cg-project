@@ -59,23 +59,27 @@ vec4 calculateSimplePointLight(Light light, Material material, vec3 lightVec, ve
 
 	float angle = -361.0;
 	float distanceFactor = 10.0;
+	float radiusDistance = 1.0;
 
 	/*calculate angle*/
 	if(light.spotAngle > 0.0) {
 		angle = acos(dot(lightVec, light.lookAt));
 		distanceFactor *= (6.2832/light.spotAngle);
+		float angleDifference = min(1.0, (angle / light.spotAngle));
+		radiusDistance = 1.0 - angleDifference * angleDifference;
 	}
 	if(angle < light.spotAngle) {
+
 		float distanceToLight = max(length(lVec)/distanceFactor,1.0);
 		float diffuse = max(dot(normalVec,lightVec),0.0) / (distanceToLight*distanceToLight);
 
 		vec3 reflectVec = reflect(-lightVec, normalVec);
 		float spec = pow( max( dot(reflectVec, eyeVec), 0.0) , material.shininess);
 
-		c_diff += clamp(diffuse * light.diffuse * material.diffuse, 0.0, 1.0);
-		c_spec += clamp(spec * light.specular * material.specular, 0.0, 1.0);
+		c_diff += clamp(radiusDistance * diffuse * light.diffuse * material.diffuse, 0.0, 1.0);
+		c_spec += clamp(radiusDistance * spec * light.specular * material.specular, 0.0, 1.0);
+		c_amb  += clamp(radiusDistance * light.ambient * material.ambient, 0.0, 1.0);
 	}
-	c_amb  += clamp(light.ambient * material.ambient, 0.0, 1.0);
 
 	vec4 c_em = material.emission;
 	return c_amb + c_diff + c_spec + c_em;
