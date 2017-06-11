@@ -1,6 +1,6 @@
 precision mediump float;
 
-#define LIGHT_NODES 16
+#define LIGHT_NODES 10
 
 /**
  * definition of a material structure containing common properties
@@ -20,6 +20,7 @@ struct Light {
 	vec4 ambient;
 	vec4 diffuse;
 	vec4 specular;
+	float spotAngle;
 };
 
 //illumination related variables
@@ -29,6 +30,7 @@ uniform Light u_torch;
 varying vec3 v_normalVec;
 varying vec3 v_eyeVec;
 varying vec3 v_lightVec[LIGHT_NODES];
+varying vec3 v_lightDir[LIGHT_NODES];
 
 //texture related variables
 //uniform bool u_enableObjectTexture;
@@ -37,16 +39,10 @@ uniform int u_nrOfLights;
 varying vec2 v_texCoord;
 uniform sampler2D u_tex;
 
-vec4 calculateSimplePointLight(Light light[LIGHT_NODES], Material material, vec3 lightVec[LIGHT_NODES], vec3 normalVec, vec3 eyeVec, vec4 textureColor, int numberOfLights) {
-	vec3 lVec[LIGHT_NODES];
+vec4 calculateSimplePointLight(Light light, Material material, vec3 lightVec, vec3 lightDir, vec3 normalVec, vec3 eyeVec, vec4 textureColor, int numberOfLights) {
+	vec3 lVec = lightVec;
 
-	for(int i = 0; i < LIGHT_NODES; i++) {
-		if(i > numberOfLights)
-			break;
-		lVec[i] = lightVec[i];
-		lightVec[i] = normalize(lightVec[i]);
-	}
-
+	lightVec = normalize(lightVec);
 	normalVec = normalize(normalVec);
 	eyeVec = normalize(eyeVec);
 
@@ -59,25 +55,27 @@ vec4 calculateSimplePointLight(Light light[LIGHT_NODES], Material material, vec3
 		material.diffuse = textureColor;
 		material.ambient = textureColor;
 	}
-	for(int i = 0; i < LIGHT_NODES; i++) {
-		if(i > u_nrOfLights)
-			break;
-		float distanceToLight = max(length(lVec[i])/10.0,1.0);
-		float diffuse = max(dot(normalVec,lightVec[i]),0.0) / (distanceToLight*distanceToLight);
 
-		vec3 reflectVec = reflect(-lightVec[i], normalVec);
-		float spec = pow( max( dot(reflectVec, eyeVec), 0.0) , material.shininess);
+	float angle = -361.0;
 
-		c_amb  += clamp(light[i].ambient * material.ambient, 0.0, 1.0);
-		c_diff += clamp(diffuse * light[i].diffuse * material.diffuse, 0.0, 1.0);
-		c_spec += clamp(spec * light[i].specular * material.specular, 0.0, 1.0);
+	/*calculate angle*/
+	if(light.spotAngle > 0.0) {
+		angle = acos(dot(lightVec, lightDir));
 	}
+		if(angle < light.spotAngle) {
+			float distanceToLight = max(length(lVec)/10.0,1.0);
+			float diffuse = max(dot(normalVec,lightVec),0.0) / (distanceToLight*distanceToLight);
 
-	c_amb  = clamp(c_amb, 0.0, 1.0);
-	c_diff = clamp(c_diff, 0.0, 1.0);
-	c_spec = clamp(c_spec, 0.0, 1.0);
-	vec4 c_em   = material.emission;
-	return c_amb + c_diff + c_spec + c_em;
+			vec3 reflectVec = reflect(-lightVec, normalVec);
+			float spec = pow( max( dot(reflectVec, eyeVec), 0.0) , material.shininess);
+
+			c_diff += clamp(diffuse * light.diffuse * material.diffuse, 0.0, 1.0);
+			c_spec += clamp(spec * light.specular * material.specular, 0.0, 1.0);
+		}
+		c_amb  += clamp(light.ambient * material.ambient, 0.0, 1.0);
+
+		vec4 c_em = material.emission;
+		return c_amb + c_diff + c_spec + c_em;
 }
 
 void main (void) {
@@ -93,7 +91,13 @@ void main (void) {
     textureColor = texture2D(u_tex,v_texCoord);
   }
 
-	gl_FragColor = calculateSimplePointLight(u_light, u_material, v_lightVec, v_normalVec, v_eyeVec, textureColor, u_nrOfLights);
+	vec4 fragColor = vec4(0,0,0,0);
+	for(int i = 0; i < LIGHT_NODES; i++) {
+		if(i > u_nrOfLights)
+			break;
+		fragColor += calculateSimplePointLight(u_light[i], u_material, v_lightVec[i], v_lightDir[i], v_normalVec, v_eyeVec, textureColor, u_nrOfLights);
+	}
+	gl_FragColor = fragColor;
 	gl_FragColor[3] = textureColor.a;
 
 }

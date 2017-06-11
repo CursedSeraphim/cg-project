@@ -166,25 +166,25 @@ function createSceneGraph(gl, resources) {
     let staticFireNode = createParticleNode(300, [0.5,0.2,0.5]);
 
     /*Init Light*/
-    let torchNode = new TorchSGNode();
-    torchNode.ambientOrig = [0.01,0.01,0.01,1.0];
-    torchNode.diffuseOrig = [0.6,0.3,0.05,1.0];
-    torchNode.specularOrig = [0,0,0,1.0];
+    let torchNode = new AdvancedLightSGNode(true);
+    torchNode.ambient = [0.01,0.01,0.01,1.0];
+    torchNode.diffuse = [0.6,0.3,0.05,1.0];
+    torchNode.specular = [0,0,0,1.0];
     torchNode.position = [0, 0, 0];
     torchNode.shininess = 0;
 
 
     /*LIGHT TEST NODES*/
-    let lightNode = new TorchSGNode();
-    lightNode.ambientOrig = [0.0,0.0,0.0,1.0];//[0.2, 0.2, 0.2, 1];
-    lightNode.diffuseOrig = [0.6,0.3,0.05,1.0];//[0.5, 0.5, 0.5, 1];
-    lightNode.specularOrig = [0.0,0.0,0.0,1.0];//[1, 1, 1, 1];
+    let lightNode = new AdvancedLightSGNode(true);
+    lightNode.ambient = [0.0,0.0,0.0,1.0];//[0.2, 0.2, 0.2, 1];
+    lightNode.diffuse = [0.6,0.3,0.05,1.0];//[0.5, 0.5, 0.5, 1];
+    lightNode.specular = [0.0,0.0,0.0,1.0];//[1, 1, 1, 1];
     lightNode.position = [0, 0, 0];
 
-    let lightTest = new TorchSGNode();
-    lightTest.ambientOrig = [0.0,0.0,0.0,1.0];//[0.2, 0.2, 0.2, 1];
-    lightTest.diffuseOrig = [0.6, 0.3, 0.05, 1.0];
-    lightTest.specularOrig = [0, 0, 0, 1.0];
+    let lightTest = new AdvancedLightSGNode(true, 30, [0,0,1]);
+    lightTest.ambient = [0.1,0.1,0.1,1.0];//[0.2, 0.2, 0.2, 1];
+    lightTest.diffuse = [1.0,0.6,0.05,1.0];
+    lightTest.specular = [0, 0, 0, 1.0];
 
     /*Init Light Positions*/
     translateTorch = new TransformationSGNode(glm.translate(0, 0, 0));
@@ -195,9 +195,9 @@ function createSceneGraph(gl, resources) {
     /*POSITION TEST NODES*/
     rotateLight = new TransformationSGNode(mat4.create());
     let translateLight = new TransformationSGNode(glm.translate(0,3,8)); //translating the light is the same as setting the light position
-    translateLight.append(lightNode);
+    //translateLight.append(lightNode);
     translateLight.append(fireNode);
-    //translateLight.append(fireNode);
+    translateLight.append(fireNode);
     rotateLight.append(translateLight);
     b2fNodes.append(rotateLight);
 
@@ -246,7 +246,7 @@ function createSceneGraph(gl, resources) {
   //initialize map floor
   cobbleTextureNode.append(new RenderSGNode(resources.modelMapCobble));
   let mapCobble = new MaterialSGNode(cobbleTextureNode);
-  mapCobble.ambient = [0.24725, 0.1995, 0.0745, 1];
+  mapCobble.ambient = [1, 1, 1, 1];
   mapCobble.diffuse = [0.75164, 0.60648, 0.22648, 1];
   mapCobble.specular = [0.628281, 0.555802, 0.366065, 1];
   mapCobble.shininess = 1;

@@ -15,29 +15,49 @@ class LightingSGNode extends SGNode {
   }
 }
 
-class TorchSGNode extends LightSGNode {
+class AdvancedLightSGNode extends LightSGNode {
 
-  constructor(position, children) {
-    super(null, children);
+  constructor(flicker, spotAngle, lookAt, position, children) {
+    super(position, children);
 
-    this.ambientOrig = this.ambient;
-    this.diffuseOrig = this.diffuse;
-    this.specularOrig = this.specular;
+    this.flicker = (flicker || false);
+
+    this.spotAngle = spotAngle || 0;
+    this.lookAt =  lookAt || [1,0,0];
+
+    vec3.normalize(this.lookAt, this.lookAt);
+    this.spotAngle *= Math.PI/180;
 
     this.counter = 0;
   }
 
   render(context) {
     /*get some random flickering into this*/
-    var flicker = 1 + Math.cos(this.counter)/8;
-    flicker *= (1.0 + Math.random()/8);
-    this.ambient = vec4.scale(vec4.create(), this.ambientOrig, flicker);
-    this.diffuse = vec4.scale(vec4.create(), this.diffuseOrig, flicker);
-    this.specular = vec4.scale(vec4.create(), this.specularOrig, flicker);
+    if(this.flicker) {
+      var flicker = 1 + Math.cos(this.counter)/8;
+      flicker *= (1.0 + Math.random()/8);
+      this.ambientOrig = this.ambient.slice(0);
+      this.diffuseOrig = this.diffuse.slice(0);
+      this.specularOrig = this.specular.slice(0);
+      this.ambient = vec4.scale(vec4.create(), this.ambientOrig, flicker);
+      this.diffuse = vec4.scale(vec4.create(), this.diffuseOrig, flicker);
+      this.specular = vec4.scale(vec4.create(), this.specularOrig, flicker);
+    }
 
-    //this.counter+=0.16;
+    const viewNormalMatrix = mat3.normalFromMat4(mat3.create(), context.viewMatrix);
+    gl.uniformMatrix3fv(gl.getUniformLocation(context.shader, 'u_normalViewMatrix'), false, viewNormalMatrix);
+    gl.uniform1f(gl.getUniformLocation(context.shader, this.uniform+ '[' + this.nr + ']'+'.spotAngle'), this.spotAngle);
+    gl.uniform3fv(gl.getUniformLocation(context.shader, this.uniform+ 'Dir' +'[' + this.nr + ']'), this.lookAt);
+    console.log(this.lookAt);
+
     this.counter+=Math.random()/2;
     super.render(context);
+
+    if(this.flicker) {
+      this.ambient = this.ambientOrig;
+      this.diffuse = this.diffuseOrig;
+      this.specular = this.specularOrig;
+    }
   }
 }
 
@@ -135,9 +155,9 @@ class FireSGNode extends SGNode {
     this.speedVariance = 0.2;
     this.sizeVariance = 0.5;
     this.sparkEmmitRate = 0.97;
-    this.fireHeatDegreeRate = 0.015*this.scalefactor;
-    this.sparkHeatDegreeRate = 0.01*this.scalefactor;
-    this.fireCenterHeatDegreeRate = 0.09*this.scalefactor;
+    this.fireHeatDegreeRate = 1.5*this.scalefactor;
+    this.sparkHeatDegreeRate = 0.1*this.scalefactor;
+    this.fireCenterHeatDegreeRate = 2*this.scalefactor;
     this.particleSizeReduction = 50.0;
     this.fireRiseFactor = 0.1;
     this.sparkRiseFactor = 0.005;
@@ -264,9 +284,6 @@ class FireSGNode extends SGNode {
 
     var timeDiff = (time() - this.lastTime);
 
-    if(timeDiff > 100)
-      timeDiff = 100;
-
     var timeS = timeDiff/1000.0;
 
     var partPosGlBuffer = [];
@@ -274,7 +291,7 @@ class FireSGNode extends SGNode {
     var sizeGlBuffer = [];
 
     /*create new particles*/
-    for(var i = 0; i < 500*timeS; i++){
+    for(var i = 0; i < 500*(timeDiff > 100?0.1:timeS); i++){
       this.fireParticles.push(this.createParticle(this.fuelSize ,this.partSize, this.sizeVariance, this.fireSpeed, this.fireEmmitAngle));
     }
 
@@ -316,8 +333,8 @@ class FireSGNode extends SGNode {
       var distanceToCenter = Math.sqrt((xDistance*xDistance + zDistance*zDistance));
       //fast solution
       //var distanceToCenter = xDistance + zDistance;
-      particle.color[3] -= (this.fireHeatDegreeRate + Math.abs(distanceToCenter)*this.fireCenterHeatDegreeRate);
-      particle.size -= (particle.size/this.particleSizeReduction + Math.abs(distanceToCenter)*particle.size/(this.particleSizeReduction*2));
+      particle.color[3] -= (this.fireHeatDegreeRate*timeS + Math.abs(distanceToCenter)*this.fireCenterHeatDegreeRate*timeS);
+      particle.size -= (particle.size/this.particleSizeReduction*timeS + Math.abs(distanceToCenter)*particle.size/(this.particleSizeReduction*2)*timeS);
 
       //if particle gets invisible e.g. all its energy is used, remove it
       if(particle.color[3] <= 0.0 || particle.size <= 0.0) {
@@ -426,7 +443,6 @@ class Back2FrontSGNode extends SGNode {
     vec3.subtract(pos, pos, camPos);
     var distance = vec3.length(pos);
 
-    console.log(distance);
 
     if(vec3.dot(context.lookAtVector, pos) < 0.0)
       distance *= -1;
@@ -452,7 +468,6 @@ class Back2FrontSGNode extends SGNode {
       parent.children.push(c.child);
     });
 
-    console.log(renderList);
     super.render(context);
   }
 }

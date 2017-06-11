@@ -805,6 +805,7 @@ class RenderSGNode extends SGNode {
 
     const gl = context.gl,
       shader = context.shader;
+
     gl.uniformMatrix4fv(gl.getUniformLocation(shader, 'u_modelView'), false, modelViewMatrix);
     gl.uniformMatrix3fv(gl.getUniformLocation(shader, 'u_normalMatrix'), false, normalMatrix);
     gl.uniformMatrix4fv(gl.getUniformLocation(shader, 'u_projection'), false, projectionMatrix);
@@ -939,11 +940,12 @@ class MaterialSGNode extends SGNode {
 class LightSGNode extends TransformationSGNode {
 
   constructor(position, children) {
-    super(null, children);
+    super(position, children);
     this.position = position || [0, 0, 0];
     this.ambient = [0, 0, 0, 1];
     this.diffuse = [1, 1, 1, 1];
     this.specular = [1, 1, 1, 1];
+
     //uniform name
     this.uniform = 'u_light';
 
@@ -959,10 +961,11 @@ class LightSGNode extends TransformationSGNode {
     //no materials in use
     if (!context.shader || !isValidUniformLocation(gl.getUniformLocation(context.shader, this.uniform+'['+ this.nr + ']'+'.ambient'))) {
       return;
-   }
+    }
     gl.uniform4fv(gl.getUniformLocation(context.shader, this.uniform+'['+this.nr + ']'+'.ambient'), this.ambient);
     gl.uniform4fv(gl.getUniformLocation(context.shader, this.uniform+'['+this.nr + ']'+'.diffuse'), this.diffuse);
     gl.uniform4fv(gl.getUniformLocation(context.shader, this.uniform+'['+this.nr + ']'+'.specular'), this.specular);
+
   }
 
   setLightPosition(context) {
