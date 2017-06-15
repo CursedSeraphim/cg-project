@@ -69,7 +69,7 @@ class AdvancedLightSGNode extends LightSGNode {
 
     gl.uniform1f(gl.getUniformLocation(context.shader, this.uniform+'.spotAngle'), this.spotAngle);
     gl.uniform3fv(gl.getUniformLocation(context.shader, this.uniform+'.lookAt'), lookAt);
-    console.log(this.lookAt);
+    //console.log(this.lookAt);
 
     this.counter+=Math.random()/2;
     super.render(context);

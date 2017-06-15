@@ -24,9 +24,10 @@ var root = null;
 var particleNodes;
 var lightingNodes;
 var translateTorch;
+var translateTorch1;
 var b2fNodes;
 var diabloSGNode;
-var lanterSGNode;
+var lanternSGNode;
 
 //waypoints
 var cubeWaypoints;
@@ -53,6 +54,8 @@ var diabloTextureNode;
 var metalTextureNode;
 var gridTextureNode;
 var glassTextureNode;
+var spikedBarsTextureNode;
+var skyTextureNode;
 
 var dreughFrames;
 
@@ -70,6 +73,9 @@ loadResources({
   modelFloor20x20: 'models/floor_20x20.obj',
   modelMapCobble: 'models/MapCobble.obj',
   modelMapFloor: 'models/MapFloor.obj',
+  modelMapSpikedBars: 'models/MapSpikedBars.obj',
+  modelMapSky: 'models/MapSky.obj',
+  modelMapTorches: 'models/MapTorches.obj',
   modelLanternMetal: 'models/lantern_metal.obj',
   modelLanternGlass: 'models/lantern_glass.obj',
   modelLanternGrid: 'models/lantern_grid.obj',
@@ -79,9 +85,11 @@ loadResources({
   stoaqTexture: 'models/stoaquad.jpg',
   cobbleTexture: 'models/dungeon_wall.png',
   diabloImage: 'models/dreugh.gif',
-  metalTexture: 'models/bars.png',//metal.png',
-  glassTexture: 'models/bars.png',//glass_64.png',
+  metalTexture: 'models/metal_128.png',//metal.png',
+  glassTexture: 'models/glass.png',//glass_64.png',
   gridTexture: 'models/bars.png',
+  skyTexture: 'models/sky.png',
+  spikedBarsTexture: 'models/spiked_bars.png',
   dreughFrame1: 'models/textures/dreugh/dreugh (1).gif',
 dreughFrame2: 'models/textures/dreugh/dreugh (2).gif',
 dreughFrame3: 'models/textures/dreugh/dreugh (3).gif',
@@ -150,6 +158,8 @@ function init(resources) {
   glassTextureNode = new AdvancedTextureSGNode(resources.glassTexture);
   gridTextureNode = new AdvancedTextureSGNode(resources.gridTexture);
   metalTextureNode = new AdvancedTextureSGNode(resources.metalTexture);
+  spikedBarsTextureNode = new AdvancedTextureSGNode(resources.spikedBarsTexture);
+  skyTextureNode = new AdvancedTextureSGNode(resources.skyTexture);
 // diceTextureNode.wrapS = gl.CLAMP_TO_EDGE;
 //  diceTextureNode.wrapT = gl.CLAMP_TO_EDGE;
   cobbleTextureNode = new AdvancedTextureSGNode(resources.cobbleTexture);
@@ -216,12 +226,13 @@ function createSceneGraph(gl, resources) {
 
   {
     /*Init Particles*/
-    let torchFireParticleNode  = createParticleNode(100, [0.1,0.05,0.1]);
+    let lanternFireParticleNode  = createParticleNode(100, [0.02,0.01,0.02]);
 
 
     /*PARTICLE TEST NODES*/
     let fireNode = createParticleNode(300, [0.5,0.2,0.5]);
     let staticFireNode = createParticleNode(600, [2,0.4,2]);
+    let torchNode1 = createParticleNode(200, [0.25,0.1,0.25]);
 
     /*Init Light*/
     let torchNode = new AdvancedLightSGNode(true, 10, [0,0,1]);
@@ -244,10 +255,16 @@ function createSceneGraph(gl, resources) {
     lightTest.diffuse = [1.0,0.6,0.05,1.0];
     lightTest.specular = [0, 0, 0, 1.0];
 
+    let torchLight1 = new AdvancedLightSGNode(true);
+    torchLight1.ambient = [0.1,0.1,0.1,1.0];
+    torchLight1.diffuse = [0.6,0.3,0.05,1.0];
+    torchLight1.specular = [0.0,0.0,0.0,1.0];
+    torchLight1.position = [0, 0, 0];
+
     /*Init Light Positions*/
     translateTorch = new TransformationSGNode(glm.translate(0, 0, 0));
     translateTorch.append(torchNode);
-    translateTorch.append(torchFireParticleNode);
+    translateTorch.append(lanternFireParticleNode);
     b2fNodes.append(translateTorch);
 
     /*POSITION TEST NODES*/
@@ -258,10 +275,15 @@ function createSceneGraph(gl, resources) {
     rotateLight.append(translateLight);
     b2fNodes.append(rotateLight);
 
-    let fireTransNode = new TransformationSGNode(glm.translate(-3, 1, 2));
+    let fireTransNode = new TransformationSGNode(glm.translate(-3, 5, 2));
     fireTransNode.append(staticFireNode);
     fireTransNode.append(lightTest);
     b2fNodes.append(fireTransNode);
+
+    let torchTransNode1 = new TransformationSGNode(glm.translate(27.6, 0, -0.125));
+    torchTransNode1.append(torchNode1);
+    torchTransNode1.append(torchLight1);
+    b2fNodes.append(torchTransNode1)
 }
 
 /*Place the interior of the dungeon*/
@@ -309,29 +331,57 @@ function createSceneGraph(gl, resources) {
   mapCobble.specular = [0.1, 0.1, 0.1, 0.1];
   mapCobble.shininess = 1000;
   lightingNodes.append(mapCobble);
+
+  //initialize map spiked bars
+  spikedBarsTextureNode.append(new RenderSGNode(resources.modelMapSpikedBars));
+  let mapSpikedBars = new MaterialSGNode(spikedBarsTextureNode);
+  mapSpikedBars.ambient = [1, 1, 1, 1];
+  mapSpikedBars.diffuse = [1, 1, 1, 1];
+  mapSpikedBars.specular = [0.1, 0.1, 0.1, 0.1];
+  mapSpikedBars.shininess = 1000;
+  lightingNodes.append(mapSpikedBars);
+
+  //initialize map sky
+  skyTextureNode.append(new RenderSGNode(resources.modelMapSky));
+  let mapSky = new MaterialSGNode(skyTextureNode);
+  mapSky.ambient = [1, 1, 1, 1];
+  mapSky.diffuse = [1, 1, 1, 1];
+  mapSky.specular = [0.0, 0.0, 0.0, 0.0];
+  mapSky.shininess = 1.0;
+  lightingNodes.append(mapSky);
+
+  //initialize map torches
+  metalTextureNode.append(new RenderSGNode(resources.modelMapTorches));
+  let mapTorches = new MaterialSGNode(metalTextureNode);
+  mapTorches.ambient = [1, 1, 1, 1];
+  mapTorches.diffuse = [1, 1, 1, 1];
+  mapTorches.specular = [0.0, 0.0, 0.0, 0.0];
+  mapTorches.shininess = 1.0;
+  lightingNodes.append(mapTorches);
 }
 
 {
   let rotatelantern = new TransformationSGNode(glm.rotateY(180));
-  lanterSGNode= new TransformationSGNode(glm.translate(0,0,0), rotatelantern);
+  lanternSGNode= new TransformationSGNode(glm.translate(6,3,0), rotatelantern);
 
-  //initialize map floor
+  //initialize lantern glass
   glassTextureNode.append(new RenderSGNode(resources.modelLanternGlass));
   let glassMaterial = new MaterialSGNode(glassTextureNode);
-  glassMaterial.ambient = [0.24725, 0.1995, 0.0745, 1];
-  glassMaterial.diffuse = [0.75164, 0.60648, 0.22648, 1];
-  glassMaterial.specular = [1, 0.555802, 0.366065, 1];
-  glassMaterial.shininess = 1;
+  glassMaterial.ambient = [1, 1, 1, 1];
+  glassMaterial.diffuse = [1, 1, 1, 1];
+  glassMaterial.specular = [0.1, 0.1, 0.1, 0.1];
+  glassMaterial.shininess = 1000;
   rotatelantern.append(glassMaterial);
-  //initialize map floor
+  //initialize lantern metal
   metalTextureNode.append(new RenderSGNode(resources.modelLanternMetal));
   let metalMaterial = new MaterialSGNode(metalTextureNode);
-  metalMaterial.ambient = [0.24725, 0.1995, 0.0745, 1];
-  metalMaterial.diffuse = [0.75164, 0.60648, 0.22648, 1];
-  metalMaterial.specular = [1, 0.555802, 0.366065, 1];
-  metalMaterial.shininess = 1;
+  metalMaterial.ambient = [0.6, 0.6, 0.6, 1];
+  metalMaterial.diffuse = [0.6, 0.6, 0.6, 1];
+  metalMaterial.specular = [0.6, 0.6, 0.6, 1];
+  metalMaterial.shininess = 20;
   rotatelantern.append(metalMaterial);
 
+  //initialize lantern grid
   gridTextureNode.append(new RenderSGNode(resources.modelLanternGrid));
   let gridMaterial = new MaterialSGNode(gridTextureNode);
   gridMaterial.ambient = [0.24725, 0.1995, 0.0745, 1];
@@ -368,7 +418,7 @@ function createSceneGraph(gl, resources) {
 }
 
 lightingNodes.append(diabloTextureNode);
-lightingNodes.append(lanterSGNode);
+lightingNodes.append(lanternSGNode);
   //lightingNodes.append(b2fNodes);
   //root.append(particleNodes);
   return root;
@@ -522,7 +572,8 @@ function render(timeInMilliseconds) {
   diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));
 */
   translateTorch.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(1, -0.5, -2.0));
-  lanterSGNode.matrix = translateTorch.matrix;
+  lanternSGNode.matrix = translateTorch.matrix;
+
   //render scenegraph
   root.render(context);
 

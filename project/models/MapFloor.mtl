@@ -1,5 +1,5 @@
-# Blender MTL File: 'BACKUP6MapComplete.blend'
-# Material Count: 1
+# Blender MTL File: 'BACKUP9MapComplete.blend'
+# Material Count: 5
 
 newmtl Material.005
 Ns 96.078431
@@ -9,5 +9,43 @@ Ks 0.500000 0.500000 0.500000
 Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
+illum 2
+map_Kd floor_cobble.jpg
+
+newmtl Material.005_floor_cobble.jpg.001
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\floor_cobble.jpg
+
+newmtl None
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd sky.jpg
+
+newmtl None_floor_cobble.jpg.005
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd floor_cobble.jpg
+
+newmtl None_floor_cobble.jpg.006
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
 illum 2
 map_Kd floor_cobble.jpg
