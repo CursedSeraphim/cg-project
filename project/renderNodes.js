@@ -15,6 +15,37 @@ class LightingSGNode extends SGNode {
   }
 }
 
+
+/**
+* a node which triggers a given function once when the camera is within a given radius of the node
+*/
+class TriggerSGNode extends TransformationSGNode {
+  constructor(radius, matrix, triggeredFunction, children) {
+    super(matrix, children);
+    this.radius = radius;
+    if(triggeredFunction == null) {
+      this.triggeredFunction = function(){console.log("node triggered but no function set")};
+    } else {
+      this.triggeredFunction = triggeredFunction;
+    }
+    var triggered = 0;
+  }
+  render(context)
+  {
+    var dx = context.invViewMatrix[12] - this.matrix[12];
+    var dy = context.invViewMatrix[13] - this.matrix[13];
+    var dz = context.invViewMatrix[14] - this.matrix[14];
+    var distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
+    if(distance <= this.radius && !this.triggered) {
+      this.triggeredFunction();
+      this.triggered = 1;
+    }
+  }
+  setTriggerFunction(triggeredFunction) {
+    this.triggeredFunction = triggeredFunction;
+  }
+}
+
 class AdvancedLightSGNode extends LightSGNode {
 
   constructor(flicker, spotAngle, lookAt, position, children) {

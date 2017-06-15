@@ -19,11 +19,11 @@ d 1
 illum 2
 map_Kd metal_64.png
 
-newmtl None_spiked_bars.png.001
+newmtl None_metal_64.png.001
 Ns 0
 Ka 0.000000 0.000000 0.000000
 Kd 0.8 0.8 0.8
 Ks 0.8 0.8 0.8
 d 1
 illum 2
-map_Kd spiked_bars.png
+map_Kd metal_64.png
