@@ -47,8 +47,20 @@ var boneSGNode1;
 var bones1SGNode1;
 var skullPileSGNode1;
 var skullPileSGNode2;
-
 var hipBoneSGNode;
+//spider (compex model) scene graph nodes
+var spiderAbdomenSGNode;
+var spiderHeadSGNode;
+var spiderRightFrontLegSGNode;
+var spiderRightFrontLeg2SGNode;
+var spiderRightHindLegSGNode;
+var spiderRightHindLeg2SGNode;
+var spiderRightPincerSGNode;
+var spiderLeftFrontLegSGNode;
+var spiderLeftFrontLeg2SGNode;
+var spiderLeftHindLegSGNode;
+var spiderLeftHindLeg2SGNode;
+var spiderLeftPincerSGNode;
 
 //waypoints
 var cameraWaypoints;
@@ -91,6 +103,7 @@ var diabloTextureNode;
 var orcShamanTextureNode;
 var durielTextureNode;
 var metalTextureNode;
+var metalTextureNode2;
 var pentagramTextureNode;
 var stainedGlassTextureNode;
 var gridTextureNode;
@@ -241,7 +254,7 @@ function init(resources) {
 
   lookAtWaypointIndex2 = -1;
   lookAtWaypoints2 = [wpOrcShaman2, wpCam6];
-  let durielPos = glm.translate(43.5,-3.25,13.5);
+  let durielPos = glm.translate(43.25,-2.75,13.5);
   let skullPilePos1 = glm.translate(39.4,-5,4.1);
   let skullPilePos2 = glm.translate(48,-5,4.1);
   lookAtWaypointIndex3 = -1;
@@ -283,6 +296,7 @@ function init(resources) {
   glassTextureNode = new AdvancedTextureSGNode(resources.glassTexture);
   gridTextureNode = new AdvancedTextureSGNode(resources.gridTexture);
   metalTextureNode = new AdvancedTextureSGNode(resources.metalTexture);
+  metalTextureNode2 = new AdvancedTextureSGNode(resources.metalTexture);
   stainedGlassTextureNode = new AdvancedTextureSGNode(resources.stainedGlassTexture);
   spikedBarsTextureNode = new AdvancedTextureSGNode(resources.spikedBarsTexture);
   skyTextureNode = new AdvancedTextureSGNode(resources.skyTexture);
@@ -617,8 +631,8 @@ function createSceneGraph(gl, resources) {
   lightingNodes.append(mapSky);
 
   //initialize map torches
-  metalTextureNode.append(new RenderSGNode(resources.modelMapTorches));
-  let mapTorches = new MaterialSGNode(metalTextureNode);
+  metalTextureNode2.append(new RenderSGNode(resources.modelMapTorches));
+  let mapTorches = new MaterialSGNode(metalTextureNode2);
   mapTorches.ambient = [1, 1, 1, 1];
   mapTorches.diffuse = [1, 1, 1, 1];
   mapTorches.specular = [0.0, 0.0, 0.0, 0.0];
