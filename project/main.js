@@ -38,12 +38,15 @@ var b2fNodes;
 var b2fNodes2;
 var diabloSGNode;
 var orcShamanSGNode;
+var durielSGNode;
 var lanternSGNode;
 var hipSGNode1;
 var ribCageSGNode1;
 var skullSGNode1;
 var boneSGNode1;
 var bones1SGNode1;
+var skullPileSGNode1;
+var skullPileSGNode2;
 
 var hipBoneSGNode;
 
@@ -51,7 +54,11 @@ var hipBoneSGNode;
 var cameraWaypoints;
 var cameraWaypointIndex;
 var lookAtWaypoints;
+var lookAtWaypoints2;
+var lookAtWaypoints3;
 var lookAtWaypointIndex;
+var lookAtWaypointIndex2;
+var lookAtWaypointIndex3;
 var orcShamanWaypoints;
 var orcShamanWaypointIndex;
 var cubeWaypoints;
@@ -62,6 +69,8 @@ var diabloWaypointIndex;
 //TriggerSGNode
 var triggerTestNode;
 var triggerSGNode2;
+var triggerSGNode3;
+var triggerSGNode4;
 
 /*DEBUG NODES*/
 var rotateNode;
@@ -80,7 +89,9 @@ var cobbleTextureNode;
 var lavaTextureNode;
 var diabloTextureNode;
 var orcShamanTextureNode;
+var durielTextureNode;
 var metalTextureNode;
+var pentagramTextureNode;
 var stainedGlassTextureNode;
 var gridTextureNode;
 var glassTextureNode;
@@ -91,9 +102,11 @@ var skullTextureNode;
 var boneTextureNode;
 var ribCageTextureNode;
 var bones1TextureNode;
+var skullPile1TextureNode;
 //texture arrays
 var dreughFrames;
 var orcShamanFrames;
+var durielFrames;
 
 //load the required resources using a utility function
 loadResources({
@@ -114,6 +127,7 @@ loadResources({
   modelMapSky: 'models/MapSky.obj',
   modelMapTorches: 'models/MapTorches.obj',
   modelMapGlass: 'models/MapGlass.obj',
+  modelMapPentagram: 'models/MapPentagram.obj',
   modelLanternMetal: 'models/lantern_metal.obj',
   modelLanternGlass: 'models/lantern_glass.obj',
   modelLanternGrid: 'models/lantern_grid.obj',
@@ -135,6 +149,21 @@ loadResources({
   skullTexture: 'textures/bones/skull.png',
   boneTexture: 'textures/bones/bone.png',
   bones1Texture: 'textures/bones/bones1.png',
+  skullPileTexture: 'textures/bones/skullPile.png',
+  pentagramTexture: 'textures/misc/pentagram.png',
+
+  durielFrame1: 'textures/duriel/duriel (1).gif',
+durielFrame2: 'textures/duriel/duriel (2).gif',
+durielFrame3: 'textures/duriel/duriel (3).gif',
+durielFrame4: 'textures/duriel/duriel (4).gif',
+durielFrame5: 'textures/duriel/duriel (5).gif',
+durielFrame6: 'textures/duriel/duriel (6).gif',
+durielFrame7: 'textures/duriel/duriel (7).gif',
+durielFrame8: 'textures/duriel/duriel (8).gif',
+durielFrame9: 'textures/duriel/duriel (9).gif',
+durielFrame10: 'textures/duriel/duriel (10).gif',
+durielFrame11: 'textures/duriel/duriel (11).gif',
+durielFrame12: 'textures/duriel/duriel (12).gif',
 
   dreughFrame1: 'textures/dreugh/dreugh (1).gif',
 dreughFrame2: 'textures/dreugh/dreugh (2).gif',
@@ -196,16 +225,27 @@ function init(resources) {
   let wpCam1 = glm.translate(9, 3, -8.5);
   let wpCam2 = glm.translate(18, -3.5, -8.5);
   let wpCam3 = glm.translate(25, -3.5, -8.5);
-  let wpCam4 = glm.translate(25, -3.5, 24.5);
-  cameraWaypoints = [wpCam1, wpCam2, wpCam3, wpCam4];
+  let wpCam4 = glm.translate(25, -3.5, 10);
+  let wpCam5 = glm.translate(25, 2.3, 21);
+  let wpCam6 = glm.translate(25, 2.3, 28);
+  let wpCam7 = glm.translate(47.5, 2.3, 28);
+  cameraWaypoints = [wpCam1, wpCam2, wpCam3, wpCam4, wpCam5, wpCam6, wpCam7];
   let wpLookAt4 = glm.translate(25,-3,-15);
   lookAtWaypoints = [wpCam2, wpCam3, wpLookAt4];
 
   //-1 is used to trigger the orc shaman at a later point
   orcShamanWaypointIndex = -1;
   let wpOrcShaman1 = glm.translate(25, -3.5, -22.5);
-  let wpOrcShaman2 = glm.translate(17, -3.5, -22.5);
+  let wpOrcShaman2 = glm.translate(20, -3.5, -22.5);
   orcShamanWaypoints = [wpOrcShaman1, wpOrcShaman2];
+
+  lookAtWaypointIndex2 = -1;
+  lookAtWaypoints2 = [wpOrcShaman2, wpCam6];
+  let durielPos = glm.translate(43.5,-3.25,13.5);
+  let skullPilePos1 = glm.translate(39.4,-5,4.1);
+  let skullPilePos2 = glm.translate(48,-5,4.1);
+  lookAtWaypointIndex3 = -1;
+  lookAtWaypoints3 = [wpCam7, durielPos, skullPilePos2, durielPos, skullPilePos2, durielPos];
 
   let waypointCube1 = mat4.create();
   waypointCube1[12] = 7;
@@ -251,9 +291,10 @@ function init(resources) {
   skullTextureNode = new AdvancedTextureSGNode(resources.skullTexture);
   boneTextureNode = new AdvancedTextureSGNode(resources.boneTexture);
   bones1TextureNode = new AdvancedTextureSGNode(resources.bones1Texture);
-// diceTextureNode.wrapS = gl.CLAMP_TO_EDGE;
-//  diceTextureNode.wrapT = gl.CLAMP_TO_EDGE;
+  skullPile1TextureNode = new AdvancedTextureSGNode(resources.skullPileTexture);
+  pentagramTextureNode = new AdvancedTextureSGNode(resources.pentagramTexture);
   cobbleTextureNode = new AdvancedTextureSGNode(resources.cobbleTexture);
+
   dreughFrames = initAnimatedTexture([resources.dreughFrame1,
 resources.dreughFrame2,
 resources.dreughFrame3,
@@ -270,6 +311,18 @@ resources.dreughFrame13,
 resources.dreughFrame14,
 resources.dreughFrame15,
 resources.dreughFrame16,], gl.CLAMP_TO_EDGE);
+durielFrames = initAnimatedTexture([resources.durielFrame1,
+resources.durielFrame2,
+resources.durielFrame3,
+resources.durielFrame4,
+resources.durielFrame5,
+resources.durielFrame6,
+resources.durielFrame7,
+resources.durielFrame8,
+resources.durielFrame9,
+resources.durielFrame10,
+resources.durielFrame11,
+resources.durielFrame12,], gl.CLAMP_TO_EDGE);
 orcShamanFrames = initAnimatedTexture([resources.orcShamanFrame1,
 resources.orcShamanFrame2,
 resources.orcShamanFrame3,
@@ -289,6 +342,7 @@ resources.orcShamanFrame16,
 ], gl.CLAMP_TO_EDGE);
 diabloTextureNode = new TextureSGNode(dreughFrames, 0, 75);
 orcShamanTextureNode = new TextureSGNode(orcShamanFrames, 0, 75);
+durielTextureNode = new TextureSGNode(durielFrames, 0, 75);
 diceTextureNode = diabloTextureNode;
   //initRenderToTexture();
 
@@ -298,15 +352,27 @@ diceTextureNode = diabloTextureNode;
   root = createSceneGraph(gl, resources);
 
   /*set triggers*/
-  triggerTestNode = new TriggerSGNode(5.0, glm.translate(-3, 1, 10));
   triggerSGNode2 = new TriggerSGNode(2, glm.translate(25, -3.5, -8.5), function() {
-    console.log("looking at orcshaman");
     autoCameraLookAt = orcShamanSGNode.matrix;
     orcShamanWaypointIndex = 0;
     lookAtWaypointIndex = lookAtWaypoints.length;
   });
-  root.append(triggerTestNode);
+  triggerSGNode3 = new ObjectTriggerSGNode(0.1, orcShamanSGNode.matrix, wpOrcShaman2, function() {
+    console.log("orc triggered his node");
+    autoCameraLookAt = wpOrcShaman2;
+    lookAtWaypointIndex = lookAtWaypoints.length;
+    lookAtWaypointIndex2 = 0;
+  });
+  /*triggerSGNode4 = new ObjectTriggerSGNode(0.1, autoCameraLookAt.matrix, wpCam6, function() {
+    console.log("autocam triggered")
+    autoCameraLookAt = wpOrcShaman2;
+    lookatwaypointindex2 = lookatwaypoints2.length;
+    lookatwaypointindex3 = 0;
+  });*/
+
   root.append(triggerSGNode2);
+  root.append(triggerSGNode3);
+//  root.append(triggerSGNode4);
 
   initInteraction(gl.canvas);
 }
@@ -447,7 +513,7 @@ function createSceneGraph(gl, resources) {
     b2fNodes.append(torchTransNode2);
     b2fNodes2.append(torchTransNode2);
 
-    let torchTransNode3 = new TransformationSGNode(glm.translate(32.0625, -1, 29.675));
+    let torchTransNode3 = new TransformationSGNode(glm.translate(32.0625, -1, 26.675));
     torchTransNode3.append(torchNode3);
     torchTransNode3.append(torchLight3);
     b2fNodes.append(torchTransNode3);
@@ -522,7 +588,7 @@ function createSceneGraph(gl, resources) {
   mapFloor.shininess = 1000;
   lightingNodes.append(mapFloor);
 
-  //initialize map floor
+  //initialize map walls
   cobbleTextureNode.append(new RenderSGNode(resources.modelMapCobble));
   let mapCobble = new MaterialSGNode(cobbleTextureNode);
   mapCobble.ambient = [1, 1, 1, 1];
@@ -558,6 +624,15 @@ function createSceneGraph(gl, resources) {
   mapTorches.specular = [0.0, 0.0, 0.0, 0.0];
   mapTorches.shininess = 1.0;
   lightingNodes.append(mapTorches);
+
+  //initialize map pentagram
+  pentagramTextureNode.append(new RenderSGNode(resources.modelMapPentagram));
+  let pentagram = new MaterialSGNode(pentagramTextureNode);
+  pentagram.ambient = [1, 1, 1, 1];
+  pentagram.diffuse = [1, 1, 1, 1];
+  pentagram.specular = [0.1, 0.1, 0.1, 0.1];
+  pentagram.shininess = 1000;
+  lightingNodes.append(pentagram);
 
   //initialize map glass
   stainedGlassTextureNode.append(new RenderSGNode(resources.modelMapGlass));
@@ -627,6 +702,37 @@ function createSceneGraph(gl, resources) {
   diabloTextureNode.append(b2fNodes);
 }
 
+/*Add skull piles*/
+{
+  var rect = makeFloor(1.25, 1.25, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  skullPileSGNode1 = new BillboardSGNode(glm.transform({translate: [39.4,-5,4.1]}));
+  let skullPile1MaterialNode = new MaterialSGNode(skullPile1TextureNode);
+  skullPile1MaterialNode.ambient = [0.6, 0.6, 0.6, 1];
+  skullPile1MaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
+  skullPile1MaterialNode.specular = [1, 1, 1, 1];
+  skullPile1MaterialNode.shininess = 1000;
+  skullPileSGNode1.append(skullPile1MaterialNode);
+  skullPile1TextureNode.append(new RenderSGNode(rect));
+  lightingNodes.append(skullPileSGNode1);
+
+  var rect = makeFloor(1.25, 1.25, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  skullPileSGNode2 = new BillboardSGNode(glm.transform({translate: [48,-5,4.1]}));
+  let skullPile2MaterialNode = new MaterialSGNode(skullPile1TextureNode);
+  skullPile2MaterialNode.ambient = [0.6, 0.6, 0.6, 1];
+  skullPile2MaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
+  skullPile2MaterialNode.specular = [1, 1, 1, 1];
+  skullPile2MaterialNode.shininess = 1000;
+  skullPileSGNode2.append(skullPile2MaterialNode);
+  skullPile1TextureNode.append(new RenderSGNode(rect));
+  lightingNodes.append(skullPileSGNode2);
+}
+
 /*Add bones1*/
 {
   var rect = makeFloor(0.3, 0.3, 1)
@@ -643,6 +749,24 @@ function createSceneGraph(gl, resources) {
   bones1TextureNode.append(new RenderSGNode(rect));
 
   lightingNodes.append(bones1SGNode1);
+}
+
+/*Add Duriel*/
+{
+  var rect = makeFloor(2.5, 2.5, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  durielSGNode = new BillboardSGNode(glm.transform({translate: [43.5,-3.25,13.5]}));
+  let durielMaterialNode = new MaterialSGNode(durielTextureNode);
+  durielMaterialNode.ambient = [0.6, 0.6, 0.6, 1];
+  durielMaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
+  durielMaterialNode.specular = [1, 1, 1, 1];
+  durielMaterialNode.shininess = 1000;
+  durielSGNode.append(durielMaterialNode);
+  durielTextureNode.append(new RenderSGNode(rect));
+
+  lightingNodes.append(durielSGNode);
 }
 
 /*Add ribCage*/
@@ -669,7 +793,7 @@ function createSceneGraph(gl, resources) {
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
-  boneSGNode1 = new BillboardSGNode(glm.transform({translate: [25.1,-5.25,2.6]}));
+  boneSGNode1 = new BillboardSGNode(glm.transform({translate: [25.1,-5.25,-1]}));
   let boneMaterialNode = new MaterialSGNode(boneTextureNode);
   boneMaterialNode.ambient = [0.6, 0.6, 0.6, 1];
   boneMaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
@@ -830,11 +954,6 @@ function render(timeInMilliseconds) {
     orcShamanWaypointIndex = moveUsingWaypoints(orcShamanSGNode.matrix, orcShamanWaypoints, orcShamanWaypointIndex, 0.1);
   }
 
-  triggerTestNode.setTriggerFunction(function(){
-    console.log("triggered");
-
-  })
-
   //console.log("after: "+rotateNode.matrix[12]);
   //setup viewport
   gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
@@ -893,6 +1012,15 @@ function render(timeInMilliseconds) {
   }
   if(lookAtWaypointIndex < lookAtWaypoints.length && !manualCameraEnabled) {
     lookAtWaypointIndex = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints, lookAtWaypointIndex, 0.1);
+  }
+  if(lookAtWaypointIndex2 < lookAtWaypoints2.length && lookAtWaypointIndex2 !== -1 && !manualCameraEnabled) {
+    lookAtWaypointIndex2 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints2, lookAtWaypointIndex2, 2);
+    if(lookAtWaypointIndex2 === lookAtWaypoints2.length) {
+      lookAtWaypointIndex3 = 0;
+    }
+  }
+  if(lookAtWaypointIndex3 < lookAtWaypoints3.length && lookAtWaypointIndex3 !== -1 && !manualCameraEnabled) {
+    lookAtWaypointIndex3 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints3, lookAtWaypointIndex3, 0.45);
   }
 
   if(!manualCameraEnabled) {

@@ -1,5 +1,5 @@
-# Blender MTL File: 'BACKUP9MapComplete.blend'
-# Material Count: 103
+# Blender MTL File: 'BACKUP10MapComplete.blend'
+# Material Count: 105
 
 newmtl Material.000
 Ns 96.078431
@@ -134,6 +134,17 @@ illum 2
 map_Kd black_cobble_rotated.jpg
 
 newmtl Material.005
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd floor_cobble.jpg
+
+newmtl Material.005_black_cobble.jpg.006
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -1044,15 +1055,6 @@ d 1
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None_black_cobble_rotated.jpg.026
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
-map_Kd black_cobble_rotated.jpg
-
 newmtl None_black_cobble_rotated.jpg.027
 Ns 0
 Ka 0.000000 0.000000 0.000000
@@ -1071,6 +1073,33 @@ d 1
 illum 2
 map_Kd black_cobble_rotated.jpg
 
+newmtl None_black_cobble_rotated.jpg.029
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl None_dungeon_wall.png
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\dungeon_wall.png
+
+newmtl None_dungeon_wall.png.001
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\dungeon_wall.png
+
 newmtl None_floor_cobble.jpg.007
 Ns 0
 Ka 0.000000 0.000000 0.000000
@@ -1079,12 +1108,3 @@ Ks 0.8 0.8 0.8
 d 1
 illum 2
 map_Kd floor_cobble.jpg
-
-newmtl None_sky.jpg
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
-map_Kd sky.jpg

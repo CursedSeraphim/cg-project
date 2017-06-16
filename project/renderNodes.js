@@ -19,12 +19,43 @@ class LightingSGNode extends SGNode {
 /**
 * a node which triggers a given function once when the camera is within a given radius of the node
 */
+class ObjectTriggerSGNode extends TransformationSGNode {
+  constructor(radius, triggeringObjectMatrix, matrix, triggeredFunction, children) {
+    super(matrix, children);
+    this.radius = radius;
+    this.triggeringObjectMatrix = triggeringObjectMatrix;
+    if(triggeredFunction == null) {
+      this.triggeredFunction = function(){console.log("node for point " + matrix + " triggered but no function set")};
+    } else {
+      this.triggeredFunction = triggeredFunction;
+    }
+    var triggered = 0;
+  }
+  render(context)
+  {
+    var dx = this.triggeringObjectMatrix[12] - this.matrix[12];
+    var dy = this.triggeringObjectMatrix[13] - this.matrix[13];
+    var dz = this.triggeringObjectMatrix[14] - this.matrix[14];
+    var distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
+    if(distance <= this.radius && !this.triggered) {
+      this.triggeredFunction();
+      this.triggered = 1;
+    }
+  }
+  setTriggerFunction(triggeredFunction) {
+    this.triggeredFunction = triggeredFunction;
+  }
+}
+
+/**
+* a node which triggers a given function once when the camera is within a given radius of the node
+*/
 class TriggerSGNode extends TransformationSGNode {
   constructor(radius, matrix, triggeredFunction, children) {
     super(matrix, children);
     this.radius = radius;
     if(triggeredFunction == null) {
-      this.triggeredFunction = function(){console.log("node triggered but no function set")};
+      this.triggeredFunction = function(){console.log("node for point " + matrix + " triggered but no function set")};
     } else {
       this.triggeredFunction = triggeredFunction;
     }

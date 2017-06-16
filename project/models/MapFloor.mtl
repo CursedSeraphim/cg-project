@@ -1,5 +1,5 @@
-# Blender MTL File: 'BACKUP9MapComplete.blend'
-# Material Count: 9
+# Blender MTL File: 'BACKUP10MapComplete.blend'
+# Material Count: 12
 
 newmtl Material.005
 Ns 96.078431
@@ -12,7 +12,7 @@ d 1.000000
 illum 2
 map_Kd floor_cobble.jpg
 
-newmtl Material.005_floor_cobble.jpg.001
+newmtl Material.014
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -23,6 +23,17 @@ d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\floor_cobble.jpg
 
+newmtl Material.014_floor_cobble.jpg.009
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd floor_cobble.jpg
+
 newmtl None
 Ns 0
 Ka 0.000000 0.000000 0.000000
@@ -30,7 +41,7 @@ Kd 0.8 0.8 0.8
 Ks 0.8 0.8 0.8
 d 1
 illum 2
-map_Kd sky.jpg
+map_Kd black_cobble_rotated.jpg
 
 newmtl None_NONE
 Ns 0
@@ -40,25 +51,16 @@ Ks 0.8 0.8 0.8
 d 1
 illum 2
 
-newmtl None_black_cobble_rotated.jpg.014
+newmtl None_floor_cobble.jpg
 Ns 0
 Ka 0.000000 0.000000 0.000000
 Kd 0.8 0.8 0.8
 Ks 0.8 0.8 0.8
 d 1
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\floor_cobble.jpg
 
 newmtl None_floor_cobble.jpg.002
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
-map_Kd floor_cobble.jpg
-
-newmtl None_floor_cobble.jpg.005
 Ns 0
 Ka 0.000000 0.000000 0.000000
 Kd 0.8 0.8 0.8
@@ -76,7 +78,34 @@ d 1
 illum 2
 map_Kd floor_cobble.jpg
 
+newmtl None_floor_cobble.jpg.014
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd floor_cobble.jpg
+
+newmtl None_floor_cobble.jpg.017
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\floor_cobble.jpg
+
 newmtl None_metal_64.png
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd metal_64.png
+
+newmtl None_metal_64.png.002
 Ns 0
 Ka 0.000000 0.000000 0.000000
 Kd 0.8 0.8 0.8
