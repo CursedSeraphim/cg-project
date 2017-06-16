@@ -31,7 +31,7 @@ var autoCameraLookAt;
 var root = null;
 var particleNodes;
 var lightingNodes;
-var translateTorch;
+var translateLantern;
 var translateTorch1;
 var translateTorch2;
 var b2fNodes;
@@ -39,6 +39,11 @@ var b2fNodes2;
 var diabloSGNode;
 var orcShamanSGNode;
 var lanternSGNode;
+var hipSGNode1;
+var ribCageSGNode1;
+var skullSGNode1;
+var boneSGNode1;
+var bones1SGNode1;
 
 var hipBoneSGNode;
 
@@ -76,6 +81,7 @@ var lavaTextureNode;
 var diabloTextureNode;
 var orcShamanTextureNode;
 var metalTextureNode;
+var stainedGlassTextureNode;
 var gridTextureNode;
 var glassTextureNode;
 var spikedBarsTextureNode;
@@ -84,6 +90,7 @@ var imSoHipTextureNode;
 var skullTextureNode;
 var boneTextureNode;
 var ribCageTextureNode;
+var bones1TextureNode;
 //texture arrays
 var dreughFrames;
 var orcShamanFrames;
@@ -106,58 +113,62 @@ loadResources({
   modelMapSpikedBars: 'models/MapSpikedBars.obj',
   modelMapSky: 'models/MapSky.obj',
   modelMapTorches: 'models/MapTorches.obj',
+  modelMapGlass: 'models/MapGlass.obj',
   modelLanternMetal: 'models/lantern_metal.obj',
   modelLanternGlass: 'models/lantern_glass.obj',
   modelLanternGrid: 'models/lantern_grid.obj',
 
-  lavaTexture: 'models/lava.jpg',
-  diceTexture: 'models/diemap.jpg',
-  floorTexture: 'models/floor_cobble.jpg',
-  stoaqTexture: 'models/stoaquad.jpg',
-  cobbleTexture: 'models/dungeon_wall.png',
-  diabloImage: 'models/dreugh.gif',
-  metalTexture: 'models/metal_128.png',//metal.png',
-  glassTexture: 'models/glass.png',//glass_64.png',
-  gridTexture: 'models/bars.png',
-  skyTexture: 'models/sky.png',
-  spikedBarsTexture: 'models/spiked_bars.png',
-  hipBoneTexture: 'models/textures/bones/imsohip.png',
-  ribCageTexture: 'models/textures/bones/ribcage.png',
-  skullTexture: 'models/textures/bones/skull.png',
-  boneTexture: 'models/textures/bones/bone.png',
+  lavaTexture: 'textures/lava/lava.jpg',
+  diceTexture: 'textures/misc/diemap.jpg',
+  floorTexture: 'textures/dungeon/floor_cobble.jpg',
+  stoaqTexture: 'textures/dungeon/stoaquad.jpg',
+  cobbleTexture: 'textures/dungeon/dungeon_wall.png',
+  diabloImage: 'textures/diablo/diablo.png',
+  metalTexture: 'textures/metal/metal_128.png',//metal.png',
+  glassTexture: 'textures/glass/glass.png',//glass_64.png',
+  stainedGlassTexture: 'textures/glass/stainedGlass.png',
+  gridTexture: 'textures/metal/bars.png',
+  skyTexture: 'textures/sky/sky.png',
+  spikedBarsTexture: 'textures/metal/spiked_bars.png',
+  hipBoneTexture: 'textures/bones/imsohip.png',
+  ribCageTexture: 'textures/bones/ribCage.png',
+  skullTexture: 'textures/bones/skull.png',
+  boneTexture: 'textures/bones/bone.png',
+  bones1Texture: 'textures/bones/bones1.png',
 
-  dreughFrame1: 'models/textures/dreugh/dreugh (1).gif',
-dreughFrame2: 'models/textures/dreugh/dreugh (2).gif',
-dreughFrame3: 'models/textures/dreugh/dreugh (3).gif',
-dreughFrame4: 'models/textures/dreugh/dreugh (4).gif',
-dreughFrame5: 'models/textures/dreugh/dreugh (5).gif',
-dreughFrame6: 'models/textures/dreugh/dreugh (6).gif',
-dreughFrame7: 'models/textures/dreugh/dreugh (7).gif',
-dreughFrame8: 'models/textures/dreugh/dreugh (8).gif',
-dreughFrame9: 'models/textures/dreugh/dreugh (9).gif',
-dreughFrame10: 'models/textures/dreugh/dreugh (10).gif',
-dreughFrame11: 'models/textures/dreugh/dreugh (11).gif',
-dreughFrame12: 'models/textures/dreugh/dreugh (12).gif',
-dreughFrame13: 'models/textures/dreugh/dreugh (13).gif',
-dreughFrame14: 'models/textures/dreugh/dreugh (14).gif',
-dreughFrame15: 'models/textures/dreugh/dreugh (15).gif',
-dreughFrame16: 'models/textures/dreugh/dreugh (16).gif',
-orcShamanFrame1: 'models/textures/orc_shaman/orc_shaman (1).gif',
-orcShamanFrame2: 'models/textures/orc_shaman/orc_shaman (2).gif',
-orcShamanFrame3: 'models/textures/orc_shaman/orc_shaman (3).gif',
-orcShamanFrame4: 'models/textures/orc_shaman/orc_shaman (4).gif',
-orcShamanFrame5: 'models/textures/orc_shaman/orc_shaman (5).gif',
-orcShamanFrame6: 'models/textures/orc_shaman/orc_shaman (6).gif',
-orcShamanFrame7: 'models/textures/orc_shaman/orc_shaman (7).gif',
-orcShamanFrame8: 'models/textures/orc_shaman/orc_shaman (8).gif',
-orcShamanFrame9: 'models/textures/orc_shaman/orc_shaman (9).gif',
-orcShamanFrame10: 'models/textures/orc_shaman/orc_shaman (10).gif',
-orcShamanFrame11: 'models/textures/orc_shaman/orc_shaman (11).gif',
-orcShamanFrame12: 'models/textures/orc_shaman/orc_shaman (12).gif',
-orcShamanFrame13: 'models/textures/orc_shaman/orc_shaman (13).gif',
-orcShamanFrame14: 'models/textures/orc_shaman/orc_shaman (14).gif',
-orcShamanFrame15: 'models/textures/orc_shaman/orc_shaman (15).gif',
-orcShamanFrame16: 'models/textures/orc_shaman/orc_shaman (16).gif'
+  dreughFrame1: 'textures/dreugh/dreugh (1).gif',
+dreughFrame2: 'textures/dreugh/dreugh (2).gif',
+dreughFrame3: 'textures/dreugh/dreugh (3).gif',
+dreughFrame4: 'textures/dreugh/dreugh (4).gif',
+dreughFrame5: 'textures/dreugh/dreugh (5).gif',
+dreughFrame6: 'textures/dreugh/dreugh (6).gif',
+dreughFrame7: 'textures/dreugh/dreugh (7).gif',
+dreughFrame8: 'textures/dreugh/dreugh (8).gif',
+dreughFrame9: 'textures/dreugh/dreugh (9).gif',
+dreughFrame10: 'textures/dreugh/dreugh (10).gif',
+dreughFrame11: 'textures/dreugh/dreugh (11).gif',
+dreughFrame12: 'textures/dreugh/dreugh (12).gif',
+dreughFrame13: 'textures/dreugh/dreugh (13).gif',
+dreughFrame14: 'textures/dreugh/dreugh (14).gif',
+dreughFrame15: 'textures/dreugh/dreugh (15).gif',
+dreughFrame16: 'textures/dreugh/dreugh (16).gif',
+
+orcShamanFrame1: 'textures/orc_shaman/orc_shaman (1).gif',
+orcShamanFrame2: 'textures/orc_shaman/orc_shaman (2).gif',
+orcShamanFrame3: 'textures/orc_shaman/orc_shaman (3).gif',
+orcShamanFrame4: 'textures/orc_shaman/orc_shaman (4).gif',
+orcShamanFrame5: 'textures/orc_shaman/orc_shaman (5).gif',
+orcShamanFrame6: 'textures/orc_shaman/orc_shaman (6).gif',
+orcShamanFrame7: 'textures/orc_shaman/orc_shaman (7).gif',
+orcShamanFrame8: 'textures/orc_shaman/orc_shaman (8).gif',
+orcShamanFrame9: 'textures/orc_shaman/orc_shaman (9).gif',
+orcShamanFrame10: 'textures/orc_shaman/orc_shaman (10).gif',
+orcShamanFrame11: 'textures/orc_shaman/orc_shaman (11).gif',
+orcShamanFrame12: 'textures/orc_shaman/orc_shaman (12).gif',
+orcShamanFrame13: 'textures/orc_shaman/orc_shaman (13).gif',
+orcShamanFrame14: 'textures/orc_shaman/orc_shaman (14).gif',
+orcShamanFrame15: 'textures/orc_shaman/orc_shaman (15).gif',
+orcShamanFrame16: 'textures/orc_shaman/orc_shaman (16).gif'
 
 }).then(function (resources /*an object containing our keys with the loaded resources*/) {
   init(resources);
@@ -178,12 +189,11 @@ function init(resources) {
 
   /*set camera Start position*/
   cameraPosition = vec3.fromValues(3, -1, -10);
-  camera.rotation.x = -50
 
   /*set waypoints*/
   cameraWaypointIndex = 0;
   lookAtWaypointIndex = 0;
-  let wpCam1 = glm.translate(9, 2, -8.5);
+  let wpCam1 = glm.translate(9, 3, -8.5);
   let wpCam2 = glm.translate(18, -3.5, -8.5);
   let wpCam3 = glm.translate(25, -3.5, -8.5);
   let wpCam4 = glm.translate(25, -3.5, 24.5);
@@ -193,8 +203,8 @@ function init(resources) {
 
   //-1 is used to trigger the orc shaman at a later point
   orcShamanWaypointIndex = -1;
-  let wpOrcShaman1 = glm.translate(25, -3, -22.5);
-  let wpOrcShaman2 = glm.translate(17, -3, -22.5);
+  let wpOrcShaman1 = glm.translate(25, -3.5, -22.5);
+  let wpOrcShaman2 = glm.translate(17, -3.5, -22.5);
   orcShamanWaypoints = [wpOrcShaman1, wpOrcShaman2];
 
   let waypointCube1 = mat4.create();
@@ -233,12 +243,14 @@ function init(resources) {
   glassTextureNode = new AdvancedTextureSGNode(resources.glassTexture);
   gridTextureNode = new AdvancedTextureSGNode(resources.gridTexture);
   metalTextureNode = new AdvancedTextureSGNode(resources.metalTexture);
+  stainedGlassTextureNode = new AdvancedTextureSGNode(resources.stainedGlassTexture);
   spikedBarsTextureNode = new AdvancedTextureSGNode(resources.spikedBarsTexture);
   skyTextureNode = new AdvancedTextureSGNode(resources.skyTexture);
   ribCageTextureNode = new AdvancedTextureSGNode(resources.ribCageTexture);
   imSoHipTextureNode = new AdvancedTextureSGNode(resources.hipBoneTexture);
   skullTextureNode = new AdvancedTextureSGNode(resources.skullTexture);
   boneTextureNode = new AdvancedTextureSGNode(resources.boneTexture);
+  bones1TextureNode = new AdvancedTextureSGNode(resources.bones1Texture);
 // diceTextureNode.wrapS = gl.CLAMP_TO_EDGE;
 //  diceTextureNode.wrapT = gl.CLAMP_TO_EDGE;
   cobbleTextureNode = new AdvancedTextureSGNode(resources.cobbleTexture);
@@ -287,7 +299,7 @@ diceTextureNode = diabloTextureNode;
 
   /*set triggers*/
   triggerTestNode = new TriggerSGNode(5.0, glm.translate(-3, 1, 10));
-  triggerSGNode2 = new TriggerSGNode(0.1, glm.translate(25, -3.5, -8.5), function() {
+  triggerSGNode2 = new TriggerSGNode(2, glm.translate(25, -3.5, -8.5), function() {
     console.log("looking at orcshaman");
     autoCameraLookAt = orcShamanSGNode.matrix;
     orcShamanWaypointIndex = 0;
@@ -315,7 +327,6 @@ function createSceneGraph(gl, resources) {
   lightingNodes = new LightingSGNode();
   b2fNodes = new Back2FrontSGNode();
   b2fNodes2 = new Back2FrontSGNode();
-
   root.append(new BlendSgNode(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, lightingNodes));
 
   //light debug helper function
@@ -343,6 +354,13 @@ function createSceneGraph(gl, resources) {
   //  let staticFireNode = createParticleNode(600, [2,0.4,2]);
     let torchNode1 = createParticleNode(200, [0.25,0.1,0.25]);
     let torchNode2 = createParticleNode(200, [0.25,0.1,0.25]);
+    let torchNode3 = createParticleNode(200, [0.25,0.1,0.25]);
+    let torchNode4 = createParticleNode(200, [0.25,0.1,0.25]);
+    let torchNode5 = createParticleNode(200, [0.25,0.1,0.25]);
+    let torchNode6 = createParticleNode(200, [0.25,0.1,0.25]);
+    let torchNode7 = createParticleNode(200, [0.25,0.1,0.25]);
+    let torchNode8 = createParticleNode(200, [0.25,0.1,0.25]);
+    let torchNode9 = createParticleNode(200, [0.25,0.1,0.25]);
 
     /*Init Light*/
     let torchNode = new AdvancedLightSGNode(true, 10, [0,0,1]);
@@ -377,12 +395,30 @@ function createSceneGraph(gl, resources) {
     torchLight2.specular = [0.0,0.0,0.0,1.0];
     torchLight2.position = [0, 0, 0];
 
+    let torchLight3 = new AdvancedLightSGNode(true);
+    torchLight3.ambient = [0.1,0.1,0.1,1.0];
+    torchLight3.diffuse = [0.6,0.3,0.05,1.0];
+    torchLight3.specular = [0.0,0.0,0.0,1.0];
+    torchLight3.position = [0, 0, 0];
+
+    let torchLight4 = new AdvancedLightSGNode(true);
+    torchLight4.ambient = [0.1,0.1,0.1,1.0];
+    torchLight4.diffuse = [0.6,0.3,0.05,1.0];
+    torchLight4.specular = [0.0,0.0,0.0,1.0];
+    torchLight4.position = [0, 0, 0];
+
+    let torchLight5 = new AdvancedLightSGNode(true);
+    torchLight4.ambient = [0.1,0.1,0.1,1.0];
+    torchLight4.diffuse = [0.6,0.3,0.05,1.0];
+    torchLight4.specular = [0.0,0.0,0.0,1.0];
+    torchLight4.position = [0, 0, 0];
+
     /*Init Light Positions*/
-    translateTorch = new TransformationSGNode(glm.translate(0, 0, 0));
-    translateTorch.append(torchNode);
-    translateTorch.append(lanternFireParticleNode);
-    b2fNodes.append(translateTorch);
-    b2fNodes2.append(translateTorch);
+    translateLantern = new TransformationSGNode(glm.translate(0, 0, 0));
+    translateLantern.append(torchNode);
+    translateLantern.append(lanternFireParticleNode);
+    b2fNodes.append(translateLantern);
+    b2fNodes2.append(translateLantern);
 
     /*POSITION TEST NODES*/
     rotateLight = new TransformationSGNode(mat4.create());
@@ -410,6 +446,23 @@ function createSceneGraph(gl, resources) {
     torchTransNode2.append(torchLight2);
     b2fNodes.append(torchTransNode2);
     b2fNodes2.append(torchTransNode2);
+
+    let torchTransNode3 = new TransformationSGNode(glm.translate(32.0625, -1, 29.675));
+    torchTransNode3.append(torchNode3);
+    torchTransNode3.append(torchLight3);
+    b2fNodes.append(torchTransNode3);
+
+    let torchTransNode4 = new TransformationSGNode(glm.translate(43.45, -1, 0.4));
+    torchTransNode4.append(torchNode4);
+    torchTransNode4.append(torchLight4);
+    b2fNodes.append(torchTransNode4);
+
+/*
+    let torchTransNode5 = new TransformationSGNode(glm.translate(49.7, -1, 18.95));
+    torchTransNode5.append(torchNode5);
+    torchTransNode5.append(torchLight5);
+    b2fNodes.append(torchTransNode5);
+    */
 }
 
 /*Place the interior of the dungeon*/
@@ -444,7 +497,7 @@ function createSceneGraph(gl, resources) {
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
-  orcShamanSGNode = new BillboardSGNode(glm.transform({translate: [25,-3,-15]}), [
+  orcShamanSGNode = new BillboardSGNode(glm.transform({translate: [25,-3.5,-15]}), [
     new RenderSGNode(rect)
   ]);
   let orc_shamanMaterialNode = new MaterialSGNode(orcShamanSGNode);
@@ -505,6 +558,16 @@ function createSceneGraph(gl, resources) {
   mapTorches.specular = [0.0, 0.0, 0.0, 0.0];
   mapTorches.shininess = 1.0;
   lightingNodes.append(mapTorches);
+
+  //initialize map glass
+  stainedGlassTextureNode.append(new RenderSGNode(resources.modelMapGlass));
+  let mapGlass = new MaterialSGNode(stainedGlassTextureNode);
+  mapGlass.ambient = [1, 1, 1, 1];
+  mapGlass.diffuse = [1, 1, 1, 1];
+  mapGlass.specular = [0.0, 0.0, 0.0, 0.0];
+  mapGlass.shininess = 1.0;
+  lightingNodes.append(mapGlass);
+
 }
 
 {
@@ -562,6 +625,96 @@ function createSceneGraph(gl, resources) {
 
   b2fNodes.append(diabloSGNode);
   diabloTextureNode.append(b2fNodes);
+}
+
+/*Add bones1*/
+{
+  var rect = makeFloor(0.3, 0.3, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  bones1SGNode1 = new BillboardSGNode(glm.transform({translate: [27.5,-5,-8.9]}));
+  let bones1MaterialNode = new MaterialSGNode(bones1TextureNode);
+  bones1MaterialNode.ambient = [0.6, 0.6, 0.6, 1];
+  bones1MaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
+  bones1MaterialNode.specular = [1, 1, 1, 1];
+  bones1MaterialNode.shininess = 1000;
+  bones1SGNode1.append(bones1MaterialNode);
+  bones1TextureNode.append(new RenderSGNode(rect));
+
+  lightingNodes.append(bones1SGNode1);
+}
+
+/*Add ribCage*/
+{
+  var rect = makeFloor(0.4, 0.4, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  ribCageSGNode1 = new BillboardSGNode(glm.transform({translate: [21,-4.75,-9.5]}));
+  let ribCageMaterialNode = new MaterialSGNode(ribCageTextureNode);
+  ribCageMaterialNode.ambient = [0.6, 0.6, 0.6, 1];
+  ribCageMaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
+  ribCageMaterialNode.specular = [1, 1, 1, 1];
+  ribCageMaterialNode.shininess = 1000;
+  ribCageSGNode1.append(ribCageMaterialNode);
+  ribCageTextureNode.append(new RenderSGNode(rect));
+
+  lightingNodes.append(ribCageSGNode1);
+}
+
+/*Add bone*/
+{
+  var rect = makeFloor(0.3, 0.3, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  boneSGNode1 = new BillboardSGNode(glm.transform({translate: [25.1,-5.25,2.6]}));
+  let boneMaterialNode = new MaterialSGNode(boneTextureNode);
+  boneMaterialNode.ambient = [0.6, 0.6, 0.6, 1];
+  boneMaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
+  boneMaterialNode.specular = [1, 1, 1, 1];
+  boneMaterialNode.shininess = 1000;
+  boneSGNode1.append(boneMaterialNode);
+  boneTextureNode.append(new RenderSGNode(rect));
+
+  lightingNodes.append(boneSGNode1);
+}
+
+/*Add skull*/
+{
+  var rect = makeFloor(0.3, 0.3, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  skullSGNode1 = new BillboardSGNode(glm.transform({translate: [10,0.5,-9.5]}));
+  let skullCageMaterialNode = new MaterialSGNode(skullTextureNode);
+  skullCageMaterialNode.ambient = [0.6, 0.6, 0.6, 1];
+  skullCageMaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
+  skullCageMaterialNode.specular = [1, 1, 1, 1];
+  skullCageMaterialNode.shininess = 1000;
+  skullSGNode1.append(skullCageMaterialNode);
+  skullTextureNode.append(new RenderSGNode(rect));
+
+  lightingNodes.append(skullSGNode1);
+}
+
+/*Add hip*/
+{
+  var rect = makeFloor(0.3, 0.3, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  hipSGNode1 = new BillboardSGNode(glm.transform({translate: [9.5,0.5,-4.5]}));
+  let hipMaterialNode = new MaterialSGNode(imSoHipTextureNode);
+  hipMaterialNode.ambient = [0.6, 0.6, 0.6, 1];
+  hipMaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
+  hipMaterialNode.specular = [1, 1, 1, 1];
+  hipMaterialNode.shininess = 1000;
+  hipSGNode1.append(hipMaterialNode);
+  imSoHipTextureNode.append(new RenderSGNode(rect));
+
+  lightingNodes.append(hipSGNode1);
 }
 
 lightingNodes.append(diabloTextureNode);
@@ -729,7 +882,7 @@ function render(timeInMilliseconds) {
 
   context.viewMatrix = glm.translate(cameraPosition[0], cameraPosition[1], cameraPosition[2]);
   if(manualCameraEnabled) {
-    context.viewMatrix = mat4.multiply(mat4.create(), mouseRotateMatrix, glm.translate(cameraPosition[0], cameraPosition[1], cameraPosition[2]));
+    mat4.multiply(context.viewMatrix, mouseRotateMatrix, glm.translate(cameraPosition[0], cameraPosition[1], cameraPosition[2]));
   }
   context.lookAtVector = lookAtVector;
   //get inverse view matrix to allow computing eye-to-light matrix
@@ -737,11 +890,9 @@ function render(timeInMilliseconds) {
 
   if(cameraWaypointIndex < cameraWaypoints.length && !manualCameraEnabled) {
       cameraWaypointIndex = moveUsingWaypoints(context.invViewMatrix, cameraWaypoints, cameraWaypointIndex, 0.2);
-      console.log("moving camera "+cameraWaypointIndex+" < "+cameraWaypoints.length);
   }
   if(lookAtWaypointIndex < lookAtWaypoints.length && !manualCameraEnabled) {
     lookAtWaypointIndex = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints, lookAtWaypointIndex, 0.1);
-    console.log("moving lookat "+lookAtWaypointIndex+" < "+lookAtWaypoints.length);
   }
 
   if(!manualCameraEnabled) {
@@ -754,13 +905,13 @@ function render(timeInMilliseconds) {
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
-displayText((time() - startTime)/1000+"s");//+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
+displayText((time() - startTime)/1000+"s "+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
 /* moving diablo to camera
   diabloSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.5, -2.5));
   diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));
 */
-  translateTorch.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(1, -0.5, -2.0));
-  lanternSGNode.matrix = translateTorch.matrix;
+  translateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(1, -0.75, -2));
+  lanternSGNode.matrix = translateLantern.matrix;
 
   //render scenegraph
   root.render(context);

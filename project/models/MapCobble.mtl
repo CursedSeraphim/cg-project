@@ -1,5 +1,5 @@
 # Blender MTL File: 'BACKUP9MapComplete.blend'
-# Material Count: 99
+# Material Count: 103
 
 newmtl Material.000
 Ns 96.078431
@@ -1044,6 +1044,33 @@ d 1
 illum 2
 map_Kd black_cobble_rotated.jpg
 
+newmtl None_black_cobble_rotated.jpg.026
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl None_black_cobble_rotated.jpg.027
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl None_black_cobble_rotated.jpg.028
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd black_cobble_rotated.jpg
+
 newmtl None_floor_cobble.jpg.007
 Ns 0
 Ka 0.000000 0.000000 0.000000
@@ -1052,3 +1079,12 @@ Ks 0.8 0.8 0.8
 d 1
 illum 2
 map_Kd floor_cobble.jpg
+
+newmtl None_sky.jpg
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd sky.jpg
