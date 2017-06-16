@@ -1035,7 +1035,7 @@ function createSceneGraph(gl, resources) {
   let andarielMaterialNode = new MaterialSGNode(andarielTextureNode);
   andarielMaterialNode.ambient = [0.6, 0.6, 0.6, 1];
   andarielMaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
-  andarielMaterialNode.specular = [1, 1, 1, 1];
+  andarielMaterialNode.specular = [0.1, 0.1, 0.1, 0.1];
   andarielMaterialNode.shininess = 1000;
   andarielSGNode.append(andarielMaterialNode);
   andarielTextureNode.append(new RenderSGNode(rect));
