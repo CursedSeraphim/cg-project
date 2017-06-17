@@ -10,7 +10,7 @@ class LightingSGNode extends SGNode {
   render(context)
   {
     /*defines number of lightsources*/
-    gl.uniform1i(gl.getUniformLocation(context.shader, 'u_nrOfLights'), LightSGNode.nr);
+    gl.uniform1i(gl.getUniformLocation(context.shader, 'u_nrOfLights'), AdvancedLightSGNode.nr);
     super.render(context);
   }
 }
@@ -91,8 +91,9 @@ class AdvancedLightSGNode extends LightSGNode {
     this.spotAngle *= Math.PI/180;
 
 
-    LightSGNode.nr = (LightSGNode.nr + 1 || 0);
-    this.nr = LightSGNode.nr;
+    AdvancedLightSGNode.nr = (AdvancedLightSGNode.nr + 1 || 0);
+
+    this.nr = AdvancedLightSGNode.nr;
 
     this.origUniform = this.uniform;
     this.uniform = this.uniform + '['+ this.nr + ']';
@@ -135,9 +136,9 @@ class AdvancedLightSGNode extends LightSGNode {
     gl.uniform1f(gl.getUniformLocation(context.shader, this.uniform+'.spotAngle'), this.spotAngle);
     gl.uniform3fv(gl.getUniformLocation(context.shader, this.uniform+'.lookAt'), lookAt);
     gl.uniform1f(gl.getUniformLocation(context.shader, this.uniform+'.decreaseRate'), this.decreaseRate);
-    //console.log(this.lookAt);
 
     this.counter += Math.random() / 2;
+
     super.render(context);
 
     if(this.flicker) {
@@ -259,13 +260,14 @@ class FireSGNode extends SGNode {
     this.particleSizeReduction = 70.0;
     this.fireRiseFactor = 0.3;
     this.sparkRiseFactor = 0.005;
-    this.movementScaling = 10;
+    this.movementScaling = 5;
+    this.maxMovement = 100;
+    this.maxDistanceFromStart = 100;
     this.fireSpeed = 2.5*this.invScalefactor;
     this.sparkSpeed = 0.5*(this.invScalefactor*5);
     this.particleColorMult = (colorMult || vec3.fromValues(0.5,0.5,0.1));
     this.particleColorMin = (colorMin ||vec3.fromValues(0.5,0,0));
-    this.windStrengthScale = 0.3;
-    this.windStrength = this.windStrengthScale;
+    this.windStrength = 0.3;
   }
 
   /*Generate a random color within the given parameters
@@ -304,6 +306,7 @@ class FireSGNode extends SGNode {
     particle.size = size + Math.random() * size * sizeVariance;
     particle.color = this.getRandomColor();
     particle.position = this.getRandomPosition(limits);
+    particle.startPosition = particle.position.slice(0);
     particle.velocity = this.getRandomVec3Upward(emmitAngle, speed);
 
     return particle;
@@ -338,7 +341,12 @@ class FireSGNode extends SGNode {
     vec4.subtract(moveVec, moveVec, translations);
 
     /*do some scaling, this values are pretty small*/
-    vec3.scale(moveVec, moveVec, this.movementScaling);
+    vec4.scale(moveVec, moveVec, this.movementScaling);
+    var length = vec3.length(moveVec);
+    if(length > this.maxMovement) {
+      vec4.scale(moveVec, moveVec, this.maxMovement / length);
+    }
+
     return vec3.fromValues(moveVec[0],moveVec[1],moveVec[2]);
   }
 
@@ -496,8 +504,16 @@ class FireSGNode extends SGNode {
       /*also reduce particle size during a particle lifespan*/
       particle.size -= (particle.size/this.particleSizeReduction*timeS + Math.abs(distanceToCenter)*particle.size/(this.particleSizeReduction*2)*timeS);
 
+      var pos = particle.position.slice(0);
+      pos[1] = pos[1] / 2;
+      var sPos =particle.startPosition.slice(0);
+      sPos[1] = sPos[1] / 2;
+      var distanceFromStart = vec3.length(vec3.subtract(vec3.create(),
+                                            pos,
+                                            sPos));
+
       //if particle gets invisible e.g. all its energy is used, remove it
-      if(particle.color[3] <= 0.0 || particle.size <= 0.0) {
+      if(particle.color[3] <= 0.0 || particle.size <= 0.0 || distanceFromStart > this.maxDistanceFromStart) {
         this.fireParticles.splice(i, 1);
       }else {
         this.addToGlBuffer(particle, partPosGlBuffer, colorGlBuffer, sizeGlBuffer);

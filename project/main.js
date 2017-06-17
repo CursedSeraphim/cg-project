@@ -57,6 +57,7 @@ var bones1SGNode2;
 var skullPileSGNode1;
 var skullPileSGNode2;
 var hipBoneSGNode;
+
 //spider (compex model) scene graph nodes
 var spiderAbdomenSGNode;
 var spiderHeadSGNode;
@@ -106,8 +107,6 @@ var lookAtWaypointIndex4;
 var lookAtWaypointIndex5;
 var orcShamanWaypoints;
 var orcShamanWaypointIndex;
-var cubeWaypoints;
-var cubeWaypointIndex;
 var diabloWaypoints;
 var diabloWaypointIndex;
 var spiderWaypointIndex;
@@ -124,8 +123,6 @@ var triggerSGNode7;
 var triggerSGNode8;
 
 /*DEBUG NODES*/
-var rotateNode;
-var rotateLight;
 
 /*Shader Programs*/
 var particleShaderProgram;
@@ -309,8 +306,8 @@ function init(resources) {
   gl = createContext(400, 400);
 
   //setting manual camera control variables
-  manualCameraEnabled = false;
-  //manualCameraEnabled = true;
+  //manualCameraEnabled = false;
+  manualCameraEnabled = true;
   //setting initial point to look at
   autoCameraLookAt = glm.translate(8.75, 2.35, -9.4);
   waitingFor = 0;
@@ -362,14 +359,6 @@ function init(resources) {
   lookAtWaypoints5 = [spiderPos];
 
   spiderWaypointIndex = 0;
-
-  let waypointCube1 = mat4.create();
-  waypointCube1[12] = 7;
-  waypointCube1[14] = 7;
-  let waypointCube2 = mat4.create();
-  waypointCube2[12] = -7;
-  cubeWaypointIndex = 0;
-  cubeWaypoints = [waypointCube1, waypointCube2, mat4.create()];
 
   let waypointd1 = mat4.create();
   waypointd1[12] = -3;
@@ -619,32 +608,15 @@ function createSceneGraph(gl, resources) {
   }
 
   {
-    /*Init Particles*/
-    let lanternFireParticleNode  = createParticleNode(100, [0.02,0.01,0.02]);
 
-    /*PARTICLE TEST NODES*/
-
-    /*Init Light*/
-    let torchNode = new AdvancedLightSGNode(true, 10, [0,0,1]);
-    torchNode.ambient = [1.0,0.6,0.05,1.0];
-    torchNode.diffuse = [1.0,0.6,0.05,1.0];
-    torchNode.specular = [1.0,0.6,0.05,1.0];
-    torchNode.position = [0, 0, 0];
-    torchNode.decreaseRate = 25;
 
     /*Init Light Positions*/
-    translateLantern = new TransformationSGNode(glm.translate(0, 0, 0));
-    translateLantern.append(torchNode);
-    translateLantern.append(lanternFireParticleNode);
-    b2fNodes.append(translateLantern);
+    //translateLantern = new TransformationSGNode(glm.translate(0, 0, 0));
+    //translateLantern.append(torchNode);
+    //translateLantern.append(lanternFireParticleNode);
+    //b2fNodes.append(translateLantern);
 
     /*POSITION TEST NODES*/
-    rotateLight = new TransformationSGNode(mat4.create());
-    let translateLight = new TransformationSGNode(glm.translate(0,3,8)); //translating the light is the same as setting the light position
-    //translateLight.append(lightNode);
-    //translateLight.append(fireNode);
-    //rotateLight.append(translateLight);
-    b2fNodes.append(rotateLight);
 
     function createFireTorch(pos) {
       var torch = createTorch([1.0,0.6,0.05,1.0],
@@ -697,26 +669,6 @@ function createSceneGraph(gl, resources) {
 
 /*Place the interior of the dungeon*/
 {
-  //initialize cube
-  //diceTextureNode.append(new RenderSGNode(resources.modelCube));
-
-  let cube = new MaterialSGNode([ //use now framework implementation of material node
-    diceTextureNode
-  ]);
-  cube.ambient = [0.1, 0.1, 0.1, 1];
-  cube.diffuse = [0.1, 0.1, 0.1, 1];
-  cube.specular = [0.1, 0.1, 0.1, 1];
-  cube.shininess = 1;
-
-  rotateNode = new TransformationSGNode(mat4.create());
-
-  rotateNode.append(
-      new TransformationSGNode(glm.rotateY(15) ,
-        new TransformationSGNode(glm.translate(0, 1.25, 0),  [
-          new RenderSGNode(resources.modelCube)
-    ])));
-  b2fNodes.append(rotateNode);
-
   //lightingNodes.append(cube)
 }
 
@@ -801,15 +753,33 @@ function createSceneGraph(gl, resources) {
   let mapGlass = new MaterialSGNode(stainedGlassTextureNode);
   mapGlass.ambient = [1, 1, 1, 1];
   mapGlass.diffuse = [1, 1, 1, 1];
-  mapGlass.specular = [0.0, 0.0, 0.0, 0.0];
-  mapGlass.shininess = 1.0;
+  mapGlass.specular = [1, 1, 1, 1];
+  mapGlass.shininess = 1000;
   lightingNodes.append(mapGlass);
 
 }
 
 {
+  /*Init lantern*/
+  let lanternParticleNode = new FireSGNode(50, [0.05,0.025,0.05]);
+  let lanternFireParticleNode  = createParticleNode(null, null, null, null, lanternParticleNode);
+  lanternParticleNode.maxDistanceFromStart = 0.1;
+  lanternParticleNode.windStrength = 0;
+  lanternParticleNode.maxMovement = 0.5;
+
+  /*Init Lantern-Light*/
+  let torchNode = new AdvancedLightSGNode(true, 10, [0,0,1]);
+  torchNode.ambient = [1.0,0.6,0.05,1.0];
+  torchNode.diffuse = [1.0,0.6,0.05,1.0];
+  torchNode.specular = [1.0,0.6,0.05,1.0];
+  torchNode.position = [0, 0.15, 0.02];
+  torchNode.decreaseRate = 25;
+
+  torchNode.append(lanternFireParticleNode);
+
   let rotatelantern = new TransformationSGNode(glm.rotateY(180));
-  lanternSGNode = new TransformationSGNode(glm.translate(6,3,0), rotatelantern);
+  lanternSGNode = new TransformationSGNode(glm.translate(0,2,0),
+        [torchNode, rotatelantern]);
 
   //initialize lantern glass
   glassTextureNode.append(new RenderSGNode(resources.modelLanternGlass));
@@ -825,7 +795,7 @@ function createSceneGraph(gl, resources) {
   metalMaterial.ambient = [0.6, 0.6, 0.6, 1];
   metalMaterial.diffuse = [0.6, 0.6, 0.6, 1];
   metalMaterial.specular = [0.6, 0.6, 0.6, 1];
-  metalMaterial.shininess = 20;
+  metalMaterial.shininess = 2000;
   rotatelantern.append(metalMaterial);
 
   //initialize lantern grid
@@ -833,20 +803,14 @@ function createSceneGraph(gl, resources) {
   let gridMaterial = new MaterialSGNode(gridTextureNode);
   gridMaterial.ambient = [0.24725, 0.1995, 0.0745, 1];
   gridMaterial.diffuse = [0.75164, 0.60648, 0.22648, 1];
-  gridMaterial.specular = [1, 0.555802, 0.366065, 1];
-  gridMaterial.shininess = 1;
+  gridMaterial.specular = [0, 0, 0, 1];
+  gridMaterial.shininess = 2000;
   rotatelantern.append(gridMaterial);
 
 }
 
 /*Add diablo*/
 {
-  // let diablo = new MaterialSGNode(diabloSGNode);
-  // diablo.ambient = [0.6, 0.6, 0.6, 1];
-  // diablo.diffuse = [0.5, 0.5, 0.5, 1];
-  // diablo.specular = [0.1, 0.1, 0.1, 1];
-  // diablo.shininess = 1.0;
-
   var rect = makeFloor(2, 2, 1)
 
     for(var i = 0; i < rect.normal.length; i++)
@@ -860,8 +824,8 @@ function createSceneGraph(gl, resources) {
   diabloMaterialNode.specular = [1, 1, 1, 1];
   diabloMaterialNode.shininess = 1000;
 
-  b2fNodes.append(diabloSGNode);
-  diabloTextureNode.append(b2fNodes);
+  diabloTextureNode.append(diabloMaterialNode);
+  b2fNodes.append(diabloTextureNode);
 }
 
 /*Add skull piles*/
@@ -1159,10 +1123,11 @@ function createSceneGraph(gl, resources) {
 
 }
 
-lightingNodes.append(diabloTextureNode);
-lightingNodes.append(lanternSGNode);
+  //lightingNodes.append(diabloTextureNode);
   //lightingNodes.append(b2fNodes);
   //root.append(particleNodes);
+  lightingNodes.append(b2fNodes);
+  lightingNodes.append(lanternSGNode);
   return root;
 }
 
@@ -1201,10 +1166,10 @@ function initTextures(resources, clampType)
 
 }
 
-function createParticleNode(size, area, colorMult, colorMin) {
+function createParticleNode(size, area, colorMult, colorMin, partNode) {
   return new ShaderSGNode(particleShaderProgram,
     new BlendSgNode(gl.SRC_ALPHA, gl.ONE,
-      new FireSGNode(size, area, colorMult, colorMin))
+      partNode || new FireSGNode(size, area, colorMult, colorMin))
   );
 }
 
@@ -1270,15 +1235,7 @@ function render(timeInMilliseconds) {
   var timediff = Math.min((timeInMilliseconds - (lastRenderTime || timeInMilliseconds))/20.0 ,5.0);
   checkForWindowResize(gl);
   //update animations
-  //rotateNode.matrix = glm.rotateY(timeInMilliseconds*-0.01);
-  rotateNode.matrix = mat4.rotateY(mat4.create(), rotateNode.matrix, deg2rad(1));
-  rotateLight.matrix = glm.rotateY(timeInMilliseconds*0.05);
 
-  cubeWaypointIndex = moveUsingWaypoints(rotateNode.matrix, cubeWaypoints, cubeWaypointIndex, 0.1*timediff);
-  if(cubeWaypointIndex == cubeWaypoints.length) {
-    //makes the object patrol back to first waypoint
-    cubeWaypointIndex = 0;
-  }
   diabloWaypointIndex = moveUsingWaypoints(diabloSGNode.matrix, diabloWaypoints, diabloWaypointIndex, 0.1*timediff);
   if(diabloWaypointIndex == diabloWaypoints.length) {
     //makes the object patrol back to first waypoint
@@ -1288,7 +1245,6 @@ function render(timeInMilliseconds) {
     orcShamanWaypointIndex = moveUsingWaypoints(orcShamanSGNode.matrix, orcShamanWaypoints, orcShamanWaypointIndex, 0.1*timediff);
   }
 
-  //console.log("after: "+rotateNode.matrix[12]);
   //setup viewport
   gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
   gl.clearColor(0.9, 0.9, 0.9, 1.0);
@@ -1358,7 +1314,7 @@ function render(timeInMilliseconds) {
     spiderMovementSet2SGNode.matrix[13] += deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed);
   }
 
-  context.invViewMatrix[13] += Math.sin(timeInMilliseconds/bobbSpeed)/bobbHeight;
+  //context.invViewMatrix[13] += Math.sin(timeInMilliseconds/bobbSpeed)/bobbHeight;
 
   if(!manualCameraEnabled) {
     if(cameraWaypointIndex < cameraWaypoints.length && time() - waitingSince >= waitingFor) {
@@ -1422,8 +1378,9 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s"+context.invViewMatrix[12]
   diabloSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.5, -2.5));
   diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));
 */
-  translateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(1, -0.75, -2));
-  lanternSGNode.matrix = translateLantern.matrix;
+  //translateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(1, -0.75, -2));
+  lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
+  //lanternSGNode.matrix = translateLantern.matrix;
 
   //render scenegraph
   root.render(context);

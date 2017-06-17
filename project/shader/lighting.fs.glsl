@@ -68,22 +68,21 @@ vec4 calculateSimplePointLight(Light light, Material material, vec3 lightVec, ve
 		radiusDistance = 1.0 - angleDifference * angleDifference;
 	}
 	if(angle < light.spotAngle) {
-
 		float distanceToLight = max(length(lVec)/light.decreaseRate,1.0);
 		distanceToLight*=distanceToLight;
 		float diffuse = max(dot(normalVec,lightVec),0.0) / (distanceToLight);
 
 		vec3 reflectVec = reflect(-lightVec, normalVec);
-		float spec = pow( max( dot(reflectVec, eyeVec), 0.0) , material.shininess)/distanceToLight;
+		float spec = pow( max( dot(reflectVec, eyeVec), 0.0) , material.shininess) / distanceToLight;
 
 		c_diff += clamp(radiusDistance * diffuse * light.diffuse * material.diffuse, 0.0, 1.0);
-		//c_spec += clamp(radiusDistance * spec * light.specular * material.specular, 0.0, 1.0);
+		c_spec += clamp(radiusDistance * spec * light.specular * material.specular, 0.0, 1.0);
 		c_amb  += clamp(radiusDistance * light.ambient * material.ambient, 0.0, 1.0)/(distanceToLight*2.0);
 	}
 
 	vec4 c_em = material.emission;
 	/*add a constant ambient not position dependet light, so nothing gets only black*/
-	return c_amb + c_diff + c_spec + c_em /*+ vec4(0.001,0.0005,0.0001,1)*/;
+	return c_amb + c_diff + c_spec + c_em + vec4(0.00025,0.000125,0.000025,1);
 }
 
 void main (void) {
@@ -93,11 +92,7 @@ void main (void) {
 		return;
 	}
 
-  vec4 textureColor = vec4(0,0,0,1);
-  //if(u_enableObjectTexture)
-  {
-    textureColor = texture2D(u_tex,v_texCoord);
-  }
+  vec4 textureColor = texture2D(u_tex,v_texCoord);
 
 	vec4 fragColor = vec4(0,0,0,0);
 	for(int i = 0; i < LIGHT_NODES; i++) {
