@@ -527,7 +527,7 @@ diceTextureNode = diabloTextureNode;
   //TODO
 
   spellParentNode = new TransformationSGNode(glm.translate(0,0,0));
-  spellParticle = createParticleNode(350, [1,1,1], [0.5, 0.5, 1]);
+  spellParticle = createParticleNode(500, [1,1,1], [0.5, 0.5, 1]);
   spellSGNode = new TransformationSGNode(glm.translate(0, 0, 0));
   lightNode = new AdvancedLightSGNode(true);
   lightNode.ambient = [0.25,0.25,0.25,1.0];//[0.2, 0.2, 0.2, 1];
