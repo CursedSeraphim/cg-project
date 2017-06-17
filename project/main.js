@@ -529,8 +529,8 @@ diceTextureNode = diabloTextureNode;
   });
   //TODO
   var r = 0.75;
-  var g = 0.25;
-  var b = 0.75;
+  var g = 0.20;
+  var b = 0.80;
   spellParentNode = new TransformationSGNode(glm.translate(0,0,0));
   spellParticle = createParticleNode(500, [1,1,1], [r, g, b], [r/8, g/8, b/8]);
   spellSGNode = new TransformationSGNode(glm.translate(0, 0, 0));
