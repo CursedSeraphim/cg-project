@@ -1218,15 +1218,19 @@ function render(timeInMilliseconds) {
   let upLookAtVector = [0, -1, 0];
   if(camera.movement.forward == 1) {
     vec3.subtract(cameraPosition, cameraPosition, vec3.scale(vec3.create(), lookAtVector, 0.25));
+    enableHeadBobbing();
   }
   if(camera.movement.backward == 1) {
     vec3.scaleAndAdd(cameraPosition, cameraPosition, lookAtVector, 0.25);
+    enableHeadBobbing();
   }
   if(camera.movement.left == 1) {
     vec3.scaleAndAdd(cameraPosition, cameraPosition, crossLookAtVector, 0.25);
+    enableHeadBobbing();
   }
   if(camera.movement.right == 1) {
     vec3.subtract(cameraPosition, cameraPosition, vec3.scale(vec3.create(), crossLookAtVector, 0.25));
+    enableHeadBobbing();
   }
   if(camera.movement.up == 1) {
     vec3.scaleAndAdd(cameraPosition, cameraPosition, upLookAtVector, 0.25);
@@ -1346,25 +1350,21 @@ function initInteraction(canvas) {
         case 'KeyW':
           camera.movement.forward = 1;
           camera.movement.backward = 0;
-          enableHeadBobbing();
           break;
         case 'ArrowDown':
         case 'KeyS':
           camera.movement.forward = 0;
           camera.movement.backward = 1;
-          enableHeadBobbing();
           break;
         case 'ArrowLeft':
         case 'KeyA':
           camera.movement.left = 1;
           camera.movement.right = 0;
-          enableHeadBobbing();
           break;
         case 'ArrowRight':
         case 'KeyD':
           camera.movement.left = 0;
           camera.movement.right = 1;
-          enableHeadBobbing();
           break;
         case 'ShiftLeft':
           camera.movement.up = 0;
