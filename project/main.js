@@ -523,10 +523,16 @@ function createSceneGraph(gl, resources) {
 
 
     /*LIGHT TEST NODES*/
-    let lightNode = new AdvancedLightSGNode(true);
+    /*
     lightNode.ambient = [0.0,0.0,0.0,1.0];//[0.2, 0.2, 0.2, 1];
     lightNode.diffuse = [0.6,0.3,0.05,1.0];//[0.5, 0.5, 0.5, 1];
     lightNode.specular = [0.0,0.0,0.0,1.0];//[1, 1, 1, 1];
+    lightNode.position = [0, 0, 0];
+    */
+    let lightNode = new AdvancedLightSGNode(true);
+    lightNode.ambient = [0.3,0.15,0.025,1.0];//[0.2, 0.2, 0.2, 1];
+    lightNode.diffuse = [0.3,0.15,0.025,1.0];//[0.5, 0.5, 0.5, 1];
+    lightNode.specular = [0.1,0.1,0.1,1.0];//[1, 1, 1, 1];
     lightNode.position = [0, 0, 0];
 
     let lightTest = new AdvancedLightSGNode(true, 30, [0,0,1]);
@@ -535,33 +541,33 @@ function createSceneGraph(gl, resources) {
     lightTest.specular = [0, 0, 0, 1.0];
 
     let torchLight1 = new AdvancedLightSGNode(true);
-    torchLight1.ambient = [0.1,0.1,0.1,1.0];
-    torchLight1.diffuse = [0.6,0.3,0.05,1.0];
-    torchLight1.specular = [0.0,0.0,0.0,1.0];
+    torchLight1.ambient =[0.3,0.15,0.025,1.0];
+    torchLight1.diffuse = [0.3,0.15,0.025,1.0];
+    torchLight1.specular = [0.1,0.1,0.1,1.0];
     torchLight1.position = [0, 0, 0];
 
     let torchLight2 = new AdvancedLightSGNode(true);
-    torchLight2.ambient = [0.1,0.1,0.1,1.0];
-    torchLight2.diffuse = [0.6,0.3,0.05,1.0];
-    torchLight2.specular = [0.0,0.0,0.0,1.0];
+    torchLight2.ambient = [0.3,0.15,0.025,1.0];
+    torchLight2.diffuse = [0.3,0.15,0.025,1.0];
+    torchLight2.specular = [0.1,0.1,0.1,1.0];
     torchLight2.position = [0, 0, 0];
 
     let torchLight3 = new AdvancedLightSGNode(true);
-    torchLight3.ambient = [0.1,0.1,0.1,1.0];
-    torchLight3.diffuse = [0.6,0.3,0.05,1.0];
-    torchLight3.specular = [0.0,0.0,0.0,1.0];
+    torchLight3.ambient =[0.3,0.15,0.025,1.0];
+    torchLight3.diffuse = [0.3,0.15,0.025,1.0];
+    torchLight3.specular = [0.1,0.1,0.1,1.0];
     torchLight3.position = [0, 0, 0];
 
     let torchLight4 = new AdvancedLightSGNode(true);
-    torchLight4.ambient = [0.1,0.1,0.1,1.0];
-    torchLight4.diffuse = [0.6,0.3,0.05,1.0];
-    torchLight4.specular = [0.0,0.0,0.0,1.0];
+    torchLight4.ambient =[0.3,0.15,0.025,1.0];
+    torchLight4.diffuse = [0.3,0.15,0.025,1.0];
+    torchLight4.specular = [0.1,0.1,0.1,1.0];
     torchLight4.position = [0, 0, 0];
 
     let torchLight5 = new AdvancedLightSGNode(true);
-    torchLight4.ambient = [0.1,0.1,0.1,1.0];
-    torchLight4.diffuse = [0.6,0.3,0.05,1.0];
-    torchLight4.specular = [0.0,0.0,0.0,1.0];
+    torchLight4.ambient = [0.3,0.15,0.025,1.0];
+    torchLight4.diffuse = [0.3,0.15,0.025,1.0];
+    torchLight4.specular = [0.1,0.1,0.1,1.0];
     torchLight4.position = [0, 0, 0];
 
     /*Init Light Positions*/
