@@ -942,7 +942,7 @@ function createSceneGraph(gl, resources) {
 /*add spider*/
 {
 
-  spiderTransformationNode = new TransformationSGNode(glm.translate(100,-9.75,75));
+  spiderTransformationNode = new TransformationSGNode(glm.transform({translate: [100,-9.75,75], rotateY: 0}));
   spiderMovementSet1SGNode = new TransformationSGNode(glm.translate(0,0,0));
   spiderMovementSet2SGNode = new TransformationSGNode(glm.translate(0,0,0));
 
@@ -1052,11 +1052,11 @@ function createSceneGraph(gl, resources) {
   //spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(10));
   //spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(-10));
 
-  spiderTransformationNode.append(spiderAbdomenSGNode);
   spiderTransformationNode.append(spiderMovementSet1SGNode);
   spiderTransformationNode.append(spiderMovementSet2SGNode);
-  spiderTransformationNode.append(andarielSGNode);
-  //spiderAbdomenSGNode.append(andarielSGNode);
+  //spiderTransformationNode.append(andarielSGNode);
+  spiderTransformationNode.append(spiderAbdomenSGNode);
+  spiderAbdomenSGNode.append(andarielSGNode);
 
   spiderTransformationNode.matrix = mat4.multiply(mat4.create(), spiderTransformationNode.matrix, glm.transform({scale: 1}));
 spiderTransformationNode.append(lightNode);
@@ -1234,11 +1234,11 @@ function render(timeInMilliseconds) {
   context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
 
   if(spiderMoving) {
-    var speed = 1.5;
+    var speed = 2;
     spiderAbdomenSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
-    andarielSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
-    spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(Math.sin(timeInMilliseconds*speed/100)*3*speed));
-    spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed));
+    //andarielSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
+    spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(Math.sin(timeInMilliseconds*speed/100)*1.5*speed));
+    spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(-Math.sin(timeInMilliseconds*speed/100)*1.5*speed));
     spiderMovementSet1SGNode.matrix[13] += deg2rad(Math.sin(timeInMilliseconds*speed/100)*3*speed);
     spiderMovementSet2SGNode.matrix[13] += deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed);
   }
