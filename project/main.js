@@ -26,6 +26,7 @@ var startTime;
 //matrix used to have camera look at specific points during the automated camera flight
 var firstFrame = 1;
 var autoCameraLookAt;
+var headBobbing = 1;
 
 //scene graph nodes
 var root = null;
@@ -1242,7 +1243,10 @@ function render(timeInMilliseconds) {
   //get inverse view matrix to allow computing eye-to-light matrix
   context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
 
-  context.invViewMatrix[13] += Math.sin(timeInMilliseconds/75)/25;
+  if(headBobbing){
+    context.invViewMatrix[13] += Math.sin(timeInMilliseconds/75)/25;
+
+  }
 
   if(cameraWaypointIndex < cameraWaypoints.length && !manualCameraEnabled) {
       cameraWaypointIndex = moveUsingWaypoints(context.invViewMatrix, cameraWaypoints, cameraWaypointIndex, 0.2);
@@ -1283,6 +1287,14 @@ displayText((time() - startTime)/1000+"s ");//+context.invViewMatrix[12]+" "+con
 
   //animate
   requestAnimationFrame(render);
+}
+
+//TODO make head go back down when stopping headbobbing so camera doesn't stop midair
+function enableHeadBobbing() {
+  headBobbing = 1;
+}
+function disableHeadBobbing() {
+  headBobbing = 0;
 }
 
 //camera control
@@ -1334,21 +1346,25 @@ function initInteraction(canvas) {
         case 'KeyW':
           camera.movement.forward = 1;
           camera.movement.backward = 0;
+          enableHeadBobbing();
           break;
         case 'ArrowDown':
         case 'KeyS':
           camera.movement.forward = 0;
           camera.movement.backward = 1;
+          enableHeadBobbing();
           break;
         case 'ArrowLeft':
         case 'KeyA':
           camera.movement.left = 1;
           camera.movement.right = 0;
+          enableHeadBobbing();
           break;
         case 'ArrowRight':
         case 'KeyD':
           camera.movement.left = 0;
           camera.movement.right = 1;
+          enableHeadBobbing();
           break;
         case 'ShiftLeft':
           camera.movement.up = 0;
@@ -1363,6 +1379,8 @@ function initInteraction(canvas) {
       switch(event.code) {
         case 'KeyC':
           manualCameraEnabled = 1;
+          disableHeadBobbing();
+          console.log("headbobbing: "+headbobbing);
           break;
       }
     }
@@ -1375,21 +1393,22 @@ function initInteraction(canvas) {
         case 'ArrowUp':
         case 'KeyW':
         camera.movement.forward = 0;
+        disableHeadBobbing();
         break;
         case 'ArrowDown':
         case 'KeyS':
         camera.movement.backward = 0;
+        disableHeadBobbing();
           break;
         case 'ArrowLeft':
         case 'KeyA':
         camera.movement.left = 0;
+        disableHeadBobbing();
           break;
         case 'ArrowRight':
         case 'KeyD':
         camera.movement.right = 0;
-          break;
-        case 'KeyD':
-        camera.movement.right = 0;
+        disableHeadBobbing();
           break;
         case 'ShiftLeft':
         camera.movement.down = 0;
