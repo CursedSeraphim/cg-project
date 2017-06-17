@@ -296,6 +296,7 @@ orcShamanFrame15: 'textures/orc_shaman/orc_shaman (15).gif',
 orcShamanFrame16: 'textures/orc_shaman/orc_shaman (16).gif'
 
 }).then(function (resources /*an object containing our keys with the loaded resources*/) {
+
   init(resources);
 
   render(0);
@@ -305,9 +306,13 @@ function init(resources) {
   //create a GL context
   gl = createContext(400, 400);
 
-  //setting manual camera control variables
-  //manualCameraEnabled = false;
-  manualCameraEnabled = true;
+  //setting manual camera control variable, dependent on link
+  //clicked
+  var param = window.location.search.substr(1).split("&");
+  if('free=true' == param)
+    manualCameraEnabled = true;
+  else
+    manualCameraEnabled = false;
   //setting initial point to look at
   autoCameraLookAt = glm.translate(8.75, 2.35, -9.4);
   waitingFor = 0;
@@ -632,7 +637,7 @@ function createSceneGraph(gl, resources) {
     b2fNodes.append(createFireTorch([32.0625, -1, 26.675]));
     b2fNodes.append(createFireTorch([43.45, -1, 0.4]));
 
-    function createSpiderTorch(pos, lookAt) {
+    function createGreenTorch(pos, lookAt) {
       var torch = createTorch([0.05,0.3,0.025,1.0],
                           pos,
                           [0.2,0.5,0.1],
@@ -644,20 +649,20 @@ function createSceneGraph(gl, resources) {
       return torch;
     }
 
-    b2fNodes.append(createSpiderTorch([40, -3, 50.85], [0,0,-1]));
-    b2fNodes.append(createSpiderTorch([80, -3, 50.85], [0,0,-1]));
-    b2fNodes.append(createSpiderTorch([90, -3, 50.85], [0,0,-1]));
-    b2fNodes.append(createSpiderTorch([100, -3, 50.85], [0,0,-1]));
-    b2fNodes.append(createSpiderTorch([110, -3, 50.85], [0,0,-1]));
+    b2fNodes.append(createGreenTorch([40, -3, 50.85], [0,0,-1]));
+    b2fNodes.append(createGreenTorch([80, -3, 50.85], [0,0,-1]));
+    b2fNodes.append(createGreenTorch([90, -3, 50.85], [0,0,-1]));
+    b2fNodes.append(createGreenTorch([100, -3, 50.85], [0,0,-1]));
+    b2fNodes.append(createGreenTorch([110, -3, 50.85], [0,0,-1]));
 
-    b2fNodes.append(createSpiderTorch([40, -3, 89.15], [0,0,1]));
-    b2fNodes.append(createSpiderTorch([50, -3, 89.15], [0,0,1]));
-    b2fNodes.append(createSpiderTorch([70, -3, 89.15], [0,0,1]));
-    b2fNodes.append(createSpiderTorch([60, -3, 89.15], [0,0,1]));
-    b2fNodes.append(createSpiderTorch([80, -3, 89.15], [0,0,1]));
-    b2fNodes.append(createSpiderTorch([90, -3, 89.15], [0,0,1]));
-    b2fNodes.append(createSpiderTorch([100, -3, 89.15], [0,0,1]));
-    b2fNodes.append(createSpiderTorch([110, -3, 89.15], [0,0,1]));
+    b2fNodes.append(createGreenTorch([40, -3, 89.15], [0,0,1]));
+    b2fNodes.append(createGreenTorch([50, -3, 89.15], [0,0,1]));
+    b2fNodes.append(createGreenTorch([70, -3, 89.15], [0,0,1]));
+    b2fNodes.append(createGreenTorch([60, -3, 89.15], [0,0,1]));
+    b2fNodes.append(createGreenTorch([80, -3, 89.15], [0,0,1]));
+    b2fNodes.append(createGreenTorch([90, -3, 89.15], [0,0,1]));
+    b2fNodes.append(createGreenTorch([100, -3, 89.15], [0,0,1]));
+    b2fNodes.append(createGreenTorch([110, -3, 89.15], [0,0,1]));
 
 /*
     let torchTransNode5 = new TransformationSGNode(glm.translate(49.7, -1, 18.95));
