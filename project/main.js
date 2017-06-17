@@ -23,6 +23,10 @@ var cameraPosition;
 var manualCameraEnabled;
 var startTime;
 
+//used for waiting between camera movements
+var waitingSince;
+var waitingFor;
+
 //matrix used to have camera look at specific points during the automated camera flight
 var firstFrame = 1;
 var autoCameraLookAt;
@@ -66,8 +70,10 @@ var spiderLeftHindLegSGNode;
 var spiderLeftHindLeg2SGNode;
 var spiderLeftPincerSGNode;
 var spiderTransformationNode;
+var spiderAndBillBoardSGNode;
 var spiderMovementSet1SGNode;
 var spiderMovementSet2SGNode;
+var spiderStartingPosition;
 
 var spiderMoving = 1;
 
@@ -80,9 +86,13 @@ var cameraWaypointIndex;
 var lookAtWaypoints;
 var lookAtWaypoints2;
 var lookAtWaypoints3;
+var lookAtWaypoints4;
+var lookAtWaypoints5;
 var lookAtWaypointIndex;
 var lookAtWaypointIndex2;
 var lookAtWaypointIndex3;
+var lookAtWaypointIndex4;
+var lookAtWaypointIndex5;
 var orcShamanWaypoints;
 var orcShamanWaypointIndex;
 var cubeWaypoints;
@@ -95,6 +105,8 @@ var triggerTestNode;
 var triggerSGNode2;
 var triggerSGNode3;
 var triggerSGNode4;
+var triggerSGNode5;
+var triggerSGNode6;
 
 /*DEBUG NODES*/
 var rotateNode;
@@ -278,9 +290,13 @@ function init(resources) {
 
   //setting manual camera switch to off
   manualCameraEnabled = true;
+  //setting manual camera control variables
+  manualCameraEnabled = 0;
+
   //setting initial point to look at
   autoCameraLookAt = glm.translate(8.75, 2.35, -9.4);
-
+  waitingFor = 0;
+  waitingSince = 0;
   startTime = time();
 
   /*set camera Start position*/
@@ -297,9 +313,12 @@ function init(resources) {
   let wpCam5 = glm.translate(25, 2.3, 21);
   let wpCam6 = glm.translate(25, 2.3, 28);
   let wpCam7 = glm.translate(47.5, 2.3, 28);
-  cameraWaypoints = [wpCam1, wpCam2, wpCam3, wpCam4, wpCam5, wpCam6, wpCam7];
-  let wpLookAt4 = glm.translate(25,-3,-15);
-  lookAtWaypoints = [wpCam2, wpCam3, wpLookAt4];
+  let wpCam8 = glm.translate(47.5, 2.3, 42);
+  let wpCam9 = glm.translate(31.8, 2.3, 42);
+  let wpCam10 = glm.translate(31.8, 2.3, 81.3);
+  cameraWaypoints = [wpCam1, wpCam2, wpCam3, wpCam4, wpCam5, wpCam6, wpCam7, wpCam8, wpCam9, wpCam10];
+  let wpLookAt1 = glm.translate(25,-3,-15);
+  lookAtWaypoints = [wpCam2, wpCam3, wpLookAt1];
 
   //-1 is used to trigger the orc shaman at a later point
   orcShamanWaypointIndex = -1;
@@ -314,6 +333,13 @@ function init(resources) {
   let skullPilePos2 = glm.translate(48,-5,4.1);
   lookAtWaypointIndex3 = -1;
   lookAtWaypoints3 = [wpCam7, durielPos, skullPilePos2, durielPos, skullPilePos2, durielPos];
+  lookAtWaypointIndex4 = -1;
+  spiderStartingPosition = [100, -9.75, 65];
+  let spiderPos = glm.translate(spiderStartingPosition[0], spiderStartingPosition[1], spiderStartingPosition[2]);
+  let wpLookAt2 = glm.translate(35, 1,13.5);
+  lookAtWaypoints4 = [wpLookAt2, wpCam8];
+  lookAtWaypointIndex5 = -1;
+  lookAtWaypoints5 = [spiderPos];
 
   let waypointCube1 = mat4.create();
   waypointCube1[12] = 7;
@@ -451,22 +477,37 @@ diceTextureNode = diabloTextureNode;
     orcShamanWaypointIndex = 0;
     lookAtWaypointIndex = lookAtWaypoints.length;
   });
+  //node triggered by orc reaching is second waypoint
   triggerSGNode3 = new ObjectTriggerSGNode(0.1, orcShamanSGNode.matrix, wpOrcShaman2, function() {
-    console.log("orc triggered his node");
     autoCameraLookAt = wpOrcShaman2;
     lookAtWaypointIndex = lookAtWaypoints.length;
     lookAtWaypointIndex2 = 0;
   });
-  /*triggerSGNode4 = new ObjectTriggerSGNode(0.1, autoCameraLookAt.matrix, wpCam6, function() {
-    console.log("autocam triggered")
-    autoCameraLookAt = wpOrcShaman2;
-    lookatwaypointindex2 = lookatwaypoints2.length;
-    lookatwaypointindex3 = 0;
-  });*/
+  triggerSGNode4 = new TriggerSGNode(0.1, wpCam7, function() {
+    waitingSince = time();
+    waitingFor = 1000;
+    disableHeadBobbing();
+    setTimeout(enableHeadBobbing, waitingFor);
+  });
+
+  triggerSGNode5 = new TriggerSGNode(0.1, wpCam8, function() {
+    waitingSince = time();
+    waitingFor = 500;
+    disableHeadBobbing();
+    setTimeout(enableHeadBobbing, waitingFor);
+  });
+  triggerSGNode6 = new TriggerSGNode(0.1, wpCam10);
+  /*
+  triggerSGNode6.setTriggerFunction(function() {
+    objectLookAt(spiderTransformationNode.matrix, wpCam8, [0,1,0]);
+  });
+  */
 
   root.append(triggerSGNode2);
   root.append(triggerSGNode3);
-//  root.append(triggerSGNode4);
+  root.append(triggerSGNode4);
+  root.append(triggerSGNode5);
+  root.append(triggerSGNode6);
 
   initInteraction(gl.canvas);
 }
@@ -977,8 +1018,9 @@ function createSceneGraph(gl, resources) {
 
 /*add spider*/
 {
-
-  spiderTransformationNode = new TransformationSGNode(glm.translate(100,-9.75,75));
+  spiderStartingPosition = [100, -9.75, 65];
+  spiderAndBillBoardSGNode = new TransformationSGNode(glm.transform({translate: [spiderStartingPosition[0], spiderStartingPosition[1], spiderStartingPosition[2]], rotateY: 0}));
+  spiderTransformationNode = new TransformationSGNode(glm.translate(0,0,0));
   spiderMovementSet1SGNode = new TransformationSGNode(glm.translate(0,0,0));
   spiderMovementSet2SGNode = new TransformationSGNode(glm.translate(0,0,0));
 
@@ -1088,11 +1130,12 @@ function createSceneGraph(gl, resources) {
   //spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(10));
   //spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(-10));
 
-  spiderTransformationNode.append(spiderAbdomenSGNode);
   spiderTransformationNode.append(spiderMovementSet1SGNode);
   spiderTransformationNode.append(spiderMovementSet2SGNode);
-  spiderTransformationNode.append(andarielSGNode);
-  //spiderAbdomenSGNode.append(andarielSGNode);
+  //spiderTransformationNode.append(andarielSGNode);
+  spiderTransformationNode.append(spiderAbdomenSGNode);
+  spiderAndBillBoardSGNode.append(spiderTransformationNode);
+  spiderAndBillBoardSGNode.append(andarielSGNode);
 
   spiderTransformationNode.matrix = mat4.multiply(mat4.create(), spiderTransformationNode.matrix, glm.transform({scale: 1}));
   //spiderTransformationNode.append(lightNode);
@@ -1108,9 +1151,7 @@ lightingNodes.append(lanternSGNode);
 
 function makeFloor(x, y, a) {
   var floor = makeRect(x, y);
-  //TASK 3: adapt texture coordinates
   floor.texture = [0, 0,   a*x/y, 0,   a*x/y, a,   0, a];
-  //floor.texture = [0, 0,   5, 0,   5, 5,   0, 5];
   return floor;
 }
 
@@ -1190,6 +1231,14 @@ function lookAt(context, matrix, up) {
   context.viewMatrix = lookAtMatrix;
 }
 
+//function used to return matrix used to make object look at a point
+function objectLookAtMatrix(objectMatrix, targetMatrix, up) {
+  var eye = [objectMatrix[12], objectMatrix[13], objectMatrix[14]];
+  var center = [targetMatrix[12], targetMatrix[13], targetMatrix[14]];
+  var lookAtMatrix = mat4.lookAt(mat4.create(), eye, center, up);
+  return lookAtMatrix;
+}
+
 //a scene graph node for setting texture parameters
 function render(timeInMilliseconds) {
   checkForWindowResize(gl);
@@ -1220,7 +1269,7 @@ function render(timeInMilliseconds) {
 
   //setup context and camera matrices
   const context = createSGContext(gl);
-  context.projectionMatrix = mat4.perspective(mat4.create(), glm.deg2rad(30), gl.drawingBufferWidth / gl.drawingBufferHeight, 0.01, 100);
+  context.projectionMatrix = mat4.perspective(mat4.create(), glm.deg2rad(30), gl.drawingBufferWidth / gl.drawingBufferHeight, 0.01, 110);
   //very primitive camera implementation
   //let lookAtMatrix = mat4.lookAt(mat4.create(), [0,0,0], [0,0,0], [0,1,0]);
   let mouseRotateMatrix = mat4.multiply(mat4.create(),
@@ -1270,11 +1319,11 @@ function render(timeInMilliseconds) {
   context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
 
   if(spiderMoving) {
-    var speed = 1.5;
+    var speed = 2;
     spiderAbdomenSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
-    andarielSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
-    spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(Math.sin(timeInMilliseconds*speed/100)*3*speed));
-    spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed));
+    //andarielSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
+    spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(Math.sin(timeInMilliseconds*speed/100)*1.5*speed));
+    spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(-Math.sin(timeInMilliseconds*speed/100)*1.5*speed));
     spiderMovementSet1SGNode.matrix[13] += deg2rad(Math.sin(timeInMilliseconds*speed/100)*3*speed);
     spiderMovementSet2SGNode.matrix[13] += deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed);
   }
@@ -1284,33 +1333,51 @@ function render(timeInMilliseconds) {
 
   }
 
-  if(cameraWaypointIndex < cameraWaypoints.length && !manualCameraEnabled) {
-      cameraWaypointIndex = moveUsingWaypoints(context.invViewMatrix, cameraWaypoints, cameraWaypointIndex, 0.2);
-  }
-  if(lookAtWaypointIndex < lookAtWaypoints.length && !manualCameraEnabled) {
-    lookAtWaypointIndex = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints, lookAtWaypointIndex, 0.1);
-  }
-  if(lookAtWaypointIndex2 < lookAtWaypoints2.length && lookAtWaypointIndex2 !== -1 && !manualCameraEnabled) {
-    lookAtWaypointIndex2 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints2, lookAtWaypointIndex2, 2);
-    if(lookAtWaypointIndex2 === lookAtWaypoints2.length) {
-      lookAtWaypointIndex3 = 0;
-    }
-  }
-  if(lookAtWaypointIndex3 < lookAtWaypoints3.length && lookAtWaypointIndex3 !== -1 && !manualCameraEnabled) {
-    lookAtWaypointIndex3 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints3, lookAtWaypointIndex3, 0.45);
-  }
-
   if(!manualCameraEnabled) {
+    if(cameraWaypointIndex < cameraWaypoints.length && time() - waitingSince >= waitingFor) {
+        cameraWaypointIndex = moveUsingWaypoints(context.invViewMatrix, cameraWaypoints, cameraWaypointIndex, 0.2);
+    }
+    if(lookAtWaypointIndex < lookAtWaypoints.length) {
+      lookAtWaypointIndex = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints, lookAtWaypointIndex, 0.1);
+    }
+    if(lookAtWaypointIndex2 < lookAtWaypoints2.length && lookAtWaypointIndex2 !== -1) {
+      lookAtWaypointIndex2 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints2, lookAtWaypointIndex2, 2);
+      if(lookAtWaypointIndex2 === lookAtWaypoints2.length) {
+        lookAtWaypointIndex3 = 0;
+      }
+    }
+    if(lookAtWaypointIndex3 < lookAtWaypoints3.length && lookAtWaypointIndex3 !== -1) {
+      lookAtWaypointIndex3 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints3, lookAtWaypointIndex3, 0.45);
+      if(lookAtWaypointIndex3 === lookAtWaypoints3.length) {
+        lookAtWaypointIndex4 = 0;
+      }
+    }
+    if(lookAtWaypointIndex4 < lookAtWaypoints4.length && lookAtWaypointIndex4 !== -1) {
+      lookAtWaypointIndex4 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints4, lookAtWaypointIndex4, 1);
+      if(lookAtWaypointIndex4 === lookAtWaypoints4.length) {
+        lookAtWaypointIndex5 = 0;
+      }
+    }
+    if(lookAtWaypointIndex5 < lookAtWaypoints5.length && lookAtWaypointIndex5 !== -1){
+      lookAtWaypointIndex5 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints5, lookAtWaypointIndex5, 0.1);
+    }
+
     lookAt(context, autoCameraLookAt, [0,1,0]);
     context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
+
   }
+  //TODO
+  triggerSGNode6.setTriggerFunction(function(){
+    spiderTransformationNode.matrix = objectLookAtMatrix(spiderTransformationNode.matrix, context.invViewMatrix, [0,1,0]);
+  })
+
 
 //updating camera position variables
   cameraPosition[0] = 0-context.invViewMatrix[12];
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
-displayText((time() - startTime)/1000+"s "+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
+displayText((time() - startTime)/1000+"s ");//+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
 /* moving diablo to camera
   diabloSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.5, -2.5));
   diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));
