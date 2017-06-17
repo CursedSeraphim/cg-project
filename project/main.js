@@ -1131,7 +1131,7 @@ function createSceneGraph(gl, resources) {
   //andarielSGNode.append(spiderTransformationNode);
   spiderAndBillBoardNode.append(spiderTransformationNode);
   spiderAndBillBoardNode.append(andarielSGNode);
-  spiderTransformationNode.append(lightNode);
+  //spiderTransformationNode.append(lightNode);
   lightingNodes.append(spiderAndBillBoardNode);
   //lightingNodes.append(spiderTransformationNode);
   //lightingNodes.append(andarielSGNode);
