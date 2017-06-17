@@ -73,7 +73,13 @@ var spiderAndBillBoardNode;
 var spiderMovementSet1SGNode;
 var spiderMovementSet2SGNode;
 var spiderStartingPosition;
+//spellParticle
+var spellSGNode;
 
+//used for spell
+var spellCast = 0;
+
+//activates spider animation and activates waypoint movement toward camera
 var spiderMoving = 0;
 
 //TODO only used to make spider visible while building
@@ -109,6 +115,7 @@ var triggerSGNode4;
 var triggerSGNode5;
 var triggerSGNode6;
 var triggerSGNode7;
+var triggerSGNode8;
 
 /*DEBUG NODES*/
 var rotateNode;
@@ -502,6 +509,14 @@ diceTextureNode = diabloTextureNode;
   triggerSGNode7 = new TriggerSGNode(0.1, wpCam10, function() {
     spiderMoving = 0;
   });
+  //TODO
+  triggerSGNode8 = new TriggerSGNode(0.1, wpCam1, function() {
+    spellSGNode = new TransformationSGNode(glm.translate(-cameraPosition[0], -cameraPosition[1]-1, -cameraPosition[2]));
+    let spellParticle = createParticleNode(200, [0.5,0.5,0.5], [0.3, 0.3, 0.5]);
+    spellSGNode.append(spellParticle);
+    b2fNodes.append(spellSGNode);
+    console.log("particle added at "+cameraPosition);
+  });
 
   root.append(triggerSGNode2);
   root.append(triggerSGNode3);
@@ -509,6 +524,7 @@ diceTextureNode = diabloTextureNode;
   root.append(triggerSGNode5);
   root.append(triggerSGNode6);
   root.append(triggerSGNode7);
+  root.append(triggerSGNode8);
 
   initInteraction(gl.canvas);
 }
@@ -536,14 +552,6 @@ function createSceneGraph(gl, resources) {
     return new ShaderSGNode(createProgram(gl, resources.vs_single, resources.fs_single), [
       new RenderSGNode(makeSphere(.2,10,10))
     ]);
-  }
-
-
-  function createParticleNode(size, area, colorMult, colorMin) {
-    return new ShaderSGNode(particleShaderProgram,
-      new BlendSgNode(gl.SRC_ALPHA, gl.ONE,
-        new FireSGNode(size, area, colorMult, colorMin))
-    );
   }
 
   function createTorch(color,spotAngle, lookAt, pos, colorMult, colorMin) {
@@ -1185,6 +1193,13 @@ function initTextures(resources, clampType)
 
 }
 
+function createParticleNode(size, area, colorMult, colorMin) {
+  return new ShaderSGNode(particleShaderProgram,
+    new BlendSgNode(gl.SRC_ALPHA, gl.ONE,
+      new FireSGNode(size, area, colorMult, colorMin))
+  );
+}
+
 /*
 changes the objectMatrix towards a waypointMatrix of the waypointMatrixArray using the waypointIndex and a specified speed
 returns the current waypointIndex which might be incremented by the function when the current waypoint has been reached
@@ -1334,6 +1349,10 @@ function render(timeInMilliseconds) {
     spiderMovementSet2SGNode.matrix[13] += deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed);
   }
 
+  if(spellCast) {
+    
+  }
+
   if(headBobbing){
     context.invViewMatrix[13] += Math.sin(timeInMilliseconds/75)/25;
 
@@ -1393,7 +1412,7 @@ function render(timeInMilliseconds) {
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
-displayText((time() - startTime)/1000+"s ");//+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
+displayText((timeInMilliseconds)/1000+"s ");//+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
 /* moving diablo to camera
   diabloSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.5, -2.5));
   diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));
