@@ -69,6 +69,7 @@ var spiderLeftHindLegSGNode;
 var spiderLeftHindLeg2SGNode;
 var spiderLeftPincerSGNode;
 var spiderTransformationNode;
+var spiderAndBillBoardNode;
 var spiderMovementSet1SGNode;
 var spiderMovementSet2SGNode;
 var spiderStartingPosition;
@@ -1013,7 +1014,8 @@ function createSceneGraph(gl, resources) {
 
 /*add spider*/
 {
-  spiderTransformationNode = new TransformationSGNode(glm.translate(0,0,0));//glm.transform({translate: [spiderStartingPosition[0], spiderStartingPosition[1], spiderStartingPosition[2]], rotateY: 0}));
+  spiderAndBillBoardNode = new TransformationSGNode(glm.transform({translate: [spiderStartingPosition[0], spiderStartingPosition[1], spiderStartingPosition[2]], rotateY: 0}));
+  spiderTransformationNode = new TransformationSGNode(glm.translate(0,0,0));
   spiderMovementSet1SGNode = new TransformationSGNode(glm.translate(0,0,0));
   spiderMovementSet2SGNode = new TransformationSGNode(glm.translate(0,0,0));
 
@@ -1102,7 +1104,7 @@ function createSceneGraph(gl, resources) {
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
-  andarielSGNode = new BillboardSGNode(glm.transform({translate: [0,2,-1.25]}));
+  andarielSGNode = new TransformationSGNode(glm.transform({translate: [0,2.65,-2], rotateX:180}));
   let andarielMaterialNode = new MaterialSGNode(andarielTextureNode);
   andarielMaterialNode.ambient = [0.6, 0.6, 0.6, 1];
   andarielMaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
@@ -1127,11 +1129,13 @@ function createSceneGraph(gl, resources) {
   //spiderTransformationNode.append(andarielSGNode);
   spiderTransformationNode.append(spiderAbdomenSGNode);
   //andarielSGNode.append(spiderTransformationNode);
-
-  //spiderTransformationNode.matrix = mat4.multiply(mat4.create(), spiderTransformationNode.matrix, glm.transform({scale: 1}));
+  spiderAndBillBoardNode.append(spiderTransformationNode);
+  spiderAndBillBoardNode.append(andarielSGNode);
   spiderTransformationNode.append(lightNode);
-  lightingNodes.append(spiderTransformationNode);
-  lightingNodes.append(andarielSGNode);
+  lightingNodes.append(spiderAndBillBoardNode);
+  //lightingNodes.append(spiderTransformationNode);
+  //lightingNodes.append(andarielSGNode);
+
 }
 
 lightingNodes.append(diabloTextureNode);
@@ -1315,7 +1319,7 @@ function render(timeInMilliseconds) {
   if(spiderMoving) {
     var speed = 2;
     spiderAbdomenSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
-    //andarielSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
+    andarielSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
     spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(Math.sin(timeInMilliseconds*speed/100)*1.5*speed));
     spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(-Math.sin(timeInMilliseconds*speed/100)*1.5*speed));
     spiderMovementSet1SGNode.matrix[13] += deg2rad(Math.sin(timeInMilliseconds*speed/100)*3*speed);
@@ -1361,7 +1365,7 @@ function render(timeInMilliseconds) {
 
   }
 
-  ObjectLookAtMatrix(spiderTransformationNode, context.invViewMatrix, [0,1,0]);
+  ObjectLookAtMatrix(spiderAndBillBoardNode, context.invViewMatrix, [0,1,0]);
   /*
   {
     var lookAt = mat4.lookAt(mat4.create(), [spiderTransformationNode.matrix[12], 0, spiderTransformationNode.matrix[14]], [context.invViewMatrix[12], 0, context.invViewMatrix[14]], [0, -1, 0]);
