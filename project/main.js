@@ -42,7 +42,6 @@ var translateTorch1;
 var translateTorch2;
 var b2fNodes;
 var b2fNodes2;
-var b2fNodes3;
 var diabloSGNode;
 var orcShamanSGNode;
 var durielSGNode;
@@ -70,7 +69,6 @@ var spiderLeftHindLegSGNode;
 var spiderLeftHindLeg2SGNode;
 var spiderLeftPincerSGNode;
 var spiderTransformationNode;
-var spiderAndBillBoardSGNode;
 var spiderMovementSet1SGNode;
 var spiderMovementSet2SGNode;
 var spiderStartingPosition;
@@ -288,11 +286,8 @@ function init(resources) {
   //create a GL context
   gl = createContext(400, 400);
 
-  //setting manual camera switch to off
-  manualCameraEnabled = true;
   //setting manual camera control variables
   manualCameraEnabled = 0;
-
   //setting initial point to look at
   autoCameraLookAt = glm.translate(8.75, 2.35, -9.4);
   waitingFor = 0;
@@ -300,8 +295,7 @@ function init(resources) {
   startTime = time();
 
   /*set camera Start position*/
-  //cameraPosition = vec3.fromValues(3, -1, -10);
-  cameraPosition = vec3.fromValues(-40, 3, -51);
+  cameraPosition = vec3.fromValues(3, -1, -10);
 
   /*set waypoints*/
   cameraWaypointIndex = 0;
@@ -528,7 +522,6 @@ function createSceneGraph(gl, resources) {
   lightingNodes = new LightingSGNode();
   b2fNodes = new Back2FrontSGNode();
   b2fNodes2 = new Back2FrontSGNode();
-  b2fNodes3 = new Back2FrontSGNode();
   root.append(new BlendSgNode(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, lightingNodes));
 
   //light debug helper function
@@ -538,21 +531,12 @@ function createSceneGraph(gl, resources) {
     ]);
   }
 
+
   function createParticleNode(size, area, colorMult, colorMin) {
     return new ShaderSGNode(particleShaderProgram,
       new BlendSgNode(gl.SRC_ALPHA, gl.ONE,
         new FireSGNode(size, area, colorMult, colorMin))
     );
-  }
-
-  function createTorch(color,spotAngle, lookAt, pos, colorMult, colorMin) {
-    var particle = createParticleNode(120, [0.2,0.05,0.2], colorMult,colorMin);
-    let torchLight = new AdvancedLightSGNode(true, spotAngle, lookAt, pos);
-    torchLight.ambient =[0,0,0,1.0];
-    torchLight.diffuse = color;
-    torchLight.specular = color;
-    torchLight.append(particle);
-    return torchLight
   }
 
   {
@@ -567,6 +551,11 @@ function createSceneGraph(gl, resources) {
     let torchNode2 = createParticleNode(120, [0.2,0.05,0.2]);
     let torchNode3 = createParticleNode(120, [0.2,0.05,0.2]);
     let torchNode4 = createParticleNode(120, [0.2,0.05,0.2]);
+    let torchNode5 = createParticleNode(120, [0.2,0.05,0.2]);
+    let torchNode6 = createParticleNode(120, [0.2,0.05,0.2]);
+    let torchNode7 = createParticleNode(120, [0.2,0.05,0.2]);
+    let torchNode8 = createParticleNode(120, [0.2,0.05,0.2]);
+    let torchNode9 = createParticleNode(120, [0.2,0.05,0.2]);
 
     /*Init Light*/
     let torchNode = new AdvancedLightSGNode(true, 10, [0,0,1]);
@@ -668,35 +657,6 @@ function createSceneGraph(gl, resources) {
     torchTransNode4.append(torchNode4);
     torchTransNode4.append(torchLight4);
     b2fNodes.append(torchTransNode4);
-
-    // let spiderTorchTransNode3 = new TransformationSGNode(glm.translate(90, -3, 50.85));
-    // spiderTorchTransNode3.append(spiderTorchNode3);
-    // spiderTorchTransNode3.append(spiderTorchLight3);
-
-    function createSpiderTorch(pos) {
-      return createTorch([0.01,0.3,0.025,1.0],
-                          -361,
-                          lookAt,
-                          pos,
-                          [0.1,0.5,0.1],
-                          [0,0.5,0]);
-    }
-
-    b2fNodes.append(createSpiderTorch([40, -3, 50.85]));
-    b2fNodes.append(createSpiderTorch([80, -3, 50.85]));
-    b2fNodes.append(createSpiderTorch([90, -3, 50.85]));
-    b2fNodes.append(createSpiderTorch([100, -3, 50.85]));
-    b2fNodes.append(createSpiderTorch([110, -3, 50.85]));
-
-    b2fNodes.append(createSpiderTorch([40, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([50, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([60, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([70, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([80, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([90, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([100, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([110, -3, 89.15]));
-    //b2fNodes2.append(spiderTorchTransNode2);
 
 /*
     let torchTransNode5 = new TransformationSGNode(glm.translate(49.7, -1, 18.95));
@@ -1018,9 +978,7 @@ function createSceneGraph(gl, resources) {
 
 /*add spider*/
 {
-  spiderStartingPosition = [100, -9.75, 65];
-  spiderAndBillBoardSGNode = new TransformationSGNode(glm.transform({translate: [spiderStartingPosition[0], spiderStartingPosition[1], spiderStartingPosition[2]], rotateY: 0}));
-  spiderTransformationNode = new TransformationSGNode(glm.translate(0,0,0));
+  spiderTransformationNode = new TransformationSGNode(glm.translate(0,0,0));//glm.transform({translate: [spiderStartingPosition[0], spiderStartingPosition[1], spiderStartingPosition[2]], rotateY: 0}));
   spiderMovementSet1SGNode = new TransformationSGNode(glm.translate(0,0,0));
   spiderMovementSet2SGNode = new TransformationSGNode(glm.translate(0,0,0));
 
@@ -1109,7 +1067,7 @@ function createSceneGraph(gl, resources) {
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
-  andarielSGNode = new BillboardSGNode(glm.transform({translate: [0,2.5,-1.25]}));
+  andarielSGNode = new BillboardSGNode(glm.transform({translate: [0,2,-1.25]}));
   let andarielMaterialNode = new MaterialSGNode(andarielTextureNode);
   andarielMaterialNode.ambient = [0.6, 0.6, 0.6, 1];
   andarielMaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
@@ -1129,17 +1087,16 @@ function createSceneGraph(gl, resources) {
 
   //spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(10));
   //spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(-10));
-
   spiderTransformationNode.append(spiderMovementSet1SGNode);
   spiderTransformationNode.append(spiderMovementSet2SGNode);
   //spiderTransformationNode.append(andarielSGNode);
   spiderTransformationNode.append(spiderAbdomenSGNode);
-  spiderAndBillBoardSGNode.append(spiderTransformationNode);
-  spiderAndBillBoardSGNode.append(andarielSGNode);
+  //andarielSGNode.append(spiderTransformationNode);
 
-  spiderTransformationNode.matrix = mat4.multiply(mat4.create(), spiderTransformationNode.matrix, glm.transform({scale: 1}));
-  //spiderTransformationNode.append(lightNode);
+  //spiderTransformationNode.matrix = mat4.multiply(mat4.create(), spiderTransformationNode.matrix, glm.transform({scale: 1}));
+  spiderTransformationNode.append(lightNode);
   lightingNodes.append(spiderTransformationNode);
+  lightingNodes.append(andarielSGNode);
 }
 
 lightingNodes.append(diabloTextureNode);
@@ -1223,20 +1180,22 @@ function deg2rad(degrees) {
   return degrees * Math.PI / 180;
 }
 
+
 //function used to make camera look at point given in matrix[12-15]
-function lookAt(context, matrix, up) {
+function lookAtObject(context, matrix, up) {
   var eye = [context.invViewMatrix[12], context.invViewMatrix[13], context.invViewMatrix[14]];
   var center = [matrix[12], matrix[13], matrix[14]];
   var lookAtMatrix = mat4.lookAt(mat4.create(), eye, center, up);
   context.viewMatrix = lookAtMatrix;
 }
 
-//function used to return matrix used to make object look at a point
-function objectLookAtMatrix(objectMatrix, targetMatrix, up) {
-  var eye = [objectMatrix[12], objectMatrix[13], objectMatrix[14]];
-  var center = [targetMatrix[12], targetMatrix[13], targetMatrix[14]];
-  var lookAtMatrix = mat4.lookAt(mat4.create(), eye, center, up);
-  return lookAtMatrix;
+function ObjectLookAtMatrix(object, targetMatrix, up) {
+  var lookAt = mat4.lookAt(mat4.create(), [object.matrix[12], 0, object.matrix[14]], [targetMatrix[12], 0, targetMatrix[14]], [0, -1, 0]);
+
+  for(var i = 0; i < 12; i++) {
+    object.matrix[i] = lookAt[i];
+  }
+  mat4.multiply(object.matrix, object.matrix, glm.transform({rotateX:180}));
 }
 
 //a scene graph node for setting texture parameters
@@ -1362,16 +1321,22 @@ function render(timeInMilliseconds) {
       lookAtWaypointIndex5 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints5, lookAtWaypointIndex5, 0.1);
     }
 
-    lookAt(context, autoCameraLookAt, [0,1,0]);
+    lookAtObject(context, autoCameraLookAt, [0,1,0]);
     context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
 
   }
-  //TODO
-  triggerSGNode6.setTriggerFunction(function(){
-    spiderTransformationNode.matrix = objectLookAtMatrix(spiderTransformationNode.matrix, context.invViewMatrix, [0,1,0]);
-  })
 
+  ObjectLookAtMatrix(spiderTransformationNode, context.invViewMatrix, [0,1,0]);
+  /*
+  {
+    var lookAt = mat4.lookAt(mat4.create(), [spiderTransformationNode.matrix[12], 0, spiderTransformationNode.matrix[14]], [context.invViewMatrix[12], 0, context.invViewMatrix[14]], [0, -1, 0]);
 
+    for(var i = 0; i < 12; i++) {
+      spiderTransformationNode.matrix[i] = lookAt[i];
+    }
+    mat4.multiply(spiderTransformationNode.matrix, spiderTransformationNode.matrix, glm.transform({rotateX:180}));
+  }
+  */
 //updating camera position variables
   cameraPosition[0] = 0-context.invViewMatrix[12];
   cameraPosition[1] = 0-context.invViewMatrix[13];
