@@ -536,8 +536,8 @@ diceTextureNode = diabloTextureNode;
   spellSGNode = new TransformationSGNode(glm.translate(0, 0, 0));
   lightNode = new AdvancedLightSGNode(true);
   lightNode.ambient = [0.25,0.25,0.25,1.0];
-  lightNode.diffuse = [r/8,g/8,b/4,1.0];
-  lightNode.specular = [r/8,g/8,b/4,1.0];
+  lightNode.diffuse = [r/4,g/4,b/4,1.0];
+  lightNode.specular = [r/4,g/4,b/4,1.0];
   lightNode.position = [0, 0, 0];
 
   triggerSGNode8 = new TriggerSGNode(0.1, wpCam9, function() {
