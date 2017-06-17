@@ -302,7 +302,8 @@ function init(resources) {
   gl = createContext(400, 400);
 
   //setting manual camera control variables
-  manualCameraEnabled = false;
+  //manualCameraEnabled = false;
+  manualCameraEnabled = true;
   //setting initial point to look at
   autoCameraLookAt = glm.translate(8.75, 2.35, -9.4);
   waitingFor = 0;
@@ -310,7 +311,8 @@ function init(resources) {
   startTime = time();
 
   /*set camera Start position*/
-  cameraPosition = vec3.fromValues(3, -1, -10);
+  //cameraPosition = vec3.fromValues(3, -1, -10);
+  cameraPosition = vec3.fromValues(-40, 3, -75);
 
   /*set waypoints*/
   cameraWaypointIndex = 0;
@@ -577,12 +579,13 @@ function createSceneGraph(gl, resources) {
     ]);
   }
 
-  function createTorch(color,spotAngle, lookAt, pos, colorMult, colorMin) {
+  function createTorch(color, pos, colorMult, colorMin) {
     var particle = createParticleNode(120, [0.2,0.05,0.2], colorMult,colorMin);
-    let torchLight = new AdvancedLightSGNode(true, spotAngle, lookAt, pos);
-    torchLight.ambient =[0,0,0,1.0];
+    let torchLight = new AdvancedLightSGNode(true);
+    torchLight.ambient =color;
     torchLight.diffuse = color;
     torchLight.specular = color;
+    torchLight.position = pos;
     torchLight.append(particle);
     return torchLight;
   }
@@ -612,6 +615,7 @@ function createSceneGraph(gl, resources) {
     torchNode.specular = [1.0,0.6,0.05,1.0];
     torchNode.position = [0, 0, 0];
     torchNode.shininess = 100;
+    torchNode.decreaseRate = 30;
 
 
     /*LIGHT TEST NODES*/
@@ -706,29 +710,32 @@ function createSceneGraph(gl, resources) {
     torchTransNode4.append(torchLight4);
     b2fNodes.append(torchTransNode4);
 
-    function createSpiderTorch(pos) {
-      return createTorch([0.01,0.3,0.025,1.0],
-                         -361,
-                          [1,0,0],
+    function createSpiderTorch(pos, lookAt) {
+      var torch = createTorch([0.05,0.3,0.025,1.0],
                           pos,
-                          [0.1,0.5,0.1],
+                          [0.2,0.5,0.1],
                           [0,0.5,0]);
+      torch.ambient = [0,0,0,1.0]
+      //torch.spotAngle = 105 * Math.PI/180;
+      torch.lookAt = lookAt;
+      torch.decreaseRate = 5;
+      return torch;
     }
 
-    b2fNodes.append(createSpiderTorch([40, -3, 50.85]));
-    b2fNodes.append(createSpiderTorch([80, -3, 50.85]));
-    b2fNodes.append(createSpiderTorch([90, -3, 50.85]));
-    b2fNodes.append(createSpiderTorch([100, -3, 50.85]));
-    b2fNodes.append(createSpiderTorch([110, -3, 50.85]));
+    b2fNodes.append(createSpiderTorch([40, -3, 50.85], [0,0,-1]));
+    b2fNodes.append(createSpiderTorch([80, -3, 50.85], [0,0,-1]));
+    b2fNodes.append(createSpiderTorch([90, -3, 50.85], [0,0,-1]));
+    b2fNodes.append(createSpiderTorch([100, -3, 50.85], [0,0,-1]));
+    b2fNodes.append(createSpiderTorch([110, -3, 50.85], [0,0,-1]));
 
-    b2fNodes.append(createSpiderTorch([40, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([50, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([60, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([70, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([80, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([90, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([100, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([110, -3, 89.15]));
+    b2fNodes.append(createSpiderTorch([40, -3, 89.15], [0,0,1]));
+    b2fNodes.append(createSpiderTorch([50, -3, 89.15], [0,0,1]));
+    b2fNodes.append(createSpiderTorch([70, -3, 89.15], [0,0,1]));
+    b2fNodes.append(createSpiderTorch([60, -3, 89.15], [0,0,1]));
+    b2fNodes.append(createSpiderTorch([80, -3, 89.15], [0,0,1]));
+    b2fNodes.append(createSpiderTorch([90, -3, 89.15], [0,0,1]));
+    b2fNodes.append(createSpiderTorch([100, -3, 89.15], [0,0,1]));
+    b2fNodes.append(createSpiderTorch([110, -3, 89.15], [0,0,1]));
 
 /*
     let torchTransNode5 = new TransformationSGNode(glm.translate(49.7, -1, 18.95));

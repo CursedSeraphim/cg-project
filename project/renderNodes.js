@@ -96,7 +96,8 @@ class AdvancedLightSGNode extends LightSGNode {
 
     this.origUniform = this.uniform;
     this.uniform = this.uniform + '['+ this.nr + ']';
-
+    this.decreaseRate = 15.0;
+    
     this.counter = 0;
   }
 
@@ -131,6 +132,7 @@ class AdvancedLightSGNode extends LightSGNode {
 
     gl.uniform1f(gl.getUniformLocation(context.shader, this.uniform+'.spotAngle'), this.spotAngle);
     gl.uniform3fv(gl.getUniformLocation(context.shader, this.uniform+'.lookAt'), lookAt);
+    gl.uniform1f(gl.getUniformLocation(context.shader, this.uniform+'.decreaseRate'), this.decreaseRate);
     //console.log(this.lookAt);
 
     this.counter+=Math.random()/2;

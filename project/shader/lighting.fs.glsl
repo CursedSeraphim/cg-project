@@ -22,6 +22,7 @@ struct Light {
 	vec4 specular;
 	float spotAngle;
 	vec3 lookAt;
+	float decreaseRate;
 };
 
 //illumination related variables
@@ -58,19 +59,17 @@ vec4 calculateSimplePointLight(Light light, Material material, vec3 lightVec, ve
 	}
 
 	float angle = -361.0;
-	float distanceFactor = 15.0;
 	float radiusDistance = 1.0;
 
 	/*calculate angle*/
 	if(light.spotAngle > 0.0) {
 		angle = acos(dot(lightVec, light.lookAt));
-		distanceFactor = (3.1415/light.spotAngle);
 		float angleDifference = min(1.0, (angle / light.spotAngle));
 		radiusDistance = 1.0 - angleDifference * angleDifference;
 	}
 	if(angle < light.spotAngle) {
 
-		float distanceToLight = max(length(lVec)/distanceFactor,1.0);
+		float distanceToLight = max(length(lVec)/light.decreaseRate,1.0);
 		distanceToLight*=distanceToLight;
 		float diffuse = max(dot(normalVec,lightVec),0.0) / (distanceToLight);
 
