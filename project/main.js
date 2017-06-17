@@ -1250,9 +1250,12 @@ function render(timeInMilliseconds) {
   context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
 
   if(spiderMoving) {
-    spiderAbdomenSGNode.matrix[13] += Math.sin(timeInMilliseconds/75)/25;
-    spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(Math.sin(timeInMilliseconds/100)*3));
-    spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(-Math.sin(timeInMilliseconds/100)*3));
+    var speed = 1.5;
+    spiderAbdomenSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
+    spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(Math.sin(timeInMilliseconds*speed/100)*3*speed));
+    spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed));
+    spiderMovementSet1SGNode.matrix[13] += deg2rad(Math.sin(timeInMilliseconds/100)*3)/2*speed;
+    spiderMovementSet2SGNode.matrix[13] += deg2rad(-Math.sin(timeInMilliseconds/100)*3)/2*speed;
   }
 
   if(headBobbing){
