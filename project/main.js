@@ -75,6 +75,7 @@ var spiderMovementSet1SGNode;
 var spiderMovementSet2SGNode;
 var spiderStartingPosition;
 //spellParticle
+var spellParentNode;
 var spellSGNode;
 var spellParticle;
 
@@ -515,12 +516,17 @@ diceTextureNode = diabloTextureNode;
   });
   //TODO
 
+  spellParentNode = new TransformationSGNode(glm.translate(0,0,0));
+
   triggerSGNode8 = new TriggerSGNode(0.1, wpCam9, function() {
     var fireSpell = function(){
       spellSGNode = new TransformationSGNode(glm.translate(-cameraPosition[0], -cameraPosition[1]-1, -cameraPosition[2]));
+      spellParentNode.children.pop();
+      spellParentNode.append(spellSGNode);
+
       spellParticle = createParticleNode(350, [1,1,1], [0.3, 0.3, 0.5]);
       spellSGNode.append(spellParticle);
-      b2fNodes.append(spellSGNode);
+      b2fNodes.append(spellParentNode);
       spellWayPoints = [spiderAndBillBoardNode];
       spellCast = 1;
     }
