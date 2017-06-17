@@ -1373,10 +1373,6 @@ function render(timeInMilliseconds) {
     spiderMovementSet2SGNode.matrix[13] += deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed);
   }
 
-  if(spellWayPointIndex === 0) {
-    spellWayPointIndex = moveUsingWaypoints(spellSGNode.matrix, [spiderAndBillBoardNode.matrix], spellWayPointIndex, 4);
-  }
-
   if(headBobbing){
     context.invViewMatrix[13] += Math.sin(timeInMilliseconds/75)/25;
 
@@ -1413,6 +1409,9 @@ function render(timeInMilliseconds) {
         autoCameraLookAt = spiderAndBillBoardNode.matrix;
         console.log("wp5 reached focussing spider now");
       }
+    if(spellWayPointIndex === 0) {
+      spellWayPointIndex = moveUsingWaypoints(spellSGNode.matrix, [spiderAndBillBoardNode.matrix], spellWayPointIndex, 4);
+    }
     }
 
     lookAtObject(context, autoCameraLookAt, [0,1,0]);
