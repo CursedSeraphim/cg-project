@@ -27,6 +27,7 @@ var startTime;
 var firstFrame = 1;
 var autoCameraLookAt;
 var headBobbing = 1;
+var movementSpeedModifier = 1;
 
 //scene graph nodes
 var root = null;
@@ -938,7 +939,7 @@ function createSceneGraph(gl, resources) {
 /*add spider*/
 {
 
-  spiderTransformationNode = new TransformationSGNode(glm.translate(0,0,0));
+  spiderTransformationNode = new TransformationSGNode(glm.translate(70,-6,83));
   spiderMovementSet1SGNode = new TransformationSGNode(glm.translate(0,0,0));
   spiderMovementSet2SGNode = new TransformationSGNode(glm.translate(0,0,0));
 
@@ -1198,26 +1199,26 @@ function render(timeInMilliseconds) {
   vec3.normalize(crossLookAtVector, crossLookAtVector);
   let upLookAtVector = [0, -1, 0];
   if(camera.movement.forward == 1) {
-    vec3.subtract(cameraPosition, cameraPosition, vec3.scale(vec3.create(), lookAtVector, 0.25));
+    vec3.subtract(cameraPosition, cameraPosition, vec3.scale(vec3.create(), lookAtVector, 0.25*movementSpeedModifier));
     enableHeadBobbing();
   }
   if(camera.movement.backward == 1) {
-    vec3.scaleAndAdd(cameraPosition, cameraPosition, lookAtVector, 0.25);
+    vec3.scaleAndAdd(cameraPosition, cameraPosition, lookAtVector, 0.25*movementSpeedModifier);
     enableHeadBobbing();
   }
   if(camera.movement.left == 1) {
-    vec3.scaleAndAdd(cameraPosition, cameraPosition, crossLookAtVector, 0.25);
+    vec3.scaleAndAdd(cameraPosition, cameraPosition, crossLookAtVector, 0.25*movementSpeedModifier);
     enableHeadBobbing();
   }
   if(camera.movement.right == 1) {
-    vec3.subtract(cameraPosition, cameraPosition, vec3.scale(vec3.create(), crossLookAtVector, 0.25));
+    vec3.subtract(cameraPosition, cameraPosition, vec3.scale(vec3.create(), crossLookAtVector, 0.25*movementSpeedModifier));
     enableHeadBobbing();
   }
   if(camera.movement.up == 1) {
-    vec3.scaleAndAdd(cameraPosition, cameraPosition, upLookAtVector, 0.25);
+    vec3.scaleAndAdd(cameraPosition, cameraPosition, upLookAtVector, 0.25*movementSpeedModifier);
   }
   if(camera.movement.down == 1) {
-    vec3.subtract(cameraPosition, cameraPosition, vec3.scale(vec3.create(), upLookAtVector, 0.25));
+    vec3.subtract(cameraPosition, cameraPosition, vec3.scale(vec3.create(), upLookAtVector, 0.25*movementSpeedModifier));
   }
 
   context.viewMatrix = glm.translate(cameraPosition[0], cameraPosition[1], cameraPosition[2]);
@@ -1356,7 +1357,7 @@ function initInteraction(canvas) {
           camera.movement.left = 0;
           camera.movement.right = 1;
           break;
-        case 'ShiftLeft':
+        case 'ControlLeft':
           camera.movement.up = 0;
           camera.movement.down = 1;
           break;
@@ -1364,6 +1365,9 @@ function initInteraction(canvas) {
           camera.movement.up = 1;
           camera.movement.down = 0;
           break;
+        case 'ShiftLeft':
+          movementSpeedModifier = 5;
+        break;
       }
     } else {
       switch(event.code) {
@@ -1400,12 +1404,15 @@ function initInteraction(canvas) {
         camera.movement.right = 0;
         disableHeadBobbing();
           break;
-        case 'ShiftLeft':
+        case 'ControlLeft':
         camera.movement.down = 0;
           break;
         case 'Space':
           camera.movement.up = 0;
           break;
+        case 'ShiftLeft':
+          movementSpeedModifier = 1;
+        break;
       }
     } else {
       switch(event.code) {
