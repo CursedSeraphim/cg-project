@@ -74,7 +74,7 @@ var spiderMovementSet1SGNode;
 var spiderMovementSet2SGNode;
 var spiderStartingPosition;
 
-var spiderMoving = 1;
+var spiderMoving = 0;
 
 //TODO only used to make spider visible while building
 var lightNode;
@@ -504,7 +504,7 @@ diceTextureNode = diabloTextureNode;
   root.append(triggerSGNode3);
   root.append(triggerSGNode4);
   root.append(triggerSGNode5);
-  root.append(triggerSGNode6);
+  //root.append(triggerSGNode6);
 
   initInteraction(gl.canvas);
 }
@@ -1317,6 +1317,7 @@ function render(timeInMilliseconds) {
   context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
 
   if(spiderMoving) {
+    //spiderWaypointIndex = moveUsingWaypoints(spiderAndBillBoardNode)
     var speed = 2;
     spiderAbdomenSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
     andarielSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
@@ -1357,7 +1358,11 @@ function render(timeInMilliseconds) {
       }
     }
     if(lookAtWaypointIndex5 < lookAtWaypoints5.length && lookAtWaypointIndex5 !== -1){
-      lookAtWaypointIndex5 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints5, lookAtWaypointIndex5, 0.1);
+      lookAtWaypointIndex5 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints5, lookAtWaypointIndex5, 0.5);
+      if(lookAtWaypointIndex5 === lookAtWaypoints5.length) {
+        autoCameraLookAt.matrix = spiderAndBillBoardNode.matrix;
+        console.log("wp5 reached focussing spider now");
+      }
     }
 
     lookAtObject(context, autoCameraLookAt, [0,1,0]);
