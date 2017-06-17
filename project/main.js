@@ -42,7 +42,6 @@ var translateTorch1;
 var translateTorch2;
 var b2fNodes;
 var b2fNodes2;
-var b2fNodes3;
 var diabloSGNode;
 var orcShamanSGNode;
 var durielSGNode;
@@ -525,7 +524,6 @@ function createSceneGraph(gl, resources) {
   lightingNodes = new LightingSGNode();
   b2fNodes = new Back2FrontSGNode();
   b2fNodes2 = new Back2FrontSGNode();
-  b2fNodes3 = new Back2FrontSGNode();
   root.append(new BlendSgNode(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, lightingNodes));
 
   //light debug helper function
@@ -550,6 +548,7 @@ function createSceneGraph(gl, resources) {
     torchLight.diffuse = color;
     torchLight.specular = color;
     torchLight.append(particle);
+    return torchLight;
   }
 
   {
@@ -565,6 +564,7 @@ function createSceneGraph(gl, resources) {
     let torchNode3 = createParticleNode(120, [0.2,0.05,0.2]);
     let torchNode4 = createParticleNode(120, [0.2,0.05,0.2]);
     let torchNode5 = createParticleNode(120, [0.2,0.05,0.2]);
+    let torchNode6 = createParticleNode(120, [0.2,0.05,0.2]);
     let torchNode7 = createParticleNode(120, [0.2,0.05,0.2]);
     let torchNode8 = createParticleNode(120, [0.2,0.05,0.2]);
     let torchNode9 = createParticleNode(120, [0.2,0.05,0.2]);
@@ -672,7 +672,7 @@ function createSceneGraph(gl, resources) {
     function createSpiderTorch(pos) {
       return createTorch([0.01,0.3,0.025,1.0],
                          -361,
-                          lookAt,
+                          [1,0,0],
                           pos,
                           [0.1,0.5,0.1],
                           [0,0.5,0]);
