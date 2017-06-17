@@ -289,9 +289,7 @@ function init(resources) {
   gl = createContext(400, 400);
 
   //setting manual camera switch to off
-  manualCameraEnabled = true;
-  //setting manual camera control variables
-  manualCameraEnabled = 0;
+  manualCameraEnabled = false;
 
   //setting initial point to look at
   autoCameraLookAt = glm.translate(8.75, 2.35, -9.4);
@@ -300,8 +298,8 @@ function init(resources) {
   startTime = time();
 
   /*set camera Start position*/
-  //cameraPosition = vec3.fromValues(3, -1, -10);
-  cameraPosition = vec3.fromValues(-40, 3, -51);
+  cameraPosition = vec3.fromValues(3, -1, -10);
+  //cameraPosition = vec3.fromValues(-40, 3, -51);
 
   /*set waypoints*/
   cameraWaypointIndex = 0;
@@ -1480,7 +1478,7 @@ function initInteraction(canvas) {
     } else {
       switch(event.code) {
         case 'KeyC':
-          manualCameraEnabled = 1;
+          manualCameraEnabled = true;
           disableHeadBobbing();
           break;
       }
@@ -1524,7 +1522,7 @@ function initInteraction(canvas) {
     } else {
       switch(event.code) {
         case 'KeyC':
-          manualCameraEnabled = 1;
+          manualCameraEnabled = true;
           break;
       }
     }
