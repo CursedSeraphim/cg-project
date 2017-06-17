@@ -69,6 +69,7 @@ var spiderLeftHindLegSGNode;
 var spiderLeftHindLeg2SGNode;
 var spiderLeftPincerSGNode;
 var spiderTransformationNode;
+var spiderAndBillBoardSGNode;
 var spiderMovementSet1SGNode;
 var spiderMovementSet2SGNode;
 var spiderStartingPosition;
@@ -328,7 +329,7 @@ function init(resources) {
   lookAtWaypointIndex3 = -1;
   lookAtWaypoints3 = [wpCam7, durielPos, skullPilePos2, durielPos, skullPilePos2, durielPos];
   lookAtWaypointIndex4 = -1;
-  spiderStartingPosition = [100, -9.75, 75];
+  spiderStartingPosition = [100, -9.75, 65];
   let spiderPos = glm.translate(spiderStartingPosition[0], spiderStartingPosition[1], spiderStartingPosition[2]);
   let wpLookAt2 = glm.translate(35, 1,13.5);
   lookAtWaypoints4 = [wpLookAt2, wpCam8];
@@ -490,7 +491,7 @@ diceTextureNode = diabloTextureNode;
     disableHeadBobbing();
     setTimeout(enableHeadBobbing, waitingFor);
   });
-  triggerSGNode6 = new TriggerSGNode(0.1, wpCam8);
+  triggerSGNode6 = new TriggerSGNode(0.1, wpCam10);
   /*
   triggerSGNode6.setTriggerFunction(function() {
     objectLookAt(spiderTransformationNode.matrix, wpCam8, [0,1,0]);
@@ -978,7 +979,9 @@ function createSceneGraph(gl, resources) {
 
 /*add spider*/
 {
-  spiderTransformationNode = new TransformationSGNode(glm.transform({translate: [spiderStartingPosition[0], spiderStartingPosition[1], spiderStartingPosition[2]], rotateY: 0}));
+  spiderStartingPosition = [100, -9.75, 65];
+  spiderAndBillBoardSGNode = new TransformationSGNode(glm.transform({translate: [spiderStartingPosition[0], spiderStartingPosition[1], spiderStartingPosition[2]], rotateY: 0}));
+  spiderTransformationNode = new TransformationSGNode(glm.translate(0,0,0));
   spiderMovementSet1SGNode = new TransformationSGNode(glm.translate(0,0,0));
   spiderMovementSet2SGNode = new TransformationSGNode(glm.translate(0,0,0));
 
@@ -1092,10 +1095,11 @@ function createSceneGraph(gl, resources) {
   spiderTransformationNode.append(spiderMovementSet2SGNode);
   //spiderTransformationNode.append(andarielSGNode);
   spiderTransformationNode.append(spiderAbdomenSGNode);
-  spiderAbdomenSGNode.append(andarielSGNode);
+  spiderAndBillBoardSGNode.append(spiderTransformationNode);
+  spiderAndBillBoardSGNode.append(andarielSGNode);
 
-  spiderTransformationNode.matrix = mat4.multiply(mat4.create(), spiderTransformationNode.matrix, glm.transform({scale: 1}));
-spiderTransformationNode.append(lightNode);
+  spiderAndBillBoardSGNode.matrix = mat4.multiply(mat4.create(), spiderAndBillBoardSGNode.matrix, glm.transform({scale: 1}));
+  spiderAndBillBoardSGNode.append(lightNode);
   lightingNodes.append(spiderTransformationNode);
 }
 
@@ -1324,7 +1328,9 @@ function render(timeInMilliseconds) {
 
   }
   //TODO
-  spiderTransformationNode.matrix = objectLookAtMatrix(spiderTransformationNode.matrix, context.invViewMatrix, [0,1,0]);
+  triggerSGNode6.setTriggerFunction(function(){
+    spiderTransformationNode.matrix = objectLookAtMatrix(spiderTransformationNode.matrix, context.invViewMatrix, [0,1,0]);
+  })
 
 
 //updating camera position variables
@@ -1332,7 +1338,7 @@ function render(timeInMilliseconds) {
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
-displayText((time() - startTime)/1000+"s "+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
+displayText((time() - startTime)/1000+"s ");//+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
 /* moving diablo to camera
   diabloSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.5, -2.5));
   diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));
