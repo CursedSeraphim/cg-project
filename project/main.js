@@ -70,6 +70,9 @@ var spiderMovementSet2SGNode;
 
 var spiderMoving = 1;
 
+//TODO only used to make spider visible while building
+var lightNode;
+
 //waypoints
 var cameraWaypoints;
 var cameraWaypointIndex;
@@ -533,8 +536,8 @@ function createSceneGraph(gl, resources) {
     lightNode.specular = [0.0,0.0,0.0,1.0];//[1, 1, 1, 1];
     lightNode.position = [0, 0, 0];
     */
-    let lightNode = new AdvancedLightSGNode(true);
-    lightNode.ambient = [0.3,0.15,0.025,1.0];//[0.2, 0.2, 0.2, 1];
+    lightNode = new AdvancedLightSGNode(true);
+    lightNode.ambient = [1,1,1,1.0];//[0.2, 0.2, 0.2, 1];
     lightNode.diffuse = [0.3,0.15,0.025,1.0];//[0.5, 0.5, 0.5, 1];
     lightNode.specular = [0.1,0.1,0.1,1.0];//[1, 1, 1, 1];
     lightNode.position = [0, 0, 0];
@@ -584,9 +587,9 @@ function createSceneGraph(gl, resources) {
     /*POSITION TEST NODES*/
     rotateLight = new TransformationSGNode(mat4.create());
     let translateLight = new TransformationSGNode(glm.translate(0,3,8)); //translating the light is the same as setting the light position
-    translateLight.append(lightNode);
-    translateLight.append(fireNode);
-    rotateLight.append(translateLight);
+    //translateLight.append(lightNode);
+    //translateLight.append(fireNode);
+    //rotateLight.append(translateLight);
     b2fNodes.append(rotateLight);
     b2fNodes2.append(rotateLight);
 /*
@@ -939,7 +942,7 @@ function createSceneGraph(gl, resources) {
 /*add spider*/
 {
 
-  spiderTransformationNode = new TransformationSGNode(glm.translate(70,-6,83));
+  spiderTransformationNode = new TransformationSGNode(glm.translate(100,-9.75,75));
   spiderMovementSet1SGNode = new TransformationSGNode(glm.translate(0,0,0));
   spiderMovementSet2SGNode = new TransformationSGNode(glm.translate(0,0,0));
 
@@ -1049,13 +1052,14 @@ function createSceneGraph(gl, resources) {
   //spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(10));
   //spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(-10));
 
-  spiderAbdomenSGNode.append(andarielSGNode);
   spiderTransformationNode.append(spiderAbdomenSGNode);
   spiderTransformationNode.append(spiderMovementSet1SGNode);
   spiderTransformationNode.append(spiderMovementSet2SGNode);
+  spiderTransformationNode.append(andarielSGNode);
+  //spiderAbdomenSGNode.append(andarielSGNode);
 
   spiderTransformationNode.matrix = mat4.multiply(mat4.create(), spiderTransformationNode.matrix, glm.transform({scale: 1}));
-
+spiderTransformationNode.append(lightNode);
   lightingNodes.append(spiderTransformationNode);
 }
 
@@ -1232,6 +1236,7 @@ function render(timeInMilliseconds) {
   if(spiderMoving) {
     var speed = 1.5;
     spiderAbdomenSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
+    andarielSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
     spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(Math.sin(timeInMilliseconds*speed/100)*3*speed));
     spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed));
     spiderMovementSet1SGNode.matrix[13] += deg2rad(Math.sin(timeInMilliseconds*speed/100)*3*speed);
@@ -1374,7 +1379,6 @@ function initInteraction(canvas) {
         case 'KeyC':
           manualCameraEnabled = 1;
           disableHeadBobbing();
-          console.log("headbobbing: "+headbobbing);
           break;
       }
     }
