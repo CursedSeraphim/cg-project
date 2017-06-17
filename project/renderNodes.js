@@ -97,16 +97,18 @@ class AdvancedLightSGNode extends LightSGNode {
     this.origUniform = this.uniform;
     this.uniform = this.uniform + '['+ this.nr + ']';
     this.decreaseRate = 15.0;
-    
+
     this.counter = 0;
   }
 
   /*override Original call so the array gets used properly*/
   setLightPosition(context) {
     const gl = context.gl;
+
     if (!context.shader || !isValidUniformLocation(gl.getUniformLocation(context.shader, this.origUniform+'Pos'+'[' + this.nr + ']'))) {
       return;
     }
+
     const position = this._worldPosition || this.position;
     gl.uniform3f(gl.getUniformLocation(context.shader, this.origUniform+'Pos'+'[' + this.nr + ']'), position[0], position[1], position[2]);
   }
@@ -135,7 +137,7 @@ class AdvancedLightSGNode extends LightSGNode {
     gl.uniform1f(gl.getUniformLocation(context.shader, this.uniform+'.decreaseRate'), this.decreaseRate);
     //console.log(this.lookAt);
 
-    this.counter+=Math.random()/2;
+    this.counter += Math.random() / 2;
     super.render(context);
 
     if(this.flicker) {
