@@ -1,5 +1,5 @@
 # Blender MTL File: 'BACKUP12MapComplete.blend'
-# Material Count: 19
+# Material Count: 18
 
 newmtl Material.014_floor_cobble.jpg.009
 Ns 92.156863
@@ -65,12 +65,14 @@ d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\floor_cobble.jpg
 
-newmtl None_  1
-Ns 0
+newmtl None.004
+Ns 0.000000
 Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
+Kd 0.800000 0.800000 0.800000
+Ks 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\floor_cobble.jpg
 
@@ -151,17 +153,6 @@ illum 2
 map_Kd floor_cobble.jpg
 
 newmtl None_floor_cobble.jpg.015
-Ns 0.000000
-Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.800000 0.800000 0.800000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\floor_cobble.jpg
-
-newmtl None_floor_cobble.jpg.016
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
