@@ -291,7 +291,7 @@ function init(resources) {
   gl = createContext(400, 400);
 
   //setting manual camera control variables
-  manualCameraEnabled = 0;
+  manualCameraEnabled = false;
   //setting initial point to look at
   autoCameraLookAt = glm.translate(8.75, 2.35, -9.4);
   waitingFor = 0;
@@ -546,6 +546,16 @@ function createSceneGraph(gl, resources) {
     );
   }
 
+  function createTorch(color,spotAngle, lookAt, pos, colorMult, colorMin) {
+    var particle = createParticleNode(120, [0.2,0.05,0.2], colorMult,colorMin);
+    let torchLight = new AdvancedLightSGNode(true, spotAngle, lookAt, pos);
+    torchLight.ambient =[0,0,0,1.0];
+    torchLight.diffuse = color;
+    torchLight.specular = color;
+    torchLight.append(particle);
+    return torchLight;
+  }
+
   {
     /*Init Particles*/
     let lanternFireParticleNode  = createParticleNode(100, [0.02,0.01,0.02]);
@@ -664,6 +674,30 @@ function createSceneGraph(gl, resources) {
     torchTransNode4.append(torchNode4);
     torchTransNode4.append(torchLight4);
     b2fNodes.append(torchTransNode4);
+
+    function createSpiderTorch(pos) {
+      return createTorch([0.01,0.3,0.025,1.0],
+                         -361,
+                          [1,0,0],
+                          pos,
+                          [0.1,0.5,0.1],
+                          [0,0.5,0]);
+    }
+
+    b2fNodes.append(createSpiderTorch([40, -3, 50.85]));
+    b2fNodes.append(createSpiderTorch([80, -3, 50.85]));
+    b2fNodes.append(createSpiderTorch([90, -3, 50.85]));
+    b2fNodes.append(createSpiderTorch([100, -3, 50.85]));
+    b2fNodes.append(createSpiderTorch([110, -3, 50.85]));
+
+    b2fNodes.append(createSpiderTorch([40, -3, 89.15]));
+    b2fNodes.append(createSpiderTorch([50, -3, 89.15]));
+    b2fNodes.append(createSpiderTorch([60, -3, 89.15]));
+    b2fNodes.append(createSpiderTorch([70, -3, 89.15]));
+    b2fNodes.append(createSpiderTorch([80, -3, 89.15]));
+    b2fNodes.append(createSpiderTorch([90, -3, 89.15]));
+    b2fNodes.append(createSpiderTorch([100, -3, 89.15]));
+    b2fNodes.append(createSpiderTorch([110, -3, 89.15]));
 
 /*
     let torchTransNode5 = new TransformationSGNode(glm.translate(49.7, -1, 18.95));
@@ -1102,7 +1136,7 @@ function createSceneGraph(gl, resources) {
   //andarielSGNode.append(spiderTransformationNode);
   spiderAndBillBoardNode.append(spiderTransformationNode);
   spiderAndBillBoardNode.append(andarielSGNode);
-  spiderTransformationNode.append(lightNode);
+  //spiderTransformationNode.append(lightNode);
   lightingNodes.append(spiderAndBillBoardNode);
   //lightingNodes.append(spiderTransformationNode);
   //lightingNodes.append(andarielSGNode);
@@ -1462,7 +1496,7 @@ function initInteraction(canvas) {
     } else {
       switch(event.code) {
         case 'KeyC':
-          manualCameraEnabled = 1;
+          manualCameraEnabled = true;
           disableHeadBobbing();
           break;
       }
@@ -1506,7 +1540,7 @@ function initInteraction(canvas) {
     } else {
       switch(event.code) {
         case 'KeyC':
-          manualCameraEnabled = 1;
+          manualCameraEnabled = true;
           break;
       }
     }
