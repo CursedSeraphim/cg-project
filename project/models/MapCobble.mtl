@@ -1,5 +1,5 @@
 # Blender MTL File: 'BACKUP12MapComplete.blend'
-# Material Count: 154
+# Material Count: 153
 
 newmtl Material.000_black_cobble.jpg.042
 Ns 92.156863
@@ -899,7 +899,7 @@ Kd 0.8 0.8 0.8
 Ks 0.8 0.8 0.8
 d 1
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\dungeon_wall.png
+map_Kd black_cobble_rotated.jpg
 
 newmtl None.002
 Ns 0.000000
@@ -910,7 +910,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\dungeon_wall.png
 
 newmtl None.003
 Ns 0.000000
@@ -935,6 +935,17 @@ illum 2
 map_Kd black_cobble_rotated.jpg
 
 newmtl None.005
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl None.006
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -1066,17 +1077,6 @@ illum 2
 map_Kd black_cobble_rotated.jpg
 
 newmtl None_black_cobble_rotated.jpg.017
-Ns 0.000000
-Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.800000 0.800000 0.800000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl None_black_cobble_rotated.jpg.018
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -1351,40 +1351,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None_black_cobble_rotated.jpg.044
-Ns 0.000000
-Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.800000 0.800000 0.800000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl None_black_cobble_rotated.jpg.045
-Ns 0.000000
-Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.800000 0.800000 0.800000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
 newmtl None_black_cobble_rotated.jpg.046
-Ns 0.000000
-Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.800000 0.800000 0.800000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl None_black_cobble_rotated.jpg.047
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -1568,6 +1535,24 @@ Ks 0.800000 0.800000 0.800000
 Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl None_black_cobble_rotated.jpg.133
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl None_black_cobble_rotated.jpg.135
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
 illum 2
 map_Kd black_cobble_rotated.jpg
 
