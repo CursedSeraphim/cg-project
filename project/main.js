@@ -51,7 +51,9 @@ var hipSGNode1;
 var ribCageSGNode1;
 var skullSGNode1;
 var boneSGNode1;
+var bone2SGNode1;
 var bones1SGNode1;
+var bones1SGNode2;
 var skullPileSGNode1;
 var skullPileSGNode2;
 var hipBoneSGNode;
@@ -76,6 +78,7 @@ var spiderStartingPosition;
 //spellParticle
 var spellParentNode;
 var spellSGNode;
+var spellLightNode;
 var spellParticle;
 
 //used for spell
@@ -150,8 +153,10 @@ var skyTextureNode;
 var imSoHipTextureNode;
 var skullTextureNode;
 var boneTextureNode;
+var bone2TextureNode;
 var ribCageTextureNode;
 var bones1TextureNode;
+var bones2TextureNode;
 var skullPile1TextureNode;
 var spiderTextureNode1;
 var spiderTextureNode2;
@@ -402,7 +407,9 @@ function init(resources) {
   imSoHipTextureNode = new AdvancedTextureSGNode(resources.hipBoneTexture);
   skullTextureNode = new AdvancedTextureSGNode(resources.skullTexture);
   boneTextureNode = new AdvancedTextureSGNode(resources.boneTexture);
+  bone2TextureNode = new AdvancedTextureSGNode(resources.boneTexture);
   bones1TextureNode = new AdvancedTextureSGNode(resources.bones1Texture);
+  bones2TextureNode = new AdvancedTextureSGNode(resources.bones1Texture);
   skullPile1TextureNode = new AdvancedTextureSGNode(resources.skullPileTexture);
   pentagramTextureNode = new AdvancedTextureSGNode(resources.pentagramTexture);
   cobbleTextureNode = new AdvancedTextureSGNode(resources.cobbleTexture);
@@ -525,18 +532,24 @@ diceTextureNode = diabloTextureNode;
   spellParentNode = new TransformationSGNode(glm.translate(0,0,0));
   spellParticle = createParticleNode(350, [1,1,1], [0.5, 0.5, 1]);
   spellSGNode = new TransformationSGNode(glm.translate(0, 0, 0));
+  lightNode = new AdvancedLightSGNode(true);
+  lightNode.ambient = [0.25,0.25,0.25,1.0];//[0.2, 0.2, 0.2, 1];
+  lightNode.diffuse = [0.125,0.125,0.25,1.0];//[0.5, 0.5, 0.5, 1];
+  lightNode.specular = [0.125,0.125,0.25,1.0];//[1, 1, 1, 1];
+  lightNode.position = [0, 0, 0];
 
   triggerSGNode8 = new TriggerSGNode(0.1, wpCam9, function() {
+    spellParentNode.children.pop();
+    spellSGNode.children.pop();
+    spellParentNode.append(spellSGNode);
+    spellSGNode.append(spellParticle);
+    spellSGNode.append(lightNode);
     b2fNodes.append(spellParentNode);
     var fireSpell = function(){
       console.log("executing fireSpell");
       spellSGNode.matrix[12] = -cameraPosition[0];
       spellSGNode.matrix[13] = -cameraPosition[1]-1;
       spellSGNode.matrix[14] = -cameraPosition[2];
-      spellParentNode.children.pop();
-      spellSGNode.children.pop();
-      spellParentNode.append(spellSGNode);
-      spellSGNode.append(spellParticle)
       spellWayPoints = [spiderAndBillBoardNode];
       spellWayPointIndex = 0;
     }
@@ -616,21 +629,6 @@ function createSceneGraph(gl, resources) {
     torchNode.specular = [1.0,0.6,0.05,1.0];
     torchNode.position = [0, 0, 0];
     torchNode.decreaseRate = 25;
-
-
-    /*LIGHT TEST NODES*/
-    //TODO UNUSED
-    lightNode = new AdvancedLightSGNode(true);
-    lightNode.ambient = [1,1,1,1.0];//[0.2, 0.2, 0.2, 1];
-    lightNode.diffuse = [0.3,0.15,0.025,1.0];//[0.5, 0.5, 0.5, 1];
-    lightNode.specular = [0.1,0.1,0.1,1.0];//[1, 1, 1, 1];
-    lightNode.position = [0, 0, 0];
-
-    //TODO UNUSED
-    let lightTest = new AdvancedLightSGNode(true, 30, [0,0,1]);
-    lightTest.ambient = [0.1,0.1,0.1,1.0];//[0.2, 0.2, 0.2, 1];
-    lightTest.diffuse = [1.0,0.6,0.05,1.0];
-    lightTest.specular = [0, 0, 0, 1.0];
 
     /*Init Light Positions*/
     translateLantern = new TransformationSGNode(glm.translate(0, 0, 0));
@@ -895,13 +893,13 @@ function createSceneGraph(gl, resources) {
   lightingNodes.append(skullPileSGNode2);
 }
 
-/*Add bones1*/
+/*Add bone piles*/
 {
   var rect = makeFloor(0.3, 0.3, 1)
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
-  bones1SGNode1 = new BillboardSGNode(glm.transform({translate: [27.5,-5,-8.9]}));
+  bones1SGNode1 = new BillboardSGNode(glm.transform({translate: [44,.25,29.3]}));
   let bones1MaterialNode = new MaterialSGNode(bones1TextureNode);
   bones1MaterialNode.ambient = [0.6, 0.6, 0.6, 1];
   bones1MaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
@@ -911,6 +909,21 @@ function createSceneGraph(gl, resources) {
   bones1TextureNode.append(new RenderSGNode(rect));
 
   lightingNodes.append(bones1SGNode1);
+
+  var rect = makeFloor(0.3, 0.3, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  bones1SGNode2 = new BillboardSGNode(glm.transform({translate: [25.6,-5.25,-8.44]}));
+  let bones2MaterialNode = new MaterialSGNode(bones2TextureNode);
+  bones2MaterialNode.ambient = [0.6, 0.6, 0.6, 1];
+  bones2MaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
+  bones2MaterialNode.specular = [1, 1, 1, 1];
+  bones2MaterialNode.shininess = 1000;
+  bones1SGNode2.append(bones2MaterialNode);
+  bones2TextureNode.append(new RenderSGNode(rect));
+
+  lightingNodes.append(bones1SGNode2);
 }
 
 /*Add Duriel*/
@@ -949,7 +962,7 @@ function createSceneGraph(gl, resources) {
   lightingNodes.append(ribCageSGNode1);
 }
 
-/*Add bone*/
+/*Add bones*/
 {
   var rect = makeFloor(0.3, 0.3, 1)
 
@@ -965,6 +978,21 @@ function createSceneGraph(gl, resources) {
   boneTextureNode.append(new RenderSGNode(rect));
 
   lightingNodes.append(boneSGNode1);
+
+  var rect = makeFloor(0.3, 0.3, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  bone2SGNode1 = new BillboardSGNode(glm.transform({translate: [40,.25,32.5]}));
+  let bone2MaterialNode = new MaterialSGNode(bone2TextureNode);
+  bone2MaterialNode.ambient = [0.6, 0.6, 0.6, 1];
+  bone2MaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
+  bone2MaterialNode.specular = [1, 1, 1, 1];
+  bone2MaterialNode.shininess = 1000;
+  bone2TextureNode.append(bone2MaterialNode);
+  bone2TextureNode.append(new RenderSGNode(rect));
+
+  lightingNodes.append(bone2SGNode1);
 }
 
 /*Add skull*/
@@ -1387,7 +1415,7 @@ function render(timeInMilliseconds) {
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
-displayText(((timeInMilliseconds)/1000).toFixed(2)+"s");//+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
+displayText(((timeInMilliseconds)/1000).toFixed(2)+"s"+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
 /* moving diablo to camera
   diabloSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.5, -2.5));
   diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));
