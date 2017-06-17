@@ -75,9 +75,12 @@ var spiderMovementSet2SGNode;
 var spiderStartingPosition;
 //spellParticle
 var spellSGNode;
+var spellParticle;
 
 //used for spell
 var spellCast = 0;
+var spellWayPointIndex = 0;
+var spellWayPoints;
 
 //activates spider animation and activates waypoint movement toward camera
 var spiderMoving = 0;
@@ -510,12 +513,23 @@ diceTextureNode = diabloTextureNode;
     spiderMoving = 0;
   });
   //TODO
-  triggerSGNode8 = new TriggerSGNode(0.1, wpCam1, function() {
-    spellSGNode = new TransformationSGNode(glm.translate(-cameraPosition[0], -cameraPosition[1]-1, -cameraPosition[2]));
-    let spellParticle = createParticleNode(200, [0.5,0.5,0.5], [0.3, 0.3, 0.5]);
-    spellSGNode.append(spellParticle);
-    b2fNodes.append(spellSGNode);
-    console.log("particle added at "+cameraPosition);
+
+  triggerSGNode8 = new TriggerSGNode(0.1, wpCam9, function() {
+    var fireSpell = function(){
+      spellSGNode = new TransformationSGNode(glm.translate(-cameraPosition[0], -cameraPosition[1]-1, -cameraPosition[2]));
+      spellParticle = createParticleNode(350, [1,1,1], [0.3, 0.3, 0.5]);
+      spellSGNode.append(spellParticle);
+      b2fNodes.append(spellSGNode);
+      spellWayPoints = [spiderAndBillBoardNode];
+      spellCast = 1;
+    }
+    fireSpell();
+    setTimeout(fireSpell, 250);
+    setTimeout(fireSpell, 450);
+    setTimeout(fireSpell, 750);
+    setTimeout(fireSpell, 1050);
+    setTimeout(fireSpell, 1250);
+    setTimeout(fireSpell, 1400);
   });
 
   root.append(triggerSGNode2);
@@ -1349,8 +1363,12 @@ function render(timeInMilliseconds) {
     spiderMovementSet2SGNode.matrix[13] += deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed);
   }
 
-  if(spellCast) {
-    
+  if(spellCast && spellSGNode.matrix != null) {
+    spellWayPointIndex = moveUsingWaypoints(spellSGNode.matrix, [spiderAndBillBoardNode.matrix], spellWayPointIndex, 3);
+    if(spellWayPointIndex == 1) {
+      spellCast = 0;
+    }
+
   }
 
   if(headBobbing){
