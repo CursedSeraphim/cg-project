@@ -1,5 +1,5 @@
 # Blender MTL File: 'BACKUP10MapComplete.blend'
-# Material Count: 105
+# Material Count: 104
 
 newmtl Material.000
 Ns 96.078431
@@ -10,9 +10,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.000_black_cobble_rotated.jpg.002
+newmtl Material.000_black_cobble.jpg.042
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -21,7 +21,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.001
 Ns 96.078431
@@ -32,9 +32,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.001_black_cobble_rotated.jpg.001
+newmtl Material.001_black_cobble.jpg.004
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -43,7 +43,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.002
 Ns 96.078431
@@ -54,9 +54,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.002_black_cobble_rotated.jpg.003
+newmtl Material.002_black_cobble.jpg.031
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -65,7 +65,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.003
 Ns 96.078431
@@ -76,9 +76,20 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.003_black_cobble.jpg
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
-newmtl Material.003_black_cobble_rotated.jpg.001
+newmtl Material.004
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -89,7 +100,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl Material.004
+newmtl Material.004_black_cobble.jpg
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -122,17 +133,6 @@ d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble_rotated.jpg
 
-newmtl Material.004_black_cobble_rotated.jpg.001
-Ns 96.078431
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
 newmtl Material.005
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
@@ -142,7 +142,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd floor_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
 newmtl Material.005_black_cobble.jpg.006
 Ns 96.078431
@@ -155,17 +155,6 @@ d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
-newmtl Material.005_black_cobble_rotated.jpg.001
-Ns 96.078431
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
 newmtl Material.006
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
@@ -175,9 +164,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.006_black_cobble_rotated.jpg.001
+newmtl Material.006_black_cobble.jpg.008
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -186,7 +175,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.007
 Ns 96.078431
@@ -197,9 +186,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.007_black_cobble_rotated.jpg.001
+newmtl Material.007_black_cobble.jpg.010
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -208,7 +197,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.008
 Ns 96.078431
@@ -219,9 +208,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.008_black_cobble_rotated.jpg.001
+newmtl Material.008_black_cobble.jpg.012
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -230,7 +219,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.009
 Ns 96.078431
@@ -241,9 +230,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.009_black_cobble_rotated.jpg.001
+newmtl Material.009_black_cobble.jpg.014
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -252,7 +241,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.010
 Ns 96.078431
@@ -263,9 +252,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.010_black_cobble_rotated.jpg.001
+newmtl Material.010_black_cobble.jpg.016
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -274,7 +263,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.011
 Ns 96.078431
@@ -285,9 +274,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.011_black_cobble_rotated.jpg.001
+newmtl Material.011_black_cobble.jpg.018
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -296,7 +285,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.012
 Ns 96.078431
@@ -307,9 +296,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.012_black_cobble_rotated.jpg.001
+newmtl Material.012_black_cobble.jpg.051
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -318,7 +307,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.013
 Ns 96.078431
@@ -329,9 +318,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.013_black_cobble_rotated.jpg.001
+newmtl Material.013_black_cobble.jpg.020
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -340,7 +329,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.015
 Ns 96.078431
@@ -351,9 +340,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.015_black_cobble_rotated.jpg.001
+newmtl Material.015_black_cobble.jpg.055
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -362,7 +351,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.016
 Ns 96.078431
@@ -373,9 +362,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.016_black_cobble_rotated.jpg.002
+newmtl Material.016_black_cobble.jpg.041
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -384,7 +373,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.017
 Ns 96.078431
@@ -406,9 +395,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.018_black_cobble_rotated.jpg.001
+newmtl Material.018_black_cobble.jpg.045
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -417,7 +406,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.019
 Ns 96.078431
@@ -428,9 +417,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.019_black_cobble_rotated.jpg.001
+newmtl Material.019_black_cobble.jpg.046
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -439,7 +428,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.020
 Ns 96.078431
@@ -450,9 +439,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.020_black_cobble_rotated.jpg.002
+newmtl Material.020_black_cobble.jpg.043
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -461,7 +450,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.021
 Ns 96.078431
@@ -472,9 +461,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.021_black_cobble_rotated.jpg.002
+newmtl Material.021_black_cobble.jpg.047
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -483,7 +472,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.022
 Ns 96.078431
@@ -494,9 +483,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.022_black_cobble_rotated.jpg.002
+newmtl Material.022_black_cobble.jpg.057
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -505,7 +494,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.023
 Ns 96.078431
@@ -516,9 +505,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.023_black_cobble_rotated.jpg.002
+newmtl Material.023_black_cobble.jpg.059
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -527,7 +516,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.024
 Ns 96.078431
@@ -538,9 +527,20 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.024_black_cobble.jpg.067
+Ns 96.078431
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
-newmtl Material.024_black_cobble_rotated.jpg.001
+newmtl Material.025
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -551,7 +551,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl Material.025
+newmtl Material.025_black_cobble.jpg.039
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -573,7 +573,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl Material.025_black_cobble_rotated.jpg.011
+newmtl Material.026
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -584,7 +584,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl Material.026
+newmtl Material.026_black_cobble.jpg.033
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -595,7 +595,7 @@ d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
-newmtl Material.026_black_cobble_rotated.jpg.004
+newmtl Material.027
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -606,7 +606,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl Material.027
+newmtl Material.027_black_cobble.jpg.034
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -628,17 +628,6 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl Material.027_black_cobble_rotated.jpg.006
-Ns 96.078431
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
 newmtl Material.028
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
@@ -648,9 +637,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.028_black_cobble_rotated.jpg.015
+newmtl Material.028_black_cobble.jpg.044
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -659,7 +648,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.028_black_cobble_rotated.jpg.016
 Ns 96.078431
@@ -681,9 +670,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.035_black_cobble_rotated.jpg.001
+newmtl Material.035_black_cobble.jpg.069
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -692,7 +681,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.037
 Ns 96.078431
@@ -703,9 +692,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.037_black_cobble_rotated.jpg.002
+newmtl Material.037_black_cobble.jpg.061
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -714,7 +703,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.038
 Ns 96.078431
@@ -802,9 +791,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.042_black_cobble_rotated.jpg.002
+newmtl Material.042_black_cobble.jpg.063
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -813,7 +802,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.043
 Ns 96.078431
@@ -846,9 +835,9 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
+map_Kd black_cobble_rotated.jpg
 
-newmtl Material.045_black_cobble_rotated.jpg.001
+newmtl Material.045_black_cobble.jpg
 Ns 96.078431
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -857,7 +846,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\black_cobble.jpg
 
 newmtl Material.050
 Ns 96.078431

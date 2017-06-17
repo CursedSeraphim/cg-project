@@ -1242,6 +1242,8 @@ function render(timeInMilliseconds) {
   //get inverse view matrix to allow computing eye-to-light matrix
   context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
 
+  context.invViewMatrix[13] += Math.sin(timeInMilliseconds/75)/25;
+
   if(cameraWaypointIndex < cameraWaypoints.length && !manualCameraEnabled) {
       cameraWaypointIndex = moveUsingWaypoints(context.invViewMatrix, cameraWaypoints, cameraWaypointIndex, 0.2);
   }
