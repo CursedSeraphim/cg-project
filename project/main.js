@@ -80,8 +80,7 @@ var spellSGNode;
 var spellParticle;
 
 //used for spell
-var spellCast = 0;
-var spellWayPointIndex = 0;
+var spellWayPointIndex = -1;
 var spellWayPoints;
 
 //activates spider animation and activates waypoint movement toward camera
@@ -525,11 +524,10 @@ diceTextureNode = diabloTextureNode;
       spellParentNode.children.pop();
       spellParentNode.append(spellSGNode);
 
-      spellParticle = createParticleNode(350, [1,1,1], [0.3, 0.3, 0.5]);
+      spellParticle = createParticleNode(350, [1,1,1], [0.3, 0.3, 0.8]);
       spellSGNode.append(spellParticle);
       b2fNodes.append(spellParentNode);
       spellWayPoints = [spiderAndBillBoardNode];
-      spellCast = 1;
       spellWayPointIndex = 0;
     }
     fireSpell();
@@ -539,6 +537,8 @@ diceTextureNode = diabloTextureNode;
     setTimeout(fireSpell, 1050);
     setTimeout(fireSpell, 1250);
     setTimeout(fireSpell, 1400);
+    setTimeout(fireSpell, 1600);
+    setTimeout(fireSpell, 1850);
   });
 
   root.append(triggerSGNode2);
@@ -1373,16 +1373,6 @@ function render(timeInMilliseconds) {
     spiderMovementSet2SGNode.matrix[13] += deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed);
   }
 
-  if(spellCast) {
-    if(spellWayPointIndex === 0) {
-      spellWayPointIndex = moveUsingWaypoints(spellSGNode.matrix, [spiderAndBillBoardNode.matrix], spellWayPointIndex, 4);
-    }
-    if(spellWayPointIndex === 1) {
-      spellCast = 0;
-    }
-
-  }
-
   if(headBobbing){
     context.invViewMatrix[13] += Math.sin(timeInMilliseconds/75)/25;
 
@@ -1419,6 +1409,9 @@ function render(timeInMilliseconds) {
         autoCameraLookAt = spiderAndBillBoardNode.matrix;
         console.log("wp5 reached focussing spider now");
       }
+    if(spellWayPointIndex === 0) {
+      spellWayPointIndex = moveUsingWaypoints(spellSGNode.matrix, [spiderAndBillBoardNode.matrix], spellWayPointIndex, 4);
+    }
     }
 
     lookAtObject(context, autoCameraLookAt, [0,1,0]);
@@ -1441,7 +1434,7 @@ function render(timeInMilliseconds) {
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
-displayText((timeInMilliseconds)/1000+"s spellcast:"+spellCast);//+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
+displayText((timeInMilliseconds)/1000+"s");//+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
 /* moving diablo to camera
   diabloSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.5, -2.5));
   diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));
