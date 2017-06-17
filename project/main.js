@@ -1364,7 +1364,7 @@ function render(timeInMilliseconds) {
   }
 
   if(spellCast && spellSGNode.matrix != null) {
-    spellWayPointIndex = moveUsingWaypoints(spellSGNode.matrix, [spiderAndBillBoardNode.matrix], spellWayPointIndex, 3);
+    spellWayPointIndex = moveUsingWaypoints(spellSGNode.matrix, [spiderAndBillBoardNode.matrix], spellWayPointIndex, 4);
     if(spellWayPointIndex == 1) {
       spellCast = 0;
     }
