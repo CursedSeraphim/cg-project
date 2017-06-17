@@ -328,7 +328,7 @@ function init(resources) {
   let wpCam10 = glm.translate(32.3, 2.3, 81.3);
   let wpCam11 = glm.translate(29, 2.3, 81.3);
   let wpCam12 = glm.translate(12.5, -7.5, 81.3);
-  cameraWaypoints = [wpCam1, wpCam2, wpCam3, wpCam4, wpCam5, wpCam6, wpCam7, wpCam8, wpCam9, wpCam10, wpCam11];
+  cameraWaypoints = [wpCam1, wpCam2, wpCam3, wpCam4, wpCam5, wpCam6, wpCam7, wpCam8, wpCam9, wpCam10, wpCam11, wpCam12];
   let wpLookAt1 = glm.translate(25,-3,-15);
   lookAtWaypoints = [wpCam2, wpCam3, wpLookAt1];
 
@@ -513,7 +513,7 @@ diceTextureNode = diabloTextureNode;
   triggerSGNode6 = new TriggerSGNode(0.1, wpCam8, function() {
     spiderMoving = 1;
   });
-  triggerSGNode7 = new TriggerSGNode(1, wpCam10, function() {
+  triggerSGNode7 = new TriggerSGNode(1, wpCam12, function() {
     console.log("trigger 7 called");
     spiderMoving = 0;
   });
@@ -546,6 +546,12 @@ diceTextureNode = diabloTextureNode;
     setTimeout(fireSpell, 1400);
     setTimeout(fireSpell, 1600);
     setTimeout(fireSpell, 1850);
+    setTimeout(fireSpell, 2050);
+    setTimeout(fireSpell, 2250);
+    setTimeout(fireSpell, 2500);
+    setTimeout(fireSpell, 2700);
+    setTimeout(fireSpell, 2975);
+    setTimeout(fireSpell, 3150);
   });
 
   root.append(triggerSGNode2);
