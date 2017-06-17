@@ -528,14 +528,16 @@ diceTextureNode = diabloTextureNode;
     spiderMoving = 0;
   });
   //TODO
-
+  var r = 0.75;
+  var g = 0.25;
+  var b = 0.75;
   spellParentNode = new TransformationSGNode(glm.translate(0,0,0));
-  spellParticle = createParticleNode(500, [1,1,1], [0.5, 0.5, 1]);
+  spellParticle = createParticleNode(500, [1,1,1], [r, g, b], [r/8, g/8, b/8]);
   spellSGNode = new TransformationSGNode(glm.translate(0, 0, 0));
   lightNode = new AdvancedLightSGNode(true);
-  lightNode.ambient = [0.25,0.25,0.25,1.0];//[0.2, 0.2, 0.2, 1];
-  lightNode.diffuse = [0.125,0.125,0.25,1.0];//[0.5, 0.5, 0.5, 1];
-  lightNode.specular = [0.125,0.125,0.25,1.0];//[1, 1, 1, 1];
+  lightNode.ambient = [0.25,0.25,0.25,1.0];
+  lightNode.diffuse = [r/8,g/8,b/4,1.0];
+  lightNode.specular = [r/8,g/8,b/4,1.0];
   lightNode.position = [0, 0, 0];
 
   triggerSGNode8 = new TriggerSGNode(0.1, wpCam9, function() {
