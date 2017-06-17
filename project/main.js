@@ -104,6 +104,7 @@ var triggerSGNode2;
 var triggerSGNode3;
 var triggerSGNode4;
 var triggerSGNode5;
+var triggerSGNode6;
 
 /*DEBUG NODES*/
 var rotateNode;
@@ -489,11 +490,18 @@ diceTextureNode = diabloTextureNode;
     disableHeadBobbing();
     setTimeout(enableHeadBobbing, waitingFor);
   });
+  triggerSGNode6 = new TriggerSGNode(0.1, wpCam8);
+  /*
+  triggerSGNode6.setTriggerFunction(function() {
+    objectLookAt(spiderTransformationNode.matrix, wpCam8, [0,1,0]);
+  });
+  */
 
   root.append(triggerSGNode2);
   root.append(triggerSGNode3);
   root.append(triggerSGNode4);
   root.append(triggerSGNode5);
+  root.append(triggerSGNode6);
 
   initInteraction(gl.canvas);
 }
@@ -1100,9 +1108,7 @@ lightingNodes.append(lanternSGNode);
 
 function makeFloor(x, y, a) {
   var floor = makeRect(x, y);
-  //TASK 3: adapt texture coordinates
   floor.texture = [0, 0,   a*x/y, 0,   a*x/y, a,   0, a];
-  //floor.texture = [0, 0,   5, 0,   5, 5,   0, 5];
   return floor;
 }
 
@@ -1180,6 +1186,14 @@ function lookAt(context, matrix, up) {
   var center = [matrix[12], matrix[13], matrix[14]];
   var lookAtMatrix = mat4.lookAt(mat4.create(), eye, center, up);
   context.viewMatrix = lookAtMatrix;
+}
+
+//function used to return matrix used to make object look at a point
+function objectLookAtMatrix(objectMatrix, targetMatrix, up) {
+  var eye = [objectMatrix[12], objectMatrix[13], objectMatrix[14]];
+  var center = [targetMatrix[12], targetMatrix[13], targetMatrix[14]];
+  var lookAtMatrix = mat4.lookAt(mat4.create(), eye, center, up);
+  return lookAtMatrix;
 }
 
 //a scene graph node for setting texture parameters
@@ -1309,6 +1323,8 @@ function render(timeInMilliseconds) {
     context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
 
   }
+  //TODO
+  spiderTransformationNode.matrix = objectLookAtMatrix(spiderTransformationNode.matrix, context.invViewMatrix, [0,1,0]);
 
 
 //updating camera position variables
