@@ -42,7 +42,6 @@ var translateLantern;
 var translateTorch1;
 var translateTorch2;
 var b2fNodes;
-var b2fNodes2;
 var diabloSGNode;
 var orcShamanSGNode;
 var durielSGNode;
@@ -302,8 +301,8 @@ function init(resources) {
   gl = createContext(400, 400);
 
   //setting manual camera control variables
-  //manualCameraEnabled = false;
-  manualCameraEnabled = true;
+  manualCameraEnabled = false;
+  //manualCameraEnabled = true;
   //setting initial point to look at
   autoCameraLookAt = glm.translate(8.75, 2.35, -9.4);
   waitingFor = 0;
@@ -311,8 +310,8 @@ function init(resources) {
   startTime = time();
 
   /*set camera Start position*/
-  //cameraPosition = vec3.fromValues(3, -1, -10);
-  cameraPosition = vec3.fromValues(-40, 3, -75);
+  cameraPosition = vec3.fromValues(3, -1, -10);
+  //cameraPosition = vec3.fromValues(-40, 3, -75);
 
   /*set waypoints*/
   cameraWaypointIndex = 0;
@@ -575,7 +574,6 @@ function createSceneGraph(gl, resources) {
   //particleNodes = new ShaderSGNode(particleShaderProgram);
   lightingNodes = new LightingSGNode();
   b2fNodes = new Back2FrontSGNode();
-  b2fNodes2 = new Back2FrontSGNode();
   root.append(new BlendSgNode(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, lightingNodes));
 
   //light debug helper function
@@ -588,7 +586,7 @@ function createSceneGraph(gl, resources) {
   function createTorch(color, pos, colorMult, colorMin) {
     var particle = createParticleNode(120, [0.2,0.05,0.2], colorMult,colorMin);
     let torchLight = new AdvancedLightSGNode(true);
-    torchLight.ambient =color;
+    torchLight.ambient = [0,0,0,1];
     torchLight.diffuse = color;
     torchLight.specular = color;
     torchLight.position = pos;
@@ -600,19 +598,7 @@ function createSceneGraph(gl, resources) {
     /*Init Particles*/
     let lanternFireParticleNode  = createParticleNode(100, [0.02,0.01,0.02]);
 
-
     /*PARTICLE TEST NODES*/
-    let fireNode = createParticleNode(300, [0.5,0.2,0.5]);
-  //  let staticFireNode = createParticleNode(600, [2,0.4,2]);
-    let torchNode1 = createParticleNode(120, [0.2,0.05,0.2]);
-    let torchNode2 = createParticleNode(120, [0.2,0.05,0.2]);
-    let torchNode3 = createParticleNode(120, [0.2,0.05,0.2]);
-    let torchNode4 = createParticleNode(120, [0.2,0.05,0.2]);
-    let torchNode5 = createParticleNode(120, [0.2,0.05,0.2]);
-    let torchNode6 = createParticleNode(120, [0.2,0.05,0.2]);
-    let torchNode7 = createParticleNode(120, [0.2,0.05,0.2]);
-    let torchNode8 = createParticleNode(120, [0.2,0.05,0.2]);
-    let torchNode9 = createParticleNode(120, [0.2,0.05,0.2]);
 
     /*Init Light*/
     let torchNode = new AdvancedLightSGNode(true, 10, [0,0,1]);
@@ -620,64 +606,28 @@ function createSceneGraph(gl, resources) {
     torchNode.diffuse = [1.0,0.6,0.05,1.0];
     torchNode.specular = [1.0,0.6,0.05,1.0];
     torchNode.position = [0, 0, 0];
-    torchNode.shininess = 100;
-    torchNode.decreaseRate = 20;
+    torchNode.decreaseRate = 25;
 
 
     /*LIGHT TEST NODES*/
-    /*
-    lightNode.ambient = [0.0,0.0,0.0,1.0];//[0.2, 0.2, 0.2, 1];
-    lightNode.diffuse = [0.6,0.3,0.05,1.0];//[0.5, 0.5, 0.5, 1];
-    lightNode.specular = [0.0,0.0,0.0,1.0];//[1, 1, 1, 1];
-    lightNode.position = [0, 0, 0];
-    */
+    //TODO UNUSED
     lightNode = new AdvancedLightSGNode(true);
     lightNode.ambient = [1,1,1,1.0];//[0.2, 0.2, 0.2, 1];
     lightNode.diffuse = [0.3,0.15,0.025,1.0];//[0.5, 0.5, 0.5, 1];
     lightNode.specular = [0.1,0.1,0.1,1.0];//[1, 1, 1, 1];
     lightNode.position = [0, 0, 0];
 
+    //TODO UNUSED
     let lightTest = new AdvancedLightSGNode(true, 30, [0,0,1]);
     lightTest.ambient = [0.1,0.1,0.1,1.0];//[0.2, 0.2, 0.2, 1];
     lightTest.diffuse = [1.0,0.6,0.05,1.0];
     lightTest.specular = [0, 0, 0, 1.0];
-
-    let torchLight1 = new AdvancedLightSGNode(true);
-    torchLight1.ambient =[0.3,0.15,0.025,1.0];
-    torchLight1.diffuse = [0.3,0.15,0.025,1.0];
-    torchLight1.specular = [0.1,0.1,0.1,1.0];
-    torchLight1.position = [0, 0, 0];
-
-    let torchLight2 = new AdvancedLightSGNode(true);
-    torchLight2.ambient = [0.3,0.15,0.025,1.0];
-    torchLight2.diffuse = [0.3,0.15,0.025,1.0];
-    torchLight2.specular = [0.1,0.1,0.1,1.0];
-    torchLight2.position = [0, 0, 0];
-
-    let torchLight3 = new AdvancedLightSGNode(true);
-    torchLight3.ambient =[0.3,0.15,0.025,1.0];
-    torchLight3.diffuse = [0.3,0.15,0.025,1.0];
-    torchLight3.specular = [0.1,0.1,0.1,1.0];
-    torchLight3.position = [0, 0, 0];
-
-    let torchLight4 = new AdvancedLightSGNode(true);
-    torchLight4.ambient =[0.3,0.15,0.025,1.0];
-    torchLight4.diffuse = [0.3,0.15,0.025,1.0];
-    torchLight4.specular = [0.1,0.1,0.1,1.0];
-    torchLight4.position = [0, 0, 0];
-
-    let torchLight5 = new AdvancedLightSGNode(true);
-    torchLight4.ambient = [0.3,0.15,0.025,1.0];
-    torchLight4.diffuse = [0.3,0.15,0.025,1.0];
-    torchLight4.specular = [0.1,0.1,0.1,1.0];
-    torchLight4.position = [0, 0, 0];
 
     /*Init Light Positions*/
     translateLantern = new TransformationSGNode(glm.translate(0, 0, 0));
     translateLantern.append(torchNode);
     translateLantern.append(lanternFireParticleNode);
     b2fNodes.append(translateLantern);
-    b2fNodes2.append(translateLantern);
 
     /*POSITION TEST NODES*/
     rotateLight = new TransformationSGNode(mat4.create());
@@ -686,35 +636,20 @@ function createSceneGraph(gl, resources) {
     //translateLight.append(fireNode);
     //rotateLight.append(translateLight);
     b2fNodes.append(rotateLight);
-    b2fNodes2.append(rotateLight);
-/*
-    let fireTransNode = new TransformationSGNode(glm.translate(-3, 5, 2));
-    fireTransNode.append(staticFireNode);
-    fireTransNode.append(lightTest);
-    b2fNodes.append(fireTransNode);
-    b2fNodes2.append(fireTransNode);
-*/
-    let torchTransNode1 = new TransformationSGNode(glm.translate(27.6, 0, -0.125));
-    torchTransNode1.append(torchNode1);
-    torchTransNode1.append(torchLight1);
-    b2fNodes.append(torchTransNode1);
-    b2fNodes2.append(torchTransNode1);
 
-    let torchTransNode2 = new TransformationSGNode(glm.translate(-9.5, 3, 0));
-    torchTransNode2.append(torchNode2);
-    torchTransNode2.append(torchLight2);
-    b2fNodes.append(torchTransNode2);
-    b2fNodes2.append(torchTransNode2);
+    function createFireTorch(pos) {
+      var torch = createTorch([0.6,0.3,0.05],
+                          pos);
+      torch.ambient = [0,0,0,1.0]
+      //torch.spotAngle = 105 * Math.PI/180;
+      torch.decreaseRate = 5;
+      return torch;
+    }
 
-    let torchTransNode3 = new TransformationSGNode(glm.translate(32.0625, -1, 26.675));
-    torchTransNode3.append(torchNode3);
-    torchTransNode3.append(torchLight3);
-    b2fNodes.append(torchTransNode3);
-
-    let torchTransNode4 = new TransformationSGNode(glm.translate(43.45, -1, 0.4));
-    torchTransNode4.append(torchNode4);
-    torchTransNode4.append(torchLight4);
-    b2fNodes.append(torchTransNode4);
+    b2fNodes.append(createFireTorch([27.6, 0, -0.125]));
+    b2fNodes.append(createFireTorch([-9.5, 3, 0]));
+    b2fNodes.append(createFireTorch([32.0625, -1, 26.675]));
+    b2fNodes.append(createFireTorch([43.45, -1, 0.4]));
 
     function createSpiderTorch(pos, lookAt) {
       var torch = createTorch([0.05,0.3,0.025,1.0],
@@ -772,7 +707,6 @@ function createSceneGraph(gl, resources) {
           new RenderSGNode(resources.modelCube)
     ])));
   b2fNodes.append(rotateNode);
-  b2fNodes2.append(rotateNode);
 
   //lightingNodes.append(cube)
 }
@@ -792,8 +726,7 @@ function createSceneGraph(gl, resources) {
   orc_shamanMaterialNode.specular = [1, 1, 1, 1];
   orc_shamanMaterialNode.shininess = 1000;
 
-  b2fNodes2.append(orcShamanSGNode);
-  orcShamanTextureNode.append(b2fNodes2);
+  orcShamanTextureNode.append(orcShamanSGNode);
 }
 
 /*Place the Dungeon Layout, e.g. walls, floor,...*/
@@ -1295,7 +1228,7 @@ function ObjectLookAtMatrix(object, targetMatrix, up) {
 
 //a scene graph node for setting texture parameters
 function render(timeInMilliseconds) {
-  var timediff = Math.min((timeInMilliseconds - (lastRenderTime || timeInMilliseconds))/16.0 ,5.0);
+  var timediff = Math.min((timeInMilliseconds - (lastRenderTime || timeInMilliseconds))/20.0 ,5.0);
   checkForWindowResize(gl);
   //update animations
   //rotateNode.matrix = glm.rotateY(timeInMilliseconds*-0.01);
@@ -1451,7 +1384,7 @@ function render(timeInMilliseconds) {
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
-displayText((timeInMilliseconds)/1000+"s");//+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
+displayText(((timeInMilliseconds)/1000).toFixed(2)+"s");//+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
 /* moving diablo to camera
   diabloSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.5, -2.5));
   diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));
