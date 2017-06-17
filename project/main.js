@@ -638,9 +638,9 @@ function createSceneGraph(gl, resources) {
     b2fNodes.append(rotateLight);
 
     function createFireTorch(pos) {
-      var torch = createTorch([0.6,0.3,0.05],
+      var torch = createTorch([1.0,0.6,0.05,1.0],
                           pos);
-      torch.ambient = [0.2,0.1,0.025];
+      torch.ambient = [0.25,0.15,0.0125,1.0];
       //torch.spotAngle = 105 * Math.PI/180;
       torch.decreaseRate = 5;
       return torch;
