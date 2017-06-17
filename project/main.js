@@ -22,6 +22,7 @@ var cameraPosition;
 //manual camera control switch
 var manualCameraEnabled;
 var startTime;
+var lastRenderTime;
 
 //used for waiting between camera movements
 var waitingSince;
@@ -1244,24 +1245,25 @@ function ObjectLookAtMatrix(object, targetMatrix, up) {
 
 //a scene graph node for setting texture parameters
 function render(timeInMilliseconds) {
+  var timediff = Math.min((timeInMilliseconds - (lastRenderTime || timeInMilliseconds))/16.0 ,5.0);
   checkForWindowResize(gl);
   //update animations
   //rotateNode.matrix = glm.rotateY(timeInMilliseconds*-0.01);
   rotateNode.matrix = mat4.rotateY(mat4.create(), rotateNode.matrix, deg2rad(1));
   rotateLight.matrix = glm.rotateY(timeInMilliseconds*0.05);
 
-  cubeWaypointIndex = moveUsingWaypoints(rotateNode.matrix, cubeWaypoints, cubeWaypointIndex, 0.1);
+  cubeWaypointIndex = moveUsingWaypoints(rotateNode.matrix, cubeWaypoints, cubeWaypointIndex, 0.1*timediff);
   if(cubeWaypointIndex == cubeWaypoints.length) {
     //makes the object patrol back to first waypoint
     cubeWaypointIndex = 0;
   }
-  diabloWaypointIndex = moveUsingWaypoints(diabloSGNode.matrix, diabloWaypoints, diabloWaypointIndex, 0.1);
+  diabloWaypointIndex = moveUsingWaypoints(diabloSGNode.matrix, diabloWaypoints, diabloWaypointIndex, 0.1*timediff);
   if(diabloWaypointIndex == diabloWaypoints.length) {
     //makes the object patrol back to first waypoint
     diabloWaypointIndex = 0;
   }
   if(orcShamanWaypointIndex < orcShamanWaypoints.length && orcShamanWaypointIndex !== -1) {
-    orcShamanWaypointIndex = moveUsingWaypoints(orcShamanSGNode.matrix, orcShamanWaypoints, orcShamanWaypointIndex, 0.1);
+    orcShamanWaypointIndex = moveUsingWaypoints(orcShamanSGNode.matrix, orcShamanWaypoints, orcShamanWaypointIndex, 0.1*timediff);
   }
 
   //console.log("after: "+rotateNode.matrix[12]);
@@ -1323,7 +1325,7 @@ function render(timeInMilliseconds) {
 
   if(spiderMoving) {
     if(spiderWaypointIndex < 1){
-      spiderWaypointIndex = moveUsingWaypoints(spiderAndBillBoardNode.matrix, [glm.translate(context.invViewMatrix[12], spiderAndBillBoardNode.matrix[13], context.invViewMatrix[14])], spiderWaypointIndex, 0.15);
+      spiderWaypointIndex = moveUsingWaypoints(spiderAndBillBoardNode.matrix, [glm.translate(context.invViewMatrix[12], spiderAndBillBoardNode.matrix[13], context.invViewMatrix[14])], spiderWaypointIndex, 0.15*timediff);
     }
     var speed = 1.75;
     spiderAbdomenSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
@@ -1341,31 +1343,31 @@ function render(timeInMilliseconds) {
 
   if(!manualCameraEnabled) {
     if(cameraWaypointIndex < cameraWaypoints.length && time() - waitingSince >= waitingFor) {
-        cameraWaypointIndex = moveUsingWaypoints(context.invViewMatrix, cameraWaypoints, cameraWaypointIndex, 0.2);
+        cameraWaypointIndex = moveUsingWaypoints(context.invViewMatrix, cameraWaypoints, cameraWaypointIndex, 0.2 * timediff);
     }
     if(lookAtWaypointIndex < lookAtWaypoints.length) {
-      lookAtWaypointIndex = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints, lookAtWaypointIndex, 0.1);
+      lookAtWaypointIndex = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints, lookAtWaypointIndex, 0.1 * timediff);
     }
     if(lookAtWaypointIndex2 < lookAtWaypoints2.length && lookAtWaypointIndex2 !== -1) {
-      lookAtWaypointIndex2 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints2, lookAtWaypointIndex2, 2);
+      lookAtWaypointIndex2 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints2, lookAtWaypointIndex2, 2 * timediff);
       if(lookAtWaypointIndex2 === lookAtWaypoints2.length) {
         lookAtWaypointIndex3 = 0;
       }
     }
     if(lookAtWaypointIndex3 < lookAtWaypoints3.length && lookAtWaypointIndex3 !== -1) {
-      lookAtWaypointIndex3 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints3, lookAtWaypointIndex3, 0.45);
+      lookAtWaypointIndex3 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints3, lookAtWaypointIndex3, 0.45 * timediff);
       if(lookAtWaypointIndex3 === lookAtWaypoints3.length) {
         lookAtWaypointIndex4 = 0;
       }
     }
     if(lookAtWaypointIndex4 < lookAtWaypoints4.length && lookAtWaypointIndex4 !== -1) {
-      lookAtWaypointIndex4 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints4, lookAtWaypointIndex4, 1);
+      lookAtWaypointIndex4 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints4, lookAtWaypointIndex4, 1 * timediff);
       if(lookAtWaypointIndex4 === lookAtWaypoints4.length) {
         lookAtWaypointIndex5 = 0;
       }
     }
     if(lookAtWaypointIndex5 < lookAtWaypoints5.length && lookAtWaypointIndex5 !== -1){
-      lookAtWaypointIndex5 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints5, lookAtWaypointIndex5, 0.5);
+      lookAtWaypointIndex5 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints5, lookAtWaypointIndex5, 0.5 * timediff);
       if(lookAtWaypointIndex5 === lookAtWaypoints5.length) {
         autoCameraLookAt = spiderAndBillBoardNode.matrix;
         console.log("wp5 reached focussing spider now");
@@ -1374,7 +1376,6 @@ function render(timeInMilliseconds) {
 
     lookAtObject(context, autoCameraLookAt, [0,1,0]);
     context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
-
   }
 
   ObjectLookAtMatrix(spiderAndBillBoardNode, context.invViewMatrix, [0,1,0]);
@@ -1393,7 +1394,8 @@ function render(timeInMilliseconds) {
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
-displayText((time() - startTime)/1000+"s ");//+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
+//displayText((time() - startTime)/1000+"s ");//+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
+displayText((timeInMilliseconds)/1000+"s ");//+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
 /* moving diablo to camera
   diabloSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.5, -2.5));
   diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));
@@ -1406,6 +1408,8 @@ displayText((time() - startTime)/1000+"s ");//+context.invViewMatrix[12]+" "+con
 
   //animate
   requestAnimationFrame(render);
+
+  lastRenderTime = timeInMilliseconds;
 }
 
 //TODO make head go back down when stopping headbobbing so camera doesn't stop midair
