@@ -640,7 +640,7 @@ function createSceneGraph(gl, resources) {
     function createFireTorch(pos) {
       var torch = createTorch([0.6,0.3,0.05],
                           pos);
-      torch.ambient = [0,0,0,1.0]
+      torch.ambient = [0.2,0.1,0.025];
       //torch.spotAngle = 105 * Math.PI/180;
       torch.decreaseRate = 5;
       return torch;

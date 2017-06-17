@@ -74,15 +74,16 @@ vec4 calculateSimplePointLight(Light light, Material material, vec3 lightVec, ve
 		float diffuse = max(dot(normalVec,lightVec),0.0) / (distanceToLight);
 
 		vec3 reflectVec = reflect(-lightVec, normalVec);
-		float spec = pow( max( dot(reflectVec, eyeVec), 0.0) , material.shininess);
+		float spec = pow( max( dot(reflectVec, eyeVec), 0.0) , material.shininess)/distanceToLight;
 
 		c_diff += clamp(radiusDistance * diffuse * light.diffuse * material.diffuse, 0.0, 1.0);
-		c_spec += clamp(radiusDistance * spec * light.specular * material.specular, 0.0, 1.0)/distanceToLight;
-		c_amb  += clamp(radiusDistance * light.ambient * material.ambient, 0.0, 1.0)/distanceToLight;
+		c_spec += clamp(radiusDistance * spec * light.specular * material.specular, 0.0, 1.0);
+		c_amb  += clamp(radiusDistance * light.ambient * material.ambient, 0.0, 1.0)/(distanceToLight);
 	}
 
 	vec4 c_em = material.emission;
-	return c_amb + c_diff + c_spec + c_em;
+	/*add a constant ambient not position dependet light, so nothing gets only black*/
+	return c_amb + c_diff + c_spec + c_em + vec4(0.001,0.0005,0.0001,1);
 }
 
 void main (void) {
