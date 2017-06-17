@@ -520,6 +520,7 @@ diceTextureNode = diabloTextureNode;
 
   triggerSGNode8 = new TriggerSGNode(0.1, wpCam9, function() {
     var fireSpell = function(){
+      console.log("executing fireSpell");
       spellSGNode = new TransformationSGNode(glm.translate(-cameraPosition[0], -cameraPosition[1]-1, -cameraPosition[2]));
       spellParentNode.children.pop();
       spellParentNode.append(spellSGNode);
@@ -529,6 +530,7 @@ diceTextureNode = diabloTextureNode;
       b2fNodes.append(spellParentNode);
       spellWayPoints = [spiderAndBillBoardNode];
       spellCast = 1;
+      spellWayPointIndex = 0;
     }
     fireSpell();
     setTimeout(fireSpell, 250);
@@ -1371,9 +1373,11 @@ function render(timeInMilliseconds) {
     spiderMovementSet2SGNode.matrix[13] += deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed);
   }
 
-  if(spellCast && spellSGNode.matrix != null) {
-    spellWayPointIndex = moveUsingWaypoints(spellSGNode.matrix, [spiderAndBillBoardNode.matrix], spellWayPointIndex, 4);
-    if(spellWayPointIndex == 1) {
+  if(spellCast) {
+    if(spellWayPointIndex === 0) {
+      spellWayPointIndex = moveUsingWaypoints(spellSGNode.matrix, [spiderAndBillBoardNode.matrix], spellWayPointIndex, 4);
+    }
+    if(spellWayPointIndex === 1) {
       spellCast = 0;
     }
 
@@ -1437,7 +1441,7 @@ function render(timeInMilliseconds) {
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
-displayText((timeInMilliseconds)/1000+"s ");//+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
+displayText((timeInMilliseconds)/1000+"s spellcast:"+spellCast);//+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
 /* moving diablo to camera
   diabloSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.5, -2.5));
   diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));
