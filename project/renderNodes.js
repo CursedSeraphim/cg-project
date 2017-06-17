@@ -232,7 +232,7 @@ class BillboardSGNode extends TransformationSGNode {
 
 class FireSGNode extends SGNode {
 
-  constructor(partSize, fuelSize, children) {
+  constructor(partSize, fuelSize, colorMult, colorMin, children) {
     super(children);
 
     this.partSize = partSize;
@@ -249,20 +249,24 @@ class FireSGNode extends SGNode {
     this.sparkEmmitAngle = 1;
     this.speedVariance = 0.2;
     this.sizeVariance = 0.5;
-    this.sparkEmmitRate = 0.95;
-    this.fireHeatDegreeRate = 1.5*this.scalefactor;
-    this.sparkHeatDegreeRate = 0.05*this.scalefactor;
-    this.fireCenterHeatDegreeRate = 2*this.scalefactor;
-    this.particleSizeReduction = 50.0;
-    this.fireRiseFactor = 0.1;
-    this.sparkRiseFactor = 0.001;
+    this.sparkEmmitRate = 0.97;
+    this.fireHeatDegreeRate = 0.5*this.scalefactor;
+    this.sparkHeatDegreeRate = 0.01*this.scalefactor;
+    this.fireCenterHeatDegreeRate = 5*this.scalefactor;
+    this.particleSizeReduction = 70.0;
+    this.fireRiseFactor = 0.3;
+    this.sparkRiseFactor = 0.005;
     this.movementScaling = 10;
     this.fireSpeed = 2.5*this.invScalefactor;
     this.sparkSpeed = 0.5*(this.invScalefactor*5);
+    this.particleColorMult = (colorMult || vec3.fromValues(0.5,0.5,0.1));
+    this.particleColorMin = (colorMin ||vec3.fromValues(0.5,0,0));
   }
 
   getRandomColor() {
-    return [Math.random()*0.5+0.5, Math.random()*0.5, Math.random()*0.1, 1.0];
+    return [Math.random()*this.particleColorMult[0]+this.particleColorMin[0],
+            Math.random()*this.particleColorMult[1]+this.particleColorMin[1],
+            Math.random()*this.particleColorMult[2]+this.particleColorMin[2], 1.0];
   }
 
   getRandomPosition(limits) {
@@ -388,7 +392,7 @@ class FireSGNode extends SGNode {
     var sizeGlBuffer = [];
 
     /*create new particles*/
-    for(var i = 0; i < 500*(timeDiff > 100?0.1:timeS); i++){
+    for(var i = 0; i < 150*(timeDiff > 100?0.1:timeS); i++){
       this.fireParticles.push(this.createParticle(this.fuelSize ,this.partSize, this.sizeVariance, this.fireSpeed, this.fireEmmitAngle));
     }
 

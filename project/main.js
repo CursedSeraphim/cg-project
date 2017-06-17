@@ -491,10 +491,10 @@ function createSceneGraph(gl, resources) {
   }
 
 
-  function createParticleNode(size, area) {
+  function createParticleNode(size, area, colorMult, colorMin) {
     return new ShaderSGNode(particleShaderProgram,
       new BlendSgNode(gl.SRC_ALPHA, gl.ONE,
-        new FireSGNode(size, area))
+        new FireSGNode(size, area, colorMult, colorMin))
     );
   }
 
@@ -506,15 +506,15 @@ function createSceneGraph(gl, resources) {
     /*PARTICLE TEST NODES*/
     let fireNode = createParticleNode(300, [0.5,0.2,0.5]);
   //  let staticFireNode = createParticleNode(600, [2,0.4,2]);
-    let torchNode1 = createParticleNode(200, [0.25,0.1,0.25]);
-    let torchNode2 = createParticleNode(200, [0.25,0.1,0.25]);
-    let torchNode3 = createParticleNode(200, [0.25,0.1,0.25]);
-    let torchNode4 = createParticleNode(200, [0.25,0.1,0.25]);
-    let torchNode5 = createParticleNode(200, [0.25,0.1,0.25]);
-    let torchNode6 = createParticleNode(200, [0.25,0.1,0.25]);
-    let torchNode7 = createParticleNode(200, [0.25,0.1,0.25]);
-    let torchNode8 = createParticleNode(200, [0.25,0.1,0.25]);
-    let torchNode9 = createParticleNode(200, [0.25,0.1,0.25]);
+    let torchNode1 = createParticleNode(120, [0.2,0.05,0.2], [0.1,0.5,0.1],[0,0.5,0]);
+    let torchNode2 = createParticleNode(120, [0.2,0.05,0.2]);
+    let torchNode3 = createParticleNode(120, [0.2,0.05,0.2]);
+    let torchNode4 = createParticleNode(120, [0.2,0.05,0.2]);
+    let torchNode5 = createParticleNode(120, [0.2,0.05,0.2]);
+    let torchNode6 = createParticleNode(120, [0.2,0.05,0.2]);
+    let torchNode7 = createParticleNode(120, [0.2,0.05,0.2]);
+    let torchNode8 = createParticleNode(120, [0.2,0.05,0.2]);
+    let torchNode9 = createParticleNode(120, [0.2,0.05,0.2]);
 
     /*Init Light*/
     let torchNode = new AdvancedLightSGNode(true, 10, [0,0,1]);
