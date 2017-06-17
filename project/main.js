@@ -173,6 +173,9 @@ var orcShamanFrames;
 var durielFrames;
 var andarielFrames;
 
+var bobbSpeed = 75;
+var bobbHeight = 25;
+
 //load the required resources using a utility function
 loadResources({
   vs_lighting: 'shader/lighting.vs.glsl',
@@ -1353,12 +1356,6 @@ function render(timeInMilliseconds) {
     spiderMovementSet2SGNode.matrix[13] += deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed);
   }
 
-  var bobbSpeed = 75;
-  var bobbHeight = 25;
-  if(!headBobbing){
-    bobbSpeed = 250;
-    bobbHeight = 100;
-  }
   context.invViewMatrix[13] += Math.sin(timeInMilliseconds/bobbSpeed)/bobbHeight;
 
   if(!manualCameraEnabled) {
@@ -1438,9 +1435,15 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s"+context.invViewMatrix[12]
 //TODO make head go back down when stopping headbobbing so camera doesn't stop midair
 function enableHeadBobbing() {
   headBobbing = 1;
+
+  bobbSpeed = 75;
+  bobbHeight = 25;
 }
 function disableHeadBobbing() {
   headBobbing = 0;
+
+  bobbSpeed = 300;
+  bobbHeight = 200;
 }
 
 //camera control
