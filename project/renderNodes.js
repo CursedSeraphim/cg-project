@@ -235,11 +235,10 @@ class FireSGNode extends SGNode {
   constructor(partSize, fuelSize, colorMult, colorMin, children) {
     super(children);
 
+    /*parameters to change particle look*/
     this.partSize = partSize;
-
     this.scalefactor = 300/partSize;
     this.invScalefactor = partSize/300;
-    // this.fuelSize = vec3.scale(vec3.create(), fuelSize, this.scalefactor);
     this.fuelSize = fuelSize;
     this.fireParticles = [];
     this.sparkParticles = [];
@@ -261,20 +260,27 @@ class FireSGNode extends SGNode {
     this.sparkSpeed = 0.5*(this.invScalefactor*5);
     this.particleColorMult = (colorMult || vec3.fromValues(0.5,0.5,0.1));
     this.particleColorMin = (colorMin ||vec3.fromValues(0.5,0,0));
+    this.windStrengthScale = 0.3;
+    this.windStrength = this.windStrengthScale;
   }
 
+  /*Generate a random color within the given parameters
+    for a particle*/
   getRandomColor() {
     return [Math.random()*this.particleColorMult[0]+this.particleColorMin[0],
             Math.random()*this.particleColorMult[1]+this.particleColorMin[1],
             Math.random()*this.particleColorMult[2]+this.particleColorMin[2], 1.0];
   }
 
+/*Get a random starting position in the given cube*/
   getRandomPosition(limits) {
     return [limits[0]*Math.random()-limits[0]/2,
             limits[1]*Math.random()-limits[1]/2,
             limits[2]*Math.random()-limits[2]/2];
   }
 
+/*Get a random start direction for the particles
+  it always points towards a positive y-direction*/
   getRandomVec3Upward(emmitAngle, scale) {
     /*get a minimum uprising vector*/
     var out = vec3.create();
@@ -287,6 +293,7 @@ class FireSGNode extends SGNode {
     return out;
   }
 
+/*Spawns a new particle*/
   createParticle(limits, size, sizeVariance, speed, emmitAngle) {
     var particle = {};
     var speed = speed + Math.random() * speed * this.speedVariance;
@@ -298,6 +305,8 @@ class FireSGNode extends SGNode {
     return particle;
   }
 
+/*gets the actual position of the particleNode in the Scene
+  by using the sceneMatrix*/
   getPosition(sceneMatrix) {
     var pos = vec3.transformMat4(vec3.create(), vec3.create(), sceneMatrix);
     return pos;
@@ -329,6 +338,8 @@ class FireSGNode extends SGNode {
     return vec3.fromValues(moveVec[0],moveVec[1],moveVec[2]);
   }
 
+  /*creates a vector that has the same length as the given, but it
+  points by factor more in y-direction*/
   riseVectorUp(vector, factor) {
     var oldSize = vec3.length(vector);
     vector[1] += (vector[1]*factor);
@@ -340,12 +351,48 @@ class FireSGNode extends SGNode {
     return vector;
   }
 
+  /*slowly change wind direction on a random basis*/
+  alterWind() {
+    var change = Math.random() * 0.1;
+    if(Math.random() > 0.5)
+      change *= -1;
+
+    if(Math.random() > 0.6)
+      this.wind[0] += change;
+    else
+      this.wind[2] += change;
+      vec3.normalize(this.wind, this.wind);
+
+    if(Math.random() > 0.5) {
+      this.windStrength += Math.random()*0.05;
+    }
+    else
+      this.windStrength -= Math.random()*0.05;
+
+      vec3.scale(this.wind, this.wind, this.windStrength);
+  }
+
+  /*add some random change for each particle*/
+  getWindDir() {
+    var rndWind = vec3.create();
+    var change = Math.random() * 0.1
+    if(Math.random() > 0.6)
+      rndWind[0] += change;
+    else
+      rndWind[2] += change;
+
+    vec3.add(rndWind, rndWind, this.wind);
+    return rndWind;
+  }
+
   init(context, sceneMatrix) {
     if(!this.isInit) {
         this.isInit = true;
         this.posBuffer = gl.createBuffer();
         this.colorBuffer = gl.createBuffer();
         this.sizeBuffer = gl.createBuffer();
+
+        /*set the attributes uniforms*/
         this.a_position =  gl.getAttribLocation(context.shader, 'a_position');
         this.a_color =  gl.getAttribLocation(context.shader, 'a_color');
         this.a_size =  gl.getAttribLocation(context.shader, 'a_size');
@@ -361,11 +408,14 @@ class FireSGNode extends SGNode {
         gl.bindBuffer(gl.ARRAY_BUFFER, this.sizeBuffer);
         gl.enableVertexAttribArray(this.a_size);
 
+        this.wind = vec3.fromValues(0,0,0);
+
         this.moveVec = vec3.create();
         this.oldPos = this.getPosition(sceneMatrix);
     }
   }
 
+  /*adds a particle to the gl-buffer, so it will be drawn in the particle-shaders*/
   addToGlBuffer(particle, posBuffer, colorBuffer, sizeBuffer) {
     posBuffer.push(particle.position[0],particle.position[1],particle.position[2]);
     colorBuffer.push(particle.color[0],particle.color[1],particle.color[2],particle.color[3]);
@@ -374,6 +424,8 @@ class FireSGNode extends SGNode {
 
   render(context) {
     var sceneMatrix;
+
+    /*check if a position is given external*/
     if(this.posSGNode != null)
       sceneMatrix = this.posSGNode.matrix;
     else
@@ -381,10 +433,14 @@ class FireSGNode extends SGNode {
 
     this.init(context, sceneMatrix);
 
+    /*disable the z-buffer access, so there is no
+    z-buffer-test for the particles (all of them should be drawn for
+    a good blending result)*/
     gl.depthMask(false);
 
+    /*check how much time passed since last time*/
     var timeDiff = (time() - this.lastTime);
-
+    /*based on that, calculate movement of particles*/
     var timeS = timeDiff/1000.0;
 
     var partPosGlBuffer = [];
@@ -392,7 +448,7 @@ class FireSGNode extends SGNode {
     var sizeGlBuffer = [];
 
     /*create new particles*/
-    for(var i = 0; i < 150*(timeDiff > 100?0.1:timeS); i++){
+    for(var i = 0; i < 200*(timeDiff > 100?0.1:timeS); i++){
       this.fireParticles.push(this.createParticle(this.fuelSize ,this.partSize, this.sizeVariance, this.fireSpeed, this.fireEmmitAngle));
     }
 
@@ -407,22 +463,24 @@ class FireSGNode extends SGNode {
     }
     vec3.scale(center, center, 1.0 / this.fireParticles.length);
 
-    //calculate the movement since last
+    //calculate the movement since last render-call
     var actPosition = this.getPosition(sceneMatrix);
     var moveVec = this.getMovement(actPosition, this.oldPos, sceneMatrix);
 
-    //move all particles in der direction
+    this.alterWind();
+
+    //move all particles in their direction
     for(var i = 0; i<this.fireParticles.length;i++) {
       var particle = this.fireParticles[i];
-
-      //TODO generate some random wind for each particle
-      var wind = vec3.fromValues(0,0,0);
-      vec3.add(particle.velocity, particle.velocity, wind);
 
       //add constant uprising but speed stays the same (length)
       particle.velocity = this.riseVectorUp(particle.velocity, this.fireRiseFactor);
 
+      //generate some random wind for each particle
+      var wind = this.getWindDir();
+
       var vel = vec3.add(vec3.create(), particle.velocity, moveVec);
+      vec3.add(vel, vel, wind);
       //change position of the particle
       vec3.add(particle.position, particle.position, vec3.scale(vec3.create(), vel, timeS));
 
@@ -434,7 +492,10 @@ class FireSGNode extends SGNode {
       var distanceToCenter = Math.sqrt((xDistance*xDistance + zDistance*zDistance));
       //fast solution
       //var distanceToCenter = xDistance + zDistance;
+
+      /*reduce the visibility of each particle as they rise away*/
       particle.color[3] -= (this.fireHeatDegreeRate*timeS + Math.abs(distanceToCenter)*this.fireCenterHeatDegreeRate*timeS);
+      /*also reduce particle size during a particle lifespan*/
       particle.size -= (particle.size/this.particleSizeReduction*timeS + Math.abs(distanceToCenter)*particle.size/(this.particleSizeReduction*2)*timeS);
 
       //if particle gets invisible e.g. all its energy is used, remove it
