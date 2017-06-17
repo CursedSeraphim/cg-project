@@ -861,7 +861,7 @@ function createSceneGraph(gl, resources) {
   let glassMaterial = new MaterialSGNode(glassTextureNode);
   glassMaterial.ambient = [1, 1, 1, 1];
   glassMaterial.diffuse = [1, 1, 1, 1];
-  glassMaterial.specular = [0.1, 0.1, 0.1, 0.1];
+  glassMaterial.specular = [1, 1, 1, 1];
   glassMaterial.shininess = 1000;
   rotatelantern.append(glassMaterial);
   //initialize lantern metal
@@ -869,8 +869,8 @@ function createSceneGraph(gl, resources) {
   let metalMaterial = new MaterialSGNode(metalTextureNode);
   metalMaterial.ambient = [0.6, 0.6, 0.6, 1];
   metalMaterial.diffuse = [0.6, 0.6, 0.6, 1];
-  metalMaterial.specular = [0.6, 0.6, 0.6, 1];
-  metalMaterial.shininess = 20;
+  metalMaterial.specular = [1, 1, 1, 1];
+  metalMaterial.shininess = 2000;
   rotatelantern.append(metalMaterial);
 
   //initialize lantern grid
@@ -878,8 +878,8 @@ function createSceneGraph(gl, resources) {
   let gridMaterial = new MaterialSGNode(gridTextureNode);
   gridMaterial.ambient = [0.24725, 0.1995, 0.0745, 1];
   gridMaterial.diffuse = [0.75164, 0.60648, 0.22648, 1];
-  gridMaterial.specular = [1, 0.555802, 0.366065, 1];
-  gridMaterial.shininess = 1;
+  gridMaterial.specular = [1, 1, 1, 1];
+  gridMaterial.shininess = 2000;
   rotatelantern.append(gridMaterial);
 
 }
