@@ -323,9 +323,11 @@ function init(resources) {
   let wpCam6 = glm.translate(25, 2.3, 28);
   let wpCam7 = glm.translate(47.5, 2.3, 28);
   let wpCam8 = glm.translate(47.5, 2.3, 42);
-  let wpCam9 = glm.translate(31.8, 2.3, 42);
-  let wpCam10 = glm.translate(31.8, 2.3, 81.3);
-  cameraWaypoints = [wpCam1, wpCam2, wpCam3, wpCam4, wpCam5, wpCam6, wpCam7, wpCam8, wpCam9, wpCam10];
+  let wpCam9 = glm.translate(32.3, 2.3, 42);
+  let wpCam10 = glm.translate(32.3, 2.3, 81.3);
+  let wpCam11 = glm.translate(29, 2.3, 81.3);
+  let wpCam12 = glm.translate(12.5, -7.5, 81.3);
+  cameraWaypoints = [wpCam1, wpCam2, wpCam3, wpCam4, wpCam5, wpCam6, wpCam7, wpCam8, wpCam9, wpCam10, wpCam11];
   let wpLookAt1 = glm.translate(25,-3,-15);
   lookAtWaypoints = [wpCam2, wpCam3, wpLookAt1];
 
@@ -510,23 +512,27 @@ diceTextureNode = diabloTextureNode;
   triggerSGNode6 = new TriggerSGNode(0.1, wpCam8, function() {
     spiderMoving = 1;
   });
-  triggerSGNode7 = new TriggerSGNode(0.1, wpCam10, function() {
+  triggerSGNode7 = new TriggerSGNode(1, wpCam10, function() {
+    console.log("trigger 7 called");
     spiderMoving = 0;
   });
   //TODO
 
   spellParentNode = new TransformationSGNode(glm.translate(0,0,0));
+  spellParticle = createParticleNode(350, [1,1,1], [0.5, 0.5, 1]);
+  spellSGNode = new TransformationSGNode(glm.translate(0, 0, 0));
 
   triggerSGNode8 = new TriggerSGNode(0.1, wpCam9, function() {
+    b2fNodes.append(spellParentNode);
     var fireSpell = function(){
       console.log("executing fireSpell");
-      spellSGNode = new TransformationSGNode(glm.translate(-cameraPosition[0], -cameraPosition[1]-1, -cameraPosition[2]));
+      spellSGNode.matrix[12] = -cameraPosition[0];
+      spellSGNode.matrix[13] = -cameraPosition[1]-1;
+      spellSGNode.matrix[14] = -cameraPosition[2];
       spellParentNode.children.pop();
+      spellSGNode.children.pop();
       spellParentNode.append(spellSGNode);
-
-      spellParticle = createParticleNode(350, [1,1,1], [0.3, 0.3, 0.8]);
-      spellSGNode.append(spellParticle);
-      b2fNodes.append(spellParentNode);
+      spellSGNode.append(spellParticle)
       spellWayPoints = [spiderAndBillBoardNode];
       spellWayPointIndex = 0;
     }
@@ -1168,7 +1174,7 @@ function createSceneGraph(gl, resources) {
   spiderAndBillBoardNode.append(spiderTransformationNode);
   spiderAndBillBoardNode.append(andarielSGNode);
   //spiderTransformationNode.append(lightNode);
-  lightingNodes.append(spiderAndBillBoardNode);
+  b2fNodes.append(spiderAndBillBoardNode);
   //lightingNodes.append(spiderTransformationNode);
   //lightingNodes.append(andarielSGNode);
 
@@ -1409,9 +1415,10 @@ function render(timeInMilliseconds) {
         autoCameraLookAt = spiderAndBillBoardNode.matrix;
         console.log("wp5 reached focussing spider now");
       }
+
+    }
     if(spellWayPointIndex === 0) {
       spellWayPointIndex = moveUsingWaypoints(spellSGNode.matrix, [spiderAndBillBoardNode.matrix], spellWayPointIndex, 4);
-    }
     }
 
     lookAtObject(context, autoCameraLookAt, [0,1,0]);
@@ -1434,7 +1441,7 @@ function render(timeInMilliseconds) {
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
-displayText((timeInMilliseconds)/1000+"s");//+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
+displayText((timeInMilliseconds)/1000+"s"+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
 /* moving diablo to camera
   diabloSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.5, -2.5));
   diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));
