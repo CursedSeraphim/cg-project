@@ -67,6 +67,8 @@ var spiderTransformationNode;
 var spiderMovementSet1SGNode;
 var spiderMovementSet2SGNode;
 
+var spiderMoving = 1;
+
 //waypoints
 var cameraWaypoints;
 var cameraWaypointIndex;
@@ -1054,15 +1056,15 @@ function createSceneGraph(gl, resources) {
   spiderMovementSet2SGNode.append(spiderLeftFrontLegSGNode);
   spiderMovementSet2SGNode.append(spiderRightFrontLeg2SGNode);
   spiderMovementSet2SGNode.append(spiderLeftHindLeg2SGNode);
-  spiderMovementSet1SGNode.append(spiderRightHindLegSGNode);
+  spiderMovementSet2SGNode.append(spiderRightHindLegSGNode);
 
-  spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(10));
-  spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(-10));
+  //spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(10));
+  //spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(-10));
 
+  spiderAbdomenSGNode.append(andarielSGNode);
   spiderTransformationNode.append(spiderAbdomenSGNode);
   spiderTransformationNode.append(spiderMovementSet1SGNode);
   spiderTransformationNode.append(spiderMovementSet2SGNode);
-  spiderTransformationNode.append(andarielSGNode);
 
   spiderTransformationNode.matrix = mat4.multiply(mat4.create(), spiderTransformationNode.matrix, glm.transform({scale: 1}));
 
@@ -1246,6 +1248,12 @@ function render(timeInMilliseconds) {
   context.lookAtVector = lookAtVector;
   //get inverse view matrix to allow computing eye-to-light matrix
   context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
+
+  if(spiderMoving) {
+    spiderAbdomenSGNode.matrix[13] += Math.sin(timeInMilliseconds/75)/25;
+    spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(Math.sin(timeInMilliseconds/100)*3));
+    spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(-Math.sin(timeInMilliseconds/100)*3));
+  }
 
   if(headBobbing){
     context.invViewMatrix[13] += Math.sin(timeInMilliseconds/75)/25;
