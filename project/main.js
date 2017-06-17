@@ -98,6 +98,8 @@ var cubeWaypoints;
 var cubeWaypointIndex;
 var diabloWaypoints;
 var diabloWaypointIndex;
+var spiderWaypointIndex;
+var spiderWaypoints;
 
 //TriggerSGNode
 var triggerTestNode;
@@ -106,6 +108,7 @@ var triggerSGNode3;
 var triggerSGNode4;
 var triggerSGNode5;
 var triggerSGNode6;
+var triggerSGNode7;
 
 /*DEBUG NODES*/
 var rotateNode;
@@ -287,9 +290,8 @@ function init(resources) {
   //create a GL context
   gl = createContext(400, 400);
 
-  //setting manual camera switch to off
-  manualCameraEnabled = false;
-
+  //setting manual camera control variables
+  manualCameraEnabled = 0;
   //setting initial point to look at
   autoCameraLookAt = glm.translate(8.75, 2.35, -9.4);
   waitingFor = 0;
@@ -298,7 +300,6 @@ function init(resources) {
 
   /*set camera Start position*/
   cameraPosition = vec3.fromValues(3, -1, -10);
-  //cameraPosition = vec3.fromValues(-40, 3, -51);
 
   /*set waypoints*/
   cameraWaypointIndex = 0;
@@ -331,12 +332,14 @@ function init(resources) {
   lookAtWaypointIndex3 = -1;
   lookAtWaypoints3 = [wpCam7, durielPos, skullPilePos2, durielPos, skullPilePos2, durielPos];
   lookAtWaypointIndex4 = -1;
-  spiderStartingPosition = [100, -9.75, 65];
+  spiderStartingPosition = [100, -9.75, 80];
   let spiderPos = glm.translate(spiderStartingPosition[0], spiderStartingPosition[1], spiderStartingPosition[2]);
   let wpLookAt2 = glm.translate(35, 1,13.5);
   lookAtWaypoints4 = [wpLookAt2, wpCam8];
   lookAtWaypointIndex5 = -1;
   lookAtWaypoints5 = [spiderPos];
+
+  spiderWaypointIndex = 0;
 
   let waypointCube1 = mat4.create();
   waypointCube1[12] = 7;
@@ -493,18 +496,19 @@ diceTextureNode = diabloTextureNode;
     disableHeadBobbing();
     setTimeout(enableHeadBobbing, waitingFor);
   });
-  triggerSGNode6 = new TriggerSGNode(0.1, wpCam10);
-  /*
-  triggerSGNode6.setTriggerFunction(function() {
-    objectLookAt(spiderTransformationNode.matrix, wpCam8, [0,1,0]);
+  triggerSGNode6 = new TriggerSGNode(0.1, wpCam8, function() {
+    spiderMoving = 1;
   });
-  */
+  triggerSGNode7 = new TriggerSGNode(0.1, wpCam10, function() {
+    spiderMoving = 0;
+  });
 
   root.append(triggerSGNode2);
   root.append(triggerSGNode3);
   root.append(triggerSGNode4);
   root.append(triggerSGNode5);
-  //root.append(triggerSGNode6);
+  root.append(triggerSGNode6);
+  root.append(triggerSGNode7);
 
   initInteraction(gl.canvas);
 }
@@ -542,16 +546,6 @@ function createSceneGraph(gl, resources) {
     );
   }
 
-  function createTorch(color,spotAngle, lookAt, pos, colorMult, colorMin) {
-    var particle = createParticleNode(120, [0.2,0.05,0.2], colorMult,colorMin);
-    let torchLight = new AdvancedLightSGNode(true, spotAngle, lookAt, pos);
-    torchLight.ambient =[0,0,0,1.0];
-    torchLight.diffuse = color;
-    torchLight.specular = color;
-    torchLight.append(particle);
-    return torchLight;
-  }
-
   {
     /*Init Particles*/
     let lanternFireParticleNode  = createParticleNode(100, [0.02,0.01,0.02]);
@@ -577,6 +571,7 @@ function createSceneGraph(gl, resources) {
     torchNode.specular = [1.0,0.6,0.05,1.0];
     torchNode.position = [0, 0, 0];
     torchNode.shininess = 100;
+
 
     /*LIGHT TEST NODES*/
     /*
@@ -669,30 +664,6 @@ function createSceneGraph(gl, resources) {
     torchTransNode4.append(torchNode4);
     torchTransNode4.append(torchLight4);
     b2fNodes.append(torchTransNode4);
-
-    function createSpiderTorch(pos) {
-      return createTorch([0.01,0.3,0.025,1.0],
-                         -361,
-                          [1,0,0],
-                          pos,
-                          [0.1,0.5,0.1],
-                          [0,0.5,0]);
-    }
-
-    b2fNodes.append(createSpiderTorch([40, -3, 50.85]));
-    b2fNodes.append(createSpiderTorch([80, -3, 50.85]));
-    b2fNodes.append(createSpiderTorch([90, -3, 50.85]));
-    b2fNodes.append(createSpiderTorch([100, -3, 50.85]));
-    b2fNodes.append(createSpiderTorch([110, -3, 50.85]));
-
-    b2fNodes.append(createSpiderTorch([40, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([50, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([60, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([70, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([80, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([90, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([100, -3, 89.15]));
-    b2fNodes.append(createSpiderTorch([110, -3, 89.15]));
 
 /*
     let torchTransNode5 = new TransformationSGNode(glm.translate(49.7, -1, 18.95));
@@ -1131,7 +1102,7 @@ function createSceneGraph(gl, resources) {
   //andarielSGNode.append(spiderTransformationNode);
   spiderAndBillBoardNode.append(spiderTransformationNode);
   spiderAndBillBoardNode.append(andarielSGNode);
-  //spiderTransformationNode.append(lightNode);
+  spiderTransformationNode.append(lightNode);
   lightingNodes.append(spiderAndBillBoardNode);
   //lightingNodes.append(spiderTransformationNode);
   //lightingNodes.append(andarielSGNode);
@@ -1317,8 +1288,10 @@ function render(timeInMilliseconds) {
   context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
 
   if(spiderMoving) {
-    //spiderWaypointIndex = moveUsingWaypoints(spiderAndBillBoardNode)
-    var speed = 2;
+    if(spiderWaypointIndex < 1){
+      spiderWaypointIndex = moveUsingWaypoints(spiderAndBillBoardNode.matrix, [glm.translate(context.invViewMatrix[12], spiderAndBillBoardNode.matrix[13], context.invViewMatrix[14])], spiderWaypointIndex, 0.15);
+    }
+    var speed = 1.75;
     spiderAbdomenSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
     andarielSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
     spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(Math.sin(timeInMilliseconds*speed/100)*1.5*speed));
@@ -1360,7 +1333,7 @@ function render(timeInMilliseconds) {
     if(lookAtWaypointIndex5 < lookAtWaypoints5.length && lookAtWaypointIndex5 !== -1){
       lookAtWaypointIndex5 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints5, lookAtWaypointIndex5, 0.5);
       if(lookAtWaypointIndex5 === lookAtWaypoints5.length) {
-        autoCameraLookAt.matrix = spiderAndBillBoardNode.matrix;
+        autoCameraLookAt = spiderAndBillBoardNode.matrix;
         console.log("wp5 reached focussing spider now");
       }
     }
@@ -1489,7 +1462,7 @@ function initInteraction(canvas) {
     } else {
       switch(event.code) {
         case 'KeyC':
-          manualCameraEnabled = true;
+          manualCameraEnabled = 1;
           disableHeadBobbing();
           break;
       }
@@ -1533,7 +1506,7 @@ function initInteraction(canvas) {
     } else {
       switch(event.code) {
         case 'KeyC':
-          manualCameraEnabled = true;
+          manualCameraEnabled = 1;
           break;
       }
     }
