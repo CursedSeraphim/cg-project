@@ -78,6 +78,7 @@ var spiderStartingPosition;
 //spellParticle
 var spellParentNode;
 var spellSGNode;
+var spellLightNode;
 var spellParticle;
 
 //used for spell
@@ -528,18 +529,24 @@ diceTextureNode = diabloTextureNode;
   spellParentNode = new TransformationSGNode(glm.translate(0,0,0));
   spellParticle = createParticleNode(350, [1,1,1], [0.5, 0.5, 1]);
   spellSGNode = new TransformationSGNode(glm.translate(0, 0, 0));
+  lightNode = new AdvancedLightSGNode(true);
+  lightNode.ambient = [0.25,0.25,0.25,1.0];//[0.2, 0.2, 0.2, 1];
+  lightNode.diffuse = [0.125,0.125,0.25,1.0];//[0.5, 0.5, 0.5, 1];
+  lightNode.specular = [0.125,0.125,0.25,1.0];//[1, 1, 1, 1];
+  lightNode.position = [0, 0, 0];
 
   triggerSGNode8 = new TriggerSGNode(0.1, wpCam9, function() {
+    spellParentNode.children.pop();
+    spellSGNode.children.pop();
+    spellParentNode.append(spellSGNode);
+    spellSGNode.append(spellParticle);
+    spellSGNode.append(lightNode);
     b2fNodes.append(spellParentNode);
     var fireSpell = function(){
       console.log("executing fireSpell");
       spellSGNode.matrix[12] = -cameraPosition[0];
       spellSGNode.matrix[13] = -cameraPosition[1]-1;
       spellSGNode.matrix[14] = -cameraPosition[2];
-      spellParentNode.children.pop();
-      spellSGNode.children.pop();
-      spellParentNode.append(spellSGNode);
-      spellSGNode.append(spellParticle)
       spellWayPoints = [spiderAndBillBoardNode];
       spellWayPointIndex = 0;
     }
@@ -619,21 +626,6 @@ function createSceneGraph(gl, resources) {
     torchNode.specular = [1.0,0.6,0.05,1.0];
     torchNode.position = [0, 0, 0];
     torchNode.decreaseRate = 25;
-
-
-    /*LIGHT TEST NODES*/
-    //TODO UNUSED
-    lightNode = new AdvancedLightSGNode(true);
-    lightNode.ambient = [1,1,1,1.0];//[0.2, 0.2, 0.2, 1];
-    lightNode.diffuse = [0.3,0.15,0.025,1.0];//[0.5, 0.5, 0.5, 1];
-    lightNode.specular = [0.1,0.1,0.1,1.0];//[1, 1, 1, 1];
-    lightNode.position = [0, 0, 0];
-
-    //TODO UNUSED
-    let lightTest = new AdvancedLightSGNode(true, 30, [0,0,1]);
-    lightTest.ambient = [0.1,0.1,0.1,1.0];//[0.2, 0.2, 0.2, 1];
-    lightTest.diffuse = [1.0,0.6,0.05,1.0];
-    lightTest.specular = [0, 0, 0, 1.0];
 
     /*Init Light Positions*/
     translateLantern = new TransformationSGNode(glm.translate(0, 0, 0));
