@@ -1,7 +1,18 @@
 # Blender MTL File: 'BACKUP12MapComplete.blend'
-# Material Count: 153
+# Material Count: 154
 
-newmtl Material.000_black_cobble.jpg.042
+newmtl Material.000
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.000_black_cobble.jpg.001
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -11,6 +22,17 @@ Ni 1.000000
 d 1.000000
 illum 2
 map_Kd black_cobble.jpg
+
+newmtl Material.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
 
 newmtl Material.001_black_cobble_rotated.jpg.001
 Ns 92.156863
@@ -23,7 +45,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl Material.002_black_cobble_rotated.jpg.003
+newmtl Material.002
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -33,6 +55,28 @@ Ni 1.000000
 d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
+
+newmtl Material.002_black_cobble_rotated.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.003
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
 
 newmtl Material.003_black_cobble_rotated.jpg.001
 Ns 92.156863
@@ -45,7 +89,18 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl Material.004_black_cobble.jpg.003
+newmtl Material.004
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.004_black_cobble.jpg.001
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -56,7 +111,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble.jpg
 
-newmtl Material.004_black_cobble_rotated.jpg
+newmtl Material.004_black_cobble_rotated.jpg.000
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -78,6 +133,17 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
+newmtl Material.005
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
 newmtl Material.005_black_cobble_rotated.jpg.001
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
@@ -89,7 +155,29 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
+newmtl Material.006
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
 newmtl Material.006_black_cobble_rotated.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.007
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -111,7 +199,29 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
+newmtl Material.008
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
 newmtl Material.008_black_cobble_rotated.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.009
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -133,7 +243,29 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
+newmtl Material.010
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
 newmtl Material.010_black_cobble_rotated.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.011
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -155,7 +287,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl Material.012_black_cobble.jpg.051
+newmtl Material.012
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -165,6 +297,28 @@ Ni 1.000000
 d 1.000000
 illum 2
 map_Kd black_cobble.jpg
+
+newmtl Material.012_black_cobble.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.013
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
 
 newmtl Material.013_black_cobble_rotated.jpg.001
 Ns 92.156863
@@ -177,117 +331,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl Material.015_black_cobble.jpg.055
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.016_black_cobble.jpg.041
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.018_black_cobble.jpg.045
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.019_black_cobble.jpg.046
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.020_black_cobble.jpg.043
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.021_black_cobble.jpg.047
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.022_black_cobble.jpg.057
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.023_black_cobble.jpg.059
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.024_black_cobble.jpg.067
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.025_black_cobble.jpg.039
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.025_black_cobble_rotated.jpg.011
+newmtl Material.014
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -298,7 +342,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl Material.026_black_cobble_rotated.jpg.004
+newmtl Material.015
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -308,6 +352,270 @@ Ni 1.000000
 d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
+
+newmtl Material.015_black_cobble.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.016
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.016_black_cobble.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.017
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.018
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.018_black_cobble.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.019
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.019_black_cobble.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.020
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.020_black_cobble.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.021
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.021_black_cobble.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.022
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.022_black_cobble.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.023
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.023_black_cobble.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.024
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.024_black_cobble.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.025
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.025_black_cobble.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.025_black_cobble_rotated.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.026
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.026_black_cobble_rotated.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.027
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
 
 newmtl Material.027_black_cobble_rotated.jpg.001
 Ns 92.156863
@@ -320,7 +628,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl Material.027_black_cobble_rotated.jpg.006
+newmtl Material.027_black_cobble_rotated.jpg.003
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -331,7 +639,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl Material.028_black_cobble.jpg.044
+newmtl Material.028
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -342,7 +650,18 @@ d 1.000000
 illum 2
 map_Kd black_cobble.jpg
 
-newmtl Material.028_black_cobble_rotated.jpg.015
+newmtl Material.028_black_cobble.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.028_black_cobble_rotated.jpg.001
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -353,7 +672,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl Material.035_black_cobble.jpg.069
+newmtl Material.029
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -364,7 +683,29 @@ d 1.000000
 illum 2
 map_Kd black_cobble.jpg
 
-newmtl Material.037_black_cobble.jpg.061
+newmtl Material.030
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.031
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.032
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -375,7 +716,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble.jpg
 
-newmtl Material.038_black_cobble.jpg.073
+newmtl Material.033
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -386,7 +727,18 @@ d 1.000000
 illum 2
 map_Kd black_cobble.jpg
 
-newmtl Material.039_black_cobble.jpg.075
+newmtl Material.034
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.035
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -397,7 +749,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble.jpg
 
-newmtl Material.041_black_cobble.jpg.078
+newmtl Material.035_black_cobble.jpg.001
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -408,7 +760,95 @@ d 1.000000
 illum 2
 map_Kd black_cobble.jpg
 
-newmtl Material.042_black_cobble.jpg.063
+newmtl Material.036
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.037
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.037_black_cobble.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.038
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.038_black_cobble.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.039
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl Material.039_black_cobble.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.041_black_cobble.jpg.001
+Ns 92.156863
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble.jpg
+
+newmtl Material.042_black_cobble.jpg.001
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -430,7 +870,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl Material.050_black_cobble.jpg.089
+newmtl Material.050_black_cobble.jpg.001
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -441,7 +881,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble.jpg
 
-newmtl Material.051_black_cobble.jpg.090
+newmtl Material.051_black_cobble.jpg.001
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -452,452 +892,25 @@ d 1.000000
 illum 2
 map_Kd black_cobble.jpg
 
-newmtl Material.082
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.083
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.084
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.085
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.086
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.087
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.088
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.089
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.090
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.091
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.092
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.093
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.094
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.095
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.096
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.097
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.098
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.099
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.100
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.101
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.102
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.103
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.104
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.105
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.106
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.107
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.108
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.109
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.110
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.111
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl Material.112
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.113
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.114
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.115
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.116
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.117
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.118
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.119
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.120
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl Material.121
-Ns 92.156863
-Ka 1.000000 1.000000 1.000000
-Kd 0.640000 0.640000 0.640000
-Ks 0.500000 0.500000 0.500000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble.jpg
-
-newmtl None
-Ns 0
+newmtl None.000
+Ns 0.000000
 Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
+Kd 0.800000 0.800000 0.800000
+Ks 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl None.001
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
@@ -910,7 +923,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\dungeon_wall.png
+map_Kd black_cobble_rotated.jpg
 
 newmtl None.003
 Ns 0.000000
@@ -921,7 +934,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
 illum 2
-map_Kd black_cobble_rotated.jpg
+map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\dungeon_wall.png
 
 newmtl None.004
 Ns 0.000000
@@ -945,17 +958,6 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None.006
-Ns 0.000000
-Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.800000 0.800000 0.800000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
 newmtl None_NONE.001
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
@@ -966,7 +968,7 @@ Ni 1.000000
 d 1.000000
 illum 2
 
-newmtl None__1
+newmtl None__1.000
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -977,7 +979,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None__1_black_cobble_rotated.jpg.151
+newmtl None__1_black_cobble_rotated.jpg.001
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -988,18 +990,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None__2
-Ns 0.000000
-Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.800000 0.800000 0.800000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl None_black_cobble_rotated.jpg.001
+newmtl None__2.000
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -1285,6 +1276,17 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
+newmtl None_black_cobble_rotated.jpg.038
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
 newmtl None_black_cobble_rotated.jpg.039
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
@@ -1494,7 +1496,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None_black_cobble_rotated.jpg.064
+newmtl None_black_cobble_rotated.jpg.177
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -1505,7 +1507,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None_black_cobble_rotated.jpg.066
+newmtl None_black_cobble_rotated.jpg.191
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -1516,7 +1518,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None_black_cobble_rotated.jpg.069
+newmtl None_black_cobble_rotated.jpg.192
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -1527,16 +1529,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None_black_cobble_rotated.jpg.132
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl None_black_cobble_rotated.jpg.133
+newmtl None_black_cobble_rotated.jpg.193
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -1547,7 +1540,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None_black_cobble_rotated.jpg.135
+newmtl None_black_cobble_rotated.jpg.194
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -1558,7 +1551,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None_black_cobble_rotated.jpg.142
+newmtl None_black_cobble_rotated.jpg.195
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -1569,7 +1562,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None_black_cobble_rotated.jpg.143
+newmtl None_black_cobble_rotated.jpg.196
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -1580,7 +1573,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None_black_cobble_rotated.jpg.145
+newmtl None_black_cobble_rotated.jpg.197
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -1591,7 +1584,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None_black_cobble_rotated.jpg.146
+newmtl None_black_cobble_rotated.jpg.198
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -1602,7 +1595,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None_black_cobble_rotated.jpg.147
+newmtl None_black_cobble_rotated.jpg.199
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -1613,7 +1606,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None_black_cobble_rotated.jpg.148
+newmtl None_black_cobble_rotated.jpg.200
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -1624,7 +1617,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None_black_cobble_rotated.jpg.149
+newmtl None_black_cobble_rotated.jpg.201
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -1635,7 +1628,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None_black_cobble_rotated.jpg.150
+newmtl None_black_cobble_rotated.jpg.202
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -1646,7 +1639,29 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None_dungeon_wall.png
+newmtl None_black_cobble_rotated.jpg.203
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl None_black_cobble_rotated.jpg.204
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl None_dungeon_wall.png.000
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -1668,7 +1683,7 @@ d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\dungeon_wall.png
 
-newmtl None_floor_cobble.jpg.007
+newmtl None_floor_cobble.jpg.001
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000

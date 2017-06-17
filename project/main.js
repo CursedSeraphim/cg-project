@@ -325,9 +325,11 @@ function init(resources) {
   let wpCam6 = glm.translate(25, 2.3, 28);
   let wpCam7 = glm.translate(47.5, 2.3, 28);
   let wpCam8 = glm.translate(47.5, 2.3, 42);
-  let wpCam9 = glm.translate(31.8, 2.3, 42);
-  let wpCam10 = glm.translate(31.8, 2.3, 81.3);
-  cameraWaypoints = [wpCam1, wpCam2, wpCam3, wpCam4, wpCam5, wpCam6, wpCam7, wpCam8, wpCam9, wpCam10];
+  let wpCam9 = glm.translate(32.3, 2.3, 42);
+  let wpCam10 = glm.translate(32.3, 2.3, 81.3);
+  let wpCam11 = glm.translate(29, 2.3, 81.3);
+  let wpCam12 = glm.translate(12.5, -7.5, 81.3);
+  cameraWaypoints = [wpCam1, wpCam2, wpCam3, wpCam4, wpCam5, wpCam6, wpCam7, wpCam8, wpCam9, wpCam10, wpCam11];
   let wpLookAt1 = glm.translate(25,-3,-15);
   lookAtWaypoints = [wpCam2, wpCam3, wpLookAt1];
 
@@ -512,23 +514,27 @@ diceTextureNode = diabloTextureNode;
   triggerSGNode6 = new TriggerSGNode(0.1, wpCam8, function() {
     spiderMoving = 1;
   });
-  triggerSGNode7 = new TriggerSGNode(0.1, wpCam10, function() {
+  triggerSGNode7 = new TriggerSGNode(1, wpCam10, function() {
+    console.log("trigger 7 called");
     spiderMoving = 0;
   });
   //TODO
 
   spellParentNode = new TransformationSGNode(glm.translate(0,0,0));
+  spellParticle = createParticleNode(350, [1,1,1], [0.5, 0.5, 1]);
+  spellSGNode = new TransformationSGNode(glm.translate(0, 0, 0));
 
   triggerSGNode8 = new TriggerSGNode(0.1, wpCam9, function() {
+    b2fNodes.append(spellParentNode);
     var fireSpell = function(){
       console.log("executing fireSpell");
-      spellSGNode = new TransformationSGNode(glm.translate(-cameraPosition[0], -cameraPosition[1]-1, -cameraPosition[2]));
+      spellSGNode.matrix[12] = -cameraPosition[0];
+      spellSGNode.matrix[13] = -cameraPosition[1]-1;
+      spellSGNode.matrix[14] = -cameraPosition[2];
       spellParentNode.children.pop();
+      spellSGNode.children.pop();
       spellParentNode.append(spellSGNode);
-
-      spellParticle = createParticleNode(350, [1,1,1], [0.3, 0.3, 0.8]);
-      spellSGNode.append(spellParticle);
-      b2fNodes.append(spellParentNode);
+      spellSGNode.append(spellParticle)
       spellWayPoints = [spiderAndBillBoardNode];
       spellWayPointIndex = 0;
     }
@@ -868,7 +874,7 @@ function createSceneGraph(gl, resources) {
   let glassMaterial = new MaterialSGNode(glassTextureNode);
   glassMaterial.ambient = [1, 1, 1, 1];
   glassMaterial.diffuse = [1, 1, 1, 1];
-  glassMaterial.specular = [1, 1, 1, 1];
+  glassMaterial.specular = [0.1, 0.1, 0.1, 0.1];
   glassMaterial.shininess = 1000;
   rotatelantern.append(glassMaterial);
   //initialize lantern metal
@@ -876,8 +882,8 @@ function createSceneGraph(gl, resources) {
   let metalMaterial = new MaterialSGNode(metalTextureNode);
   metalMaterial.ambient = [0.6, 0.6, 0.6, 1];
   metalMaterial.diffuse = [0.6, 0.6, 0.6, 1];
-  metalMaterial.specular = [1, 1, 1, 1];
-  metalMaterial.shininess = 2000;
+  metalMaterial.specular = [0.6, 0.6, 0.6, 1];
+  metalMaterial.shininess = 20;
   rotatelantern.append(metalMaterial);
 
   //initialize lantern grid
@@ -885,8 +891,8 @@ function createSceneGraph(gl, resources) {
   let gridMaterial = new MaterialSGNode(gridTextureNode);
   gridMaterial.ambient = [0.24725, 0.1995, 0.0745, 1];
   gridMaterial.diffuse = [0.75164, 0.60648, 0.22648, 1];
-  gridMaterial.specular = [1, 1, 1, 1];
-  gridMaterial.shininess = 2000;
+  gridMaterial.specular = [1, 0.555802, 0.366065, 1];
+  gridMaterial.shininess = 1;
   rotatelantern.append(gridMaterial);
 
 }
@@ -1175,7 +1181,7 @@ function createSceneGraph(gl, resources) {
   spiderAndBillBoardNode.append(spiderTransformationNode);
   spiderAndBillBoardNode.append(andarielSGNode);
   //spiderTransformationNode.append(lightNode);
-  lightingNodes.append(spiderAndBillBoardNode);
+  b2fNodes.append(spiderAndBillBoardNode);
   //lightingNodes.append(spiderTransformationNode);
   //lightingNodes.append(andarielSGNode);
 
@@ -1371,11 +1377,11 @@ function render(timeInMilliseconds) {
     if(spiderWaypointIndex < 1){
       spiderWaypointIndex = moveUsingWaypoints(spiderAndBillBoardNode.matrix, [glm.translate(context.invViewMatrix[12], spiderAndBillBoardNode.matrix[13], context.invViewMatrix[14])], spiderWaypointIndex, 0.15*timediff);
     }
-    var speed = 1.75;
+    var speed = 2.5;
     spiderAbdomenSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
     andarielSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
-    spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(Math.sin(timeInMilliseconds*speed/100)*1.5*speed));
-    spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(-Math.sin(timeInMilliseconds*speed/100)*1.5*speed));
+    spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(Math.sin(90+timeInMilliseconds*speed/200)*1.75));
+    spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(Math.sin(timeInMilliseconds*speed/200)*1.75));
     spiderMovementSet1SGNode.matrix[13] += deg2rad(Math.sin(timeInMilliseconds*speed/100)*3*speed);
     spiderMovementSet2SGNode.matrix[13] += deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed);
   }
@@ -1416,9 +1422,10 @@ function render(timeInMilliseconds) {
         autoCameraLookAt = spiderAndBillBoardNode.matrix;
         console.log("wp5 reached focussing spider now");
       }
+
+    }
     if(spellWayPointIndex === 0) {
       spellWayPointIndex = moveUsingWaypoints(spellSGNode.matrix, [spiderAndBillBoardNode.matrix], spellWayPointIndex, 4);
-    }
     }
 
     lookAtObject(context, autoCameraLookAt, [0,1,0]);
