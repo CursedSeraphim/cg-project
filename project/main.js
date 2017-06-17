@@ -182,7 +182,7 @@ loadResources({
   stoaqTexture: 'textures/dungeon/stoaquad.jpg',
   cobbleTexture: 'textures/dungeon/dungeon_wall.png',
   diabloImage: 'textures/diablo/diablo.png',
-  metalTexture: 'textures/metal/metal_128.png',//metal.png',
+  metalTexture: 'textures/metal/metal_32.png',//metal.png',
   glassTexture: 'textures/glass/glass.png',//glass_64.png',
   stainedGlassTexture: 'textures/glass/stainedGlass.png',
   gridTexture: 'textures/metal/bars.png',
@@ -937,20 +937,7 @@ function createSceneGraph(gl, resources) {
 
 /*add spider*/
 {
-  /*
-  spiderTextureNode1.append(spiderAbdomenSGNode);
-  spiderTextureNode2.append(spiderHeadSGNode);
-  spiderTextureNode3.append(spiderLeftFrontLegSGNode);
-  spiderTextureNode4.append(spiderLeftFrontLeg2SGNode);
-  spiderTextureNode5.append(spiderLeftHindLegSGNode);
-  spiderTextureNode6.append(spiderLeftHindLeg2SGNode);
-  spiderTextureNode7.append(spiderLeftPincerSGNode);
-  spiderTextureNode8.append(spiderRightFrontLegSGNode);
-  spiderTextureNode9.append(spiderRightFrontLeg2SGNode);
-  spiderTextureNode10.append(spiderRightHindLegSGNode);
-  spiderTextureNode11.append(spiderRightHindLeg2SGNode);
-  spiderTextureNode12.append(spiderRightPincerSGNode);
-*/
+
   spiderTransformationNode = new TransformationSGNode(glm.translate(0,0,0));
   spiderMovementSet1SGNode = new TransformationSGNode(glm.translate(0,0,0));
   spiderMovementSet2SGNode = new TransformationSGNode(glm.translate(0,0,0));
@@ -1068,15 +1055,7 @@ function createSceneGraph(gl, resources) {
 
   spiderTransformationNode.matrix = mat4.multiply(mat4.create(), spiderTransformationNode.matrix, glm.transform({scale: 1}));
 
-  lightingNodes.append(spiderTransformationNode);/*
-  lightingNodes.append(spiderMaterial2);
-  lightingNodes.append(spiderMaterial3);
-  lightingNodes.append(spiderMaterial4);
-  lightingNodes.append(spiderMaterial5);
-  lightingNodes.append(spiderMaterial6);
-  lightingNodes.append(spiderMaterial7);
-  lightingNodes.append(spiderMaterial8);
-  lightingNodes.append(spiderMaterial9);*/
+  lightingNodes.append(spiderTransformationNode);
 }
 
 lightingNodes.append(diabloTextureNode);
@@ -1254,8 +1233,8 @@ function render(timeInMilliseconds) {
     spiderAbdomenSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
     spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(Math.sin(timeInMilliseconds*speed/100)*3*speed));
     spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed));
-    spiderMovementSet1SGNode.matrix[13] += deg2rad(Math.sin(timeInMilliseconds/100)*3)/2*speed;
-    spiderMovementSet2SGNode.matrix[13] += deg2rad(-Math.sin(timeInMilliseconds/100)*3)/2*speed;
+    spiderMovementSet1SGNode.matrix[13] += deg2rad(Math.sin(timeInMilliseconds*speed/100)*3*speed);
+    spiderMovementSet2SGNode.matrix[13] += deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed);
   }
 
   if(headBobbing){
