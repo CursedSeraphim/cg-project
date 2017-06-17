@@ -31,7 +31,7 @@ var waitingFor;
 //matrix used to have camera look at specific points during the automated camera flight
 var firstFrame = 1;
 var autoCameraLookAt;
-var headBobbing = 1;
+var headBobbing = 0;
 var movementSpeedModifier = 1;
 
 //scene graph nodes
@@ -621,7 +621,7 @@ function createSceneGraph(gl, resources) {
     torchNode.specular = [1.0,0.6,0.05,1.0];
     torchNode.position = [0, 0, 0];
     torchNode.shininess = 100;
-    torchNode.decreaseRate = 30;
+    torchNode.decreaseRate = 20;
 
 
     /*LIGHT TEST NODES*/
@@ -1386,10 +1386,13 @@ function render(timeInMilliseconds) {
     spiderMovementSet2SGNode.matrix[13] += deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed);
   }
 
-  if(headBobbing){
-    context.invViewMatrix[13] += Math.sin(timeInMilliseconds/75)/25;
-
+  var bobbSpeed = 75;
+  var bobbHeight = 25;
+  if(!headBobbing){
+    bobbSpeed = 250;
+    bobbHeight = 100;
   }
+  context.invViewMatrix[13] += Math.sin(timeInMilliseconds/bobbSpeed)/bobbHeight;
 
   if(!manualCameraEnabled) {
     if(cameraWaypointIndex < cameraWaypoints.length && time() - waitingSince >= waitingFor) {
