@@ -185,18 +185,18 @@ class FireSGNode extends SGNode {
     this.lastTime = time();
     this.fireEmmitAngle = 2;
     this.sparkEmmitAngle = 1;
-    this.fireSpeed = 2.5*this.invScalefactor;
-    this.sparkSpeed = 2.5*this.invScalefactor;
     this.speedVariance = 0.2;
     this.sizeVariance = 0.5;
-    this.sparkEmmitRate = 0.97;
+    this.sparkEmmitRate = 0.95;
     this.fireHeatDegreeRate = 1.5*this.scalefactor;
-    this.sparkHeatDegreeRate = 0.1*this.scalefactor;
+    this.sparkHeatDegreeRate = 0.05*this.scalefactor;
     this.fireCenterHeatDegreeRate = 2*this.scalefactor;
     this.particleSizeReduction = 50.0;
     this.fireRiseFactor = 0.1;
-    this.sparkRiseFactor = 0.005;
+    this.sparkRiseFactor = 0.001;
     this.movementScaling = 10;
+    this.fireSpeed = 2.5*this.invScalefactor;
+    this.sparkSpeed = 0.5*(this.invScalefactor*5);
   }
 
   getRandomColor() {
@@ -388,11 +388,14 @@ class FireSGNode extends SGNode {
       //add wind to velocity
       vec3.add(particle.velocity, particle.velocity, wind);
 
+
+
       particle.velocity = this.riseVectorUp(particle.velocity, this.sparkRiseFactor);
 
+      var vel = vec3.add(vec3.create(), particle.velocity, moveVec);
       //let the particles randomly flicker around a bit
       //vec3.add(particle.velocity, particle.velocity, vec3.random(vec3.create(), 0.001));
-      vec3.add(particle.position, particle.position, vec3.scale(vec3.create(), particle.velocity, timeS));
+      vec3.add(particle.position, particle.position, vec3.scale(vec3.create(), vel, timeS));
 
       particle.color[3] -= (this.sparkHeatDegreeRate + this.sparkHeatDegreeRate * Math.random());
 
