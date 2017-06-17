@@ -1,6 +1,6 @@
 // Phong Vertex Shader
 
-#define LIGHT_NODES 10
+#define LIGHT_NODES 25
 
 attribute vec3 a_position;
 attribute vec3 a_normal;

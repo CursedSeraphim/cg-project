@@ -38,6 +38,7 @@ var translateTorch1;
 var translateTorch2;
 var b2fNodes;
 var b2fNodes2;
+var b2fNodes3;
 var diabloSGNode;
 var orcShamanSGNode;
 var durielSGNode;
@@ -276,14 +277,15 @@ function init(resources) {
   gl = createContext(400, 400);
 
   //setting manual camera switch to off
-  manualCameraEnabled = 0;
+  manualCameraEnabled = true;
   //setting initial point to look at
   autoCameraLookAt = glm.translate(8.75, 2.35, -9.4);
 
   startTime = time();
 
   /*set camera Start position*/
-  cameraPosition = vec3.fromValues(3, -1, -10);
+  //cameraPosition = vec3.fromValues(3, -1, -10);
+  cameraPosition = vec3.fromValues(-40, 3, -51);
 
   /*set waypoints*/
   cameraWaypointIndex = 0;
@@ -485,6 +487,7 @@ function createSceneGraph(gl, resources) {
   lightingNodes = new LightingSGNode();
   b2fNodes = new Back2FrontSGNode();
   b2fNodes2 = new Back2FrontSGNode();
+  b2fNodes3 = new Back2FrontSGNode();
   root.append(new BlendSgNode(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, lightingNodes));
 
   //light debug helper function
@@ -494,12 +497,21 @@ function createSceneGraph(gl, resources) {
     ]);
   }
 
-
   function createParticleNode(size, area, colorMult, colorMin) {
     return new ShaderSGNode(particleShaderProgram,
       new BlendSgNode(gl.SRC_ALPHA, gl.ONE,
         new FireSGNode(size, area, colorMult, colorMin))
     );
+  }
+
+  function createTorch(color,spotAngle, lookAt, pos, colorMult, colorMin) {
+    var particle = createParticleNode(120, [0.2,0.05,0.2], colorMult,colorMin);
+    let torchLight = new AdvancedLightSGNode(true, spotAngle, lookAt, pos);
+    torchLight.ambient =[0,0,0,1.0];
+    torchLight.diffuse = color;
+    torchLight.specular = color;
+    torchLight.append(particle);
+    return torchLight
   }
 
   {
@@ -514,11 +526,6 @@ function createSceneGraph(gl, resources) {
     let torchNode2 = createParticleNode(120, [0.2,0.05,0.2]);
     let torchNode3 = createParticleNode(120, [0.2,0.05,0.2]);
     let torchNode4 = createParticleNode(120, [0.2,0.05,0.2]);
-    let torchNode5 = createParticleNode(120, [0.2,0.05,0.2]);
-    let torchNode6 = createParticleNode(120, [0.2,0.05,0.2]);
-    let torchNode7 = createParticleNode(120, [0.2,0.05,0.2]);
-    let torchNode8 = createParticleNode(120, [0.2,0.05,0.2]);
-    let torchNode9 = createParticleNode(120, [0.2,0.05,0.2]);
 
     /*Init Light*/
     let torchNode = new AdvancedLightSGNode(true, 10, [0,0,1]);
@@ -620,6 +627,35 @@ function createSceneGraph(gl, resources) {
     torchTransNode4.append(torchNode4);
     torchTransNode4.append(torchLight4);
     b2fNodes.append(torchTransNode4);
+
+    // let spiderTorchTransNode3 = new TransformationSGNode(glm.translate(90, -3, 50.85));
+    // spiderTorchTransNode3.append(spiderTorchNode3);
+    // spiderTorchTransNode3.append(spiderTorchLight3);
+
+    function createSpiderTorch(pos) {
+      return createTorch([0.01,0.3,0.025,1.0],
+                          -361,
+                          lookAt,
+                          pos,
+                          [0.1,0.5,0.1],
+                          [0,0.5,0]);
+    }
+
+    b2fNodes.append(createSpiderTorch([40, -3, 50.85]));
+    b2fNodes.append(createSpiderTorch([80, -3, 50.85]));
+    b2fNodes.append(createSpiderTorch([90, -3, 50.85]));
+    b2fNodes.append(createSpiderTorch([100, -3, 50.85]));
+    b2fNodes.append(createSpiderTorch([110, -3, 50.85]));
+
+    b2fNodes.append(createSpiderTorch([40, -3, 89.15]));
+    b2fNodes.append(createSpiderTorch([50, -3, 89.15]));
+    b2fNodes.append(createSpiderTorch([60, -3, 89.15]));
+    b2fNodes.append(createSpiderTorch([70, -3, 89.15]));
+    b2fNodes.append(createSpiderTorch([80, -3, 89.15]));
+    b2fNodes.append(createSpiderTorch([90, -3, 89.15]));
+    b2fNodes.append(createSpiderTorch([100, -3, 89.15]));
+    b2fNodes.append(createSpiderTorch([110, -3, 89.15]));
+    //b2fNodes2.append(spiderTorchTransNode2);
 
 /*
     let torchTransNode5 = new TransformationSGNode(glm.translate(49.7, -1, 18.95));
@@ -1059,7 +1095,7 @@ function createSceneGraph(gl, resources) {
   //spiderAbdomenSGNode.append(andarielSGNode);
 
   spiderTransformationNode.matrix = mat4.multiply(mat4.create(), spiderTransformationNode.matrix, glm.transform({scale: 1}));
-spiderTransformationNode.append(lightNode);
+  //spiderTransformationNode.append(lightNode);
   lightingNodes.append(spiderTransformationNode);
 }
 

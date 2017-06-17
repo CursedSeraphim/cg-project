@@ -363,12 +363,6 @@ class FireSGNode extends SGNode {
       this.wind[2] += change;
       vec3.normalize(this.wind, this.wind);
 
-    if(Math.random() > 0.5) {
-      this.windStrength += Math.random()*0.05;
-    }
-    else
-      this.windStrength -= Math.random()*0.05;
-
       vec3.scale(this.wind, this.wind, this.windStrength);
   }
 

@@ -1,6 +1,6 @@
 precision mediump float;
 
-#define LIGHT_NODES 10
+#define LIGHT_NODES 25
 
 /**
  * definition of a material structure containing common properties
@@ -64,7 +64,7 @@ vec4 calculateSimplePointLight(Light light, Material material, vec3 lightVec, ve
 	/*calculate angle*/
 	if(light.spotAngle > 0.0) {
 		angle = acos(dot(lightVec, light.lookAt));
-		distanceFactor = (3.1415/light.spotAngle);
+		distanceFactor = 15.0;//(3.1415/light.spotAngle);
 		float angleDifference = min(1.0, (angle / light.spotAngle));
 		radiusDistance = 1.0 - angleDifference * angleDifference;
 	}
