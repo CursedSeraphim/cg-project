@@ -84,6 +84,7 @@ var spellParticle;
 var fireSpellVolley = 0;
 
 var diamondRotateNode;
+var diamondTransformationNode;
 
 //used for spell
 var spellWayPointIndex = -1;
@@ -1202,7 +1203,7 @@ function createSceneGraph(gl, resources) {
   diamondMaterial.specular = [1, 1, 1, 1];
   diamondMaterial.shininess = 100;
   diamondRotateNode = new TransformationSGNode(glm.translate(0,-6, 90), diamondMaterial);
-  let diamondTransformationNode = new TransformationSGNode(glm.translate(0,-6, 90), diamondRotateNode);
+  diamondTransformationNode = new TransformationSGNode(glm.translate(0,-6, 90), diamondRotateNode);
   b2fNodes.append(diamondTransformationNode);
 
   /*place spotlight*/
@@ -1454,6 +1455,8 @@ function render(timeInMilliseconds) {
     if(lookAtWaypointIndex7 < lookAtWaypoints6.length && lookAtWaypointIndex7 !== -1){
       lookAtWaypointIndex7 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints7, lookAtWaypointIndex7, 0.1 * timediff);
       if(lookAtWaypointIndex7 === lookAtWaypoints7.length) {
+        console.log("auto at diamond");
+        autoCameraLookAt = diamondTransformationNode.matrix;
       }
     }
 
