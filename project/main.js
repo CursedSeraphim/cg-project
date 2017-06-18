@@ -26,6 +26,10 @@ var lastRenderTime;
 
 //TODO
 var turned = 0;
+var deathRoll = 0;
+var upX = 0;
+var upY = 1;
+var upZ = 0;
 
 //used for waiting between camera movements
 var waitingSince;
@@ -703,6 +707,9 @@ diceTextureNode = dreughTextureNode;
     setTimeout(function() {
       stabbed = 1;
     }, 2000);
+    setTimeout(function() {
+      deathRoll = 1;
+    }, 2500);
   }));
 
   initInteraction(gl.canvas);
@@ -1806,7 +1813,7 @@ function render(timeInMilliseconds) {
       lookAtWaypointIndex7 = moveUsingWaypoints(autoCameraLookAt, [glm.translate(7, -7.5, 81.3), finalDiamondMatrix], lookAtWaypointIndex7, 0.1 * timediff);
     }
 
-    lookAtObject(context, autoCameraLookAt, [0,1,0]);
+    lookAtObject(context, autoCameraLookAt, [upX,upY,upZ]);
     context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
     lookAtVector = vec3.normalize(vec3.create(), vec3.fromValues(autoCameraLookAt[12], autoCameraLookAt[13], autoCameraLookAt[14]));
   }
@@ -1867,6 +1874,17 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" + " "+context.invViewMatr
 
       }
 
+    }
+  }
+  if(deathRoll && !manualCameraEnabled) {
+    if(context.invViewMatrix[13] < -6) {
+      context.invViewMatrix[13]-=0.05;
+    }
+    if(upY > 0) {
+      upY -= 0.025;
+    }
+    if(upX < 1) {
+      upX += 0.025;
     }
   }
 
