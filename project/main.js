@@ -1318,7 +1318,7 @@ function createSceneGraph(gl, resources) {
   crystalSwordSGNode.append(swordMat);
   crystalSwordTextureNode.append(new RenderSGNode(rect));
 
-  let bloodParticle = new ParticleSGNode(150, [1,0.025,1], [0.5,0,0,0],[0.5,0,0,1]);
+  let bloodParticle = new ParticleSGNode(150, [1,0.025,1], [0.2,0,0,0],[0.05,0,0,1]);
   let bloodPos = new TransformationSGNode(glm.translate(0,2,0),
     new ShaderSGNode(particleShaderProgram,
     /*new BlendSgNode(gl.SRC_ALPHA, gl.ONE,*/
