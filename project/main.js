@@ -696,7 +696,6 @@ diceTextureNode = dreughTextureNode;
   root.append(triggerSGNode9);
   root.append(triggerSGNode10);
   root.append(new TriggerSGNode(0.1, glm.translate(2.4, -8.20, 83.88), function() {
-    console.log("stabbed");
     setTimeout(function() {
       stabbed = 1;
     }, 2000);
@@ -1854,9 +1853,9 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" + " "+context.invViewMatr
       swordSGNode.matrix = stabbedPosition;
       mat4.multiply(swordSGNode.matrix, swordSGNode.matrix, glm.rotateX(90));
       */
-      //swordSGNode.matrix = stabbedPosition;
-      moveUsingWaypoints(swordSGNode.matrix, [stabbedPosition], 0, 0.1 * timediff);
-      //mat4.multiply(swordSGNode.matrix,swordSGNode.matrix, glm.rotateX(90));
+      swordSGNode.matrix = stabbedPosition;
+      //moveUsingWaypoints(swordSGNode.matrix, [stabbedPosition], 0, 0.1 * timediff);
+      mat4.multiply(swordSGNode.matrix,swordSGNode.matrix, glm.rotateX(90));
 
     }
   }
