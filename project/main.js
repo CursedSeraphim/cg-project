@@ -1325,6 +1325,31 @@ function createSceneGraph(gl, resources) {
   crystalSwordSGNode.append(swordMat);
   crystalSwordTextureNode.append(new RenderSGNode(rect));
 
+  let bloodParticle = new ParticleSGNode(150, [1,0.025,1], [0.5,0,0,0],[0.5,0,0,1]);
+  let bloodPos = new TransformationSGNode(glm.translate(0,2,0),
+    new ShaderSGNode(particleShaderProgram,
+    /*new BlendSgNode(gl.SRC_ALPHA, gl.ONE,*/
+      bloodParticle)/*)*/);
+
+  bloodParticle.fireSpeed = 2;
+  bloodParticle.windStrength = 0;
+  bloodParticle.fireEmmitAngle = 5;
+  bloodParticle.sparkEmmitAngle = 1;
+  bloodParticle.speedVariance = 0.2;
+  bloodParticle.sizeVariance = 0.5;
+  bloodParticle.sparkEmmitRate = 2;
+  bloodParticle.particleSizeReduction = 0;
+  bloodParticle.fireRiseFactor = 1;
+  bloodParticle.movementScaling = 5;
+  bloodParticle.maxMovement = 10000;
+  bloodParticle.maxDistanceFromStart = 10000;
+  bloodParticle.windStrength = 0;
+  bloodParticle.newSpawns = 100;
+  bloodParticle.fireHeatDegreeRate = 1;
+  bloodParticle.fireCenterHeatDegreeRate = 0;
+
+  bloodPos.append(bloodParticle);
+  b2fNodes.append(bloodPos);
   b2fNodes.append(crystalSwordSGNode);
 }
 
