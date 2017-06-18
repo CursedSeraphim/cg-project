@@ -1211,10 +1211,9 @@ function createSceneGraph(gl, resources) {
   diamondLight.ambient = [0.0,0.2,0.6,1];
   diamondLight.diffuse = [0.0,0.4,1,1];
   diamondLight.specular = [0,0.4,1,1];
-  diamondLight.position = [0,0.5,0];
   diamondLight.decreaseRate = 7;
 
-  diamondUpDownNode.append(diamondLight);
+  diamondRotateNode.append(diamondLight);
 
   /*place spotlight*/
 
@@ -1426,8 +1425,8 @@ function render(timeInMilliseconds) {
 
   diamondRotateNode.matrix = glm.rotateY(timeInMilliseconds*-0.01);
   diamondUpDownNode.matrix[13] = Math.sin(timeInMilliseconds*0.001);
-  var tempMatrix = mat4.multiply(mat4.create(), diamondTransformationNode.matrix, diamondRotateNode.matrix);
-  mat4.multiply(tempMatrix, tempMatrix, diamondUpDownNode.matrix);
+  var finalDiamondMatrix = mat4.multiply(mat4.create(), diamondTransformationNode.matrix, diamondRotateNode.matrix);
+  mat4.multiply(finalDiamondMatrix, finalDiamondMatrix, diamondUpDownNode.matrix);
 
   if(!manualCameraEnabled) {
     if(cameraWaypointIndex < cameraWaypoints.length && time() - waitingSince >= waitingFor) {
@@ -1467,18 +1466,16 @@ function render(timeInMilliseconds) {
         lookAtWaypointIndex7 = 0;
       }
     }
-    if(lookAtWaypointIndex7 < 1 && lookAtWaypointIndex7 !== -1){
-      lookAtWaypointIndex7 = moveUsingWaypoints(autoCameraLookAt, [tempMatrix], lookAtWaypointIndex7, 0.1 * timediff);
+    if(lookAtWaypointIndex7 < 2 && lookAtWaypointIndex7 !== -1){
+      lookAtWaypointIndex7 = moveUsingWaypoints(autoCameraLookAt, [glm.translate(7, -7.5, 81.3), finalDiamondMatrix], lookAtWaypointIndex7, 0.1 * timediff);
     }
 
     lookAtObject(context, autoCameraLookAt, [0,1,0]);
     context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
   }
-  if(lookAtWaypointIndex7 === 1) {
-    autoCameraLookAt = tempMatrix;
+  if(lookAtWaypointIndex7 === 2) {
+    autoCameraLookAt = finalDiamondMatrix;
   }
-  console.log(tempMatrix);
-  //console.log(context.sceneMatrix);
 
 
   if(spellWayPointIndex < spellWayPoints.length && spellWayPointIndex != -1) {
