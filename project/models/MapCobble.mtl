@@ -1,5 +1,5 @@
 # Blender MTL File: 'BACKUP12MapComplete.blend'
-# Material Count: 154
+# Material Count: 155
 
 newmtl Material.000
 Ns 92.156863
@@ -892,40 +892,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble.jpg
 
-newmtl None.000
-Ns 0.000000
-Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.800000 0.800000 0.800000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl None.001
-Ns 0.000000
-Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.800000 0.800000 0.800000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl None.002
-Ns 0.000000
-Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.800000 0.800000 0.800000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
-newmtl None.003
+newmtl None
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -936,7 +903,7 @@ d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\dungeon_wall.png
 
-newmtl None.004
+newmtl None.005
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -947,7 +914,40 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None.005
+newmtl None.006
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl None.007
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl None.025
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
+newmtl None.026
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -1496,17 +1496,6 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None_black_cobble_rotated.jpg.177
-Ns 0.000000
-Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.800000 0.800000 0.800000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd black_cobble_rotated.jpg
-
 newmtl None_black_cobble_rotated.jpg.191
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
@@ -1661,6 +1650,17 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
+newmtl None_black_cobble_rotated.jpg.205
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd black_cobble_rotated.jpg
+
 newmtl None_dungeon_wall.png.000
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
@@ -1680,6 +1680,15 @@ Ks 0.800000 0.800000 0.800000
 Ke 0.000000 0.000000 0.000000
 Ni 1.000000
 d 1.000000
+illum 2
+map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\dungeon_wall.png
+
+newmtl None_dungeon_wall.png.006
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 0.8 0.8 0.8
+Ks 0.8 0.8 0.8
+d 1
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\dungeon_wall.png
 
