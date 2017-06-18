@@ -1504,7 +1504,7 @@ function createSceneGraph(gl, resources) {
   diamondMatrixSniffer = new SnifferSGNode(diamondTransformationNode);
   //TODO
   let particles = createParticleNode(500, [4,30,4], [0.75, 0.6, 1], [0.75/8, 0.6/8, 1/8]);
-  diamondRotateNode.append(particles);
+  diamondUpDownNode.append(particles);
 
   b2fNodes.append(diamondMatrixSniffer);
 
