@@ -66,6 +66,12 @@ var rubySGNode;
 var emeraldSGNode;
 var tiaraSGNode;
 var goldSkinSGNode;
+var tridentSGNode;
+var goldPile1SGNode;
+var goldPile2SGNode;
+var goldPile3SGNode;
+var goldPile4SGNode;
+var goldPile5SGNode;
 
 //spider (compex model) scene graph nodes
 var spiderAbdomenSGNode;
@@ -192,6 +198,12 @@ var rubyTextureNode;
 var emeraldTextureNode;
 var tiaraTextureNode;
 var goldSkinTextureNode;
+var tridentTextureNode;
+var goldPile1TextureNode;
+var goldPile2TextureNode;
+var goldPile3TextureNode;
+var goldPile4TextureNode;
+var goldPile5TextureNode;
 
 var diamondTextureNode;
 //texture arrays
@@ -271,6 +283,8 @@ loadResources({
   emeraldTexture: 'textures/treasure/emerald.png',
   tiaraTexture: 'textures/treasure/tiara.png',
   goldSkinTexture: 'textures/treasure/goldskin.png',
+  tridentTexture: 'textures/treasure/trident.png',
+  goldPileTexture: 'textures/treasure/goldPile.png',
 
   andarielFrame1: 'textures/andariel/andariel (1).gif',
   andarielFrame2: 'textures/andariel/andariel (2).gif',
@@ -481,6 +495,13 @@ function init(resources) {
   emeraldTextureNode = new AdvancedTextureSGNode(resources.emeraldTexture);
   tiaraTextureNode = new AdvancedTextureSGNode(resources.tiaraTexture);
   goldSkinTextureNode = new AdvancedTextureSGNode(resources.goldSkinTexture);
+  tridentTextureNode = new AdvancedTextureSGNode(resources.tridentTexture);
+
+  goldPile1TextureNode = new AdvancedTextureSGNode(resources.goldPileTexture);
+  goldPile2TextureNode = new AdvancedTextureSGNode(resources.goldPileTexture);
+  goldPile3TextureNode = new AdvancedTextureSGNode(resources.goldPileTexture);
+  goldPile4TextureNode = new AdvancedTextureSGNode(resources.goldPileTexture);
+  goldPile5TextureNode = new AdvancedTextureSGNode(resources.goldPileTexture);
 
   andarielFrames = initAnimatedTexture([resources.andarielFrame1,
 resources.andarielFrame2,
@@ -953,7 +974,7 @@ function createSceneGraph(gl, resources) {
   skullPile1MaterialNode.shininess = 1000;
   skullPileSGNode1.append(skullPile1MaterialNode);
   skullPile1TextureNode.append(new RenderSGNode(rect));
-  lightingNodes.append(skullPileSGNode1);
+  b2fNodes.append(skullPileSGNode1);
 
   var rect = makeTexturedRect(1.25, 1.25, 1)
 
@@ -967,7 +988,7 @@ function createSceneGraph(gl, resources) {
   skullPile2MaterialNode.shininess = 1000;
   skullPileSGNode2.append(skullPile2MaterialNode);
   skullPile1TextureNode.append(new RenderSGNode(rect));
-  lightingNodes.append(skullPileSGNode2);
+  b2fNodes.append(skullPileSGNode2);
 }
 
 /*Add bone piles*/
@@ -985,7 +1006,7 @@ function createSceneGraph(gl, resources) {
   bones1SGNode1.append(bones1MaterialNode);
   bones1TextureNode.append(new RenderSGNode(rect));
 
-  lightingNodes.append(bones1SGNode1);
+  b2fNodes.append(bones1SGNode1);
 
   var rect = makeTexturedRect(0.3, 0.3, 1)
 
@@ -1000,7 +1021,7 @@ function createSceneGraph(gl, resources) {
   bones1SGNode2.append(bones2MaterialNode);
   bones2TextureNode.append(new RenderSGNode(rect));
 
-  lightingNodes.append(bones1SGNode2);
+  b2fNodes.append(bones1SGNode2);
 }
 
 /*Add Duriel*/
@@ -1018,7 +1039,25 @@ function createSceneGraph(gl, resources) {
   durielSGNode.append(durielMaterialNode);
   durielTextureNode.append(new RenderSGNode(rect));
 
-  lightingNodes.append(durielSGNode);
+  b2fNodes.append(durielSGNode);
+}
+
+/*Add trident*/
+{
+  var rect = makeTexturedRect(2, 2, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  tridentSGNode = new BillboardSGNode(glm.transform({translate:[-9.06,-8.75, 95.48]}));
+  let tridentMat = new MaterialSGNode(tridentTextureNode);
+  tridentMat.ambient = [0.6, 0.6, 0.6, 1];
+  tridentMat.diffuse = [0.5, 0.5, 0.5, 1];
+  tridentMat.specular = [1, 1, 1, 1];
+  tridentMat.shininess = 1000;
+  tridentSGNode.append(tridentMat);
+  tridentTextureNode.append(new RenderSGNode(rect));
+
+  b2fNodes.append(tridentSGNode);
 }
 
 /*Add goldskin*/
@@ -1027,7 +1066,7 @@ function createSceneGraph(gl, resources) {
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
-  goldSkinSGNode = new BillboardSGNode(glm.transform({translate: [-9.06,-8.75, 95.48]}));
+  goldSkinSGNode = new BillboardSGNode(glm.transform({translate: [-9.12,-8.75, 92.54]}));
   let goldSkinMat = new MaterialSGNode(goldSkinTextureNode);
   goldSkinMat.ambient = [0.6, 0.6, 0.6, 1];
   goldSkinMat.diffuse = [0.5, 0.5, 0.5, 1];
@@ -1038,6 +1077,7 @@ function createSceneGraph(gl, resources) {
 
   b2fNodes.append(goldSkinSGNode);
 }
+
 
 /*Add tiara*/
 {
@@ -1127,6 +1167,84 @@ function createSceneGraph(gl, resources) {
   maskTextureNode.append(new RenderSGNode(rect));
 
   b2fNodes.append(maskSGNode);
+}
+
+/*Add gold piles*/
+{
+  var rect = makeTexturedRect(0.4, 0.4, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  goldPile1SGNode = new BillboardSGNode(glm.transform({translate: [3.22, -8.5, 92]}));
+  let goldPileMat = new MaterialSGNode(goldPile1TextureNode);
+  goldPileMat.ambient = [0.6, 0.6, 0.6, 1];
+  goldPileMat.diffuse = [0.5, 0.5, 0.5, 1];
+  goldPileMat.specular = [1, 1, 1, 1];
+  goldPileMat.shininess = 1000;
+  goldPile1SGNode.append(goldPileMat);
+  goldPile1TextureNode.append(new RenderSGNode(rect));
+
+  b2fNodes.append(goldPile1SGNode);
+
+  var rect = makeTexturedRect(0.4, 0.4, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  goldPile2SGNode = new BillboardSGNode(glm.transform({translate: [5, -9, 89.144]}));
+  let goldPileMat2 = new MaterialSGNode(goldPile2TextureNode);
+  goldPileMat2.ambient = [0.6, 0.6, 0.6, 1];
+  goldPileMat2.diffuse = [0.5, 0.5, 0.5, 1];
+  goldPileMat2.specular = [1, 1, 1, 1];
+  goldPileMat2.shininess = 1000;
+  goldPile2SGNode.append(goldPileMat2);
+  goldPile2TextureNode.append(new RenderSGNode(rect));
+
+  b2fNodes.append(goldPile2SGNode);
+
+  var rect = makeTexturedRect(0.4, 0.4, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  goldPile3SGNode = new BillboardSGNode(glm.transform({translate: [1.57, -8, 91.5]}));
+  let goldPileMat3 = new MaterialSGNode(goldPile3TextureNode);
+  goldPileMat3.ambient = [0.6, 0.6, 0.6, 1];
+  goldPileMat3.diffuse = [0.5, 0.5, 0.5, 1];
+  goldPileMat3.specular = [1, 1, 1, 1];
+  goldPileMat3.shininess = 1000;
+  goldPile3SGNode.append(goldPileMat3);
+  goldPile3TextureNode.append(new RenderSGNode(rect));
+
+  b2fNodes.append(goldPile3SGNode);
+
+  var rect = makeTexturedRect(0.4, 0.4, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  goldPile4SGNode = new BillboardSGNode(glm.transform({translate: [1.0, -8, 89.77]}));
+  let goldPileMat4 = new MaterialSGNode(goldPile4TextureNode);
+  goldPileMat4.ambient = [0.6, 0.6, 0.6, 1];
+  goldPileMat4.diffuse = [0.5, 0.5, 0.5, 1];
+  goldPileMat4.specular = [1, 1, 1, 1];
+  goldPileMat4.shininess = 1000;
+  goldPile4SGNode.append(goldPileMat4);
+  goldPile4TextureNode.append(new RenderSGNode(rect));
+
+  b2fNodes.append(goldPile4SGNode);
+
+  var rect = makeTexturedRect(0.4, 0.4, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  goldPile5SGNode = new BillboardSGNode(glm.transform({translate:[0.77, -8, 91.47]}));
+  let goldPileMat5 = new MaterialSGNode(goldPile5TextureNode);
+  goldPileMat5.ambient = [0.6, 0.6, 0.6, 1];
+  goldPileMat5.diffuse = [0.5, 0.5, 0.5, 1];
+  goldPileMat5.specular = [1, 1, 1, 1];
+  goldPileMat5.shininess = 1000;
+  goldPile5SGNode.append(goldPileMat5);
+  goldPile5TextureNode.append(new RenderSGNode(rect));
+
+  b2fNodes.append(goldPile5SGNode);
 }
 
 /*Add crown*/
