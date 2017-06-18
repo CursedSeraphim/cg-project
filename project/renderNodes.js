@@ -274,7 +274,7 @@ class BillboardSGNode extends TransformationSGNode {
   }
 }
 
-class FireSGNode extends SGNode {
+class ParticleSGNode extends SGNode {
 
   constructor(partSize, fuelSize, colorMult, colorMin, children) {
     super(children);
