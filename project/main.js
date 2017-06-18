@@ -133,6 +133,7 @@ var renderTargetDepthTexture;
 var diceTextureNode;
 var floorTextureNode;
 var cobbleTextureNode;
+var web1TextureNode;
 var lavaTextureNode;
 var diabloTextureNode;
 var orcShamanTextureNode;
@@ -194,6 +195,7 @@ loadResources({
   modelMapTorches: 'models/MapTorches.obj',
   modelMapGlass: 'models/MapGlass.obj',
   modelMapPentagram: 'models/MapPentagram.obj',
+  modelMapWebs: 'models/MapWebs.obj',
   modelLanternMetal: 'models/lantern_metal.obj',
   modelLanternGlass: 'models/lantern_glass.obj',
   modelLanternGrid: 'models/lantern_grid.obj',
@@ -213,6 +215,7 @@ loadResources({
 
   lavaTexture: 'textures/lava/lava.jpg',
   diceTexture: 'textures/misc/diemap.jpg',
+  WebTexture1: 'textures/cobwebs/web.png',
   floorTexture: 'textures/dungeon/floor_cobble.jpg',
   stoaqTexture: 'textures/dungeon/stoaquad.jpg',
   cobbleTexture: 'textures/dungeon/dungeon_wall.png',
@@ -296,7 +299,7 @@ orcShamanFrame14: 'textures/orc_shaman/orc_shaman (14).gif',
 orcShamanFrame15: 'textures/orc_shaman/orc_shaman (15).gif',
 orcShamanFrame16: 'textures/orc_shaman/orc_shaman (16).gif',
 
-diamond: 'textures/diamond/diamond.jpg'
+diamond: 'textures/diamond/gem.png'
 
 }).then(function (resources /*an object containing our keys with the loaded resources*/) {
 
@@ -412,6 +415,7 @@ function init(resources) {
   skullPile1TextureNode = new AdvancedTextureSGNode(resources.skullPileTexture);
   pentagramTextureNode = new AdvancedTextureSGNode(resources.pentagramTexture);
   cobbleTextureNode = new AdvancedTextureSGNode(resources.cobbleTexture);
+  web1TextureNode = new AdvancedTextureSGNode(resources.WebTexture1);
   spiderTextureNode1 = new AdvancedTextureSGNode(resources.spiderTexture);
   spiderTextureNode2 = new AdvancedTextureSGNode(resources.spiderTexture);
   spiderTextureNode3 = new AdvancedTextureSGNode(resources.spiderTexture);
@@ -783,6 +787,15 @@ function createSceneGraph(gl, resources) {
   pentagram.specular = [0.1, 0.1, 0.1, 0.1];
   pentagram.shininess = 1000;
   lightingNodes.append(pentagram);
+
+  //initialize map cobwebs
+  web1TextureNode.append(new RenderSGNode(resources.modelMapWebs));
+  let mapWebs = new MaterialSGNode(web1TextureNode);
+  mapWebs.ambient = [1, 1, 1, 1];
+  mapWebs.diffuse = [1, 1, 1, 1];
+  mapWebs.specular = [0.1, 0.1, 0.1, 0.1];
+  mapWebs.shininess = 1000;
+  lightingNodes.append(mapWebs);
 
   //initialize map glass
   stainedGlassTextureNode.append(new RenderSGNode(resources.modelMapGlass));
