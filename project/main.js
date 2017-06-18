@@ -58,6 +58,10 @@ var skullPileSGNode1;
 var skullPileSGNode2;
 var hipBoneSGNode;
 
+var crownSGNode;
+var crystalSwordSGNode;
+var blueJewelSGNode;
+
 //spider (compex model) scene graph nodes
 var spiderAbdomenSGNode;
 var spiderHeadSGNode;
@@ -175,6 +179,10 @@ var spiderTextureNode7;
 var spiderTextureNode8;
 var spiderTextureNode9;
 
+var crownTextureNode;
+var crystalSwordTextureNode;
+var blueJewelTextureNode;
+
 var diamondTextureNode;
 //texture arrays
 var dreughFrames;
@@ -244,6 +252,10 @@ loadResources({
   skullPileTexture: 'textures/bones/skullPile.png',
   pentagramTexture: 'textures/misc/pentagram.png',
   spiderTexture: 'textures/spider/spider.png',
+
+  crownTexture: 'textures/treasure/crown.png',
+  crystalSwordTexture: 'textures/treasure/crystal_sword.png',
+  blueJewelTexture: 'textures/treasure/jewel_blue.png',
 
   andarielFrame1: 'textures/andariel/andariel (1).gif',
   andarielFrame2: 'textures/andariel/andariel (2).gif',
@@ -446,6 +458,9 @@ function init(resources) {
   spiderTextureNode8 = new AdvancedTextureSGNode(resources.spiderTexture);
   spiderTextureNode9 = new AdvancedTextureSGNode(resources.spiderTexture);
   diamondTextureNode = new AdvancedTextureSGNode(resources.diamond);
+  crownTextureNode = new AdvancedTextureSGNode(resources.crownTexture);
+  blueJewelTextureNode = new AdvancedTextureSGNode(resources.blueJewelTexture);
+  crystalSwordTextureNode = new AdvancedTextureSGNode(resources.crystalSwordTexture);
 
   andarielFrames = initAnimatedTexture([resources.andarielFrame1,
 resources.andarielFrame2,
@@ -984,6 +999,60 @@ function createSceneGraph(gl, resources) {
   durielTextureNode.append(new RenderSGNode(rect));
 
   lightingNodes.append(durielSGNode);
+}
+
+/*Add blue jewel*/
+{
+  var rect = makeTexturedRect(0.2, 0.2, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  blueJewelSGNode = new BillboardSGNode(glm.transform({translate: [7.3, -9.25, 91.4]}));
+  let jewelMat = new MaterialSGNode(blueJewelTextureNode);
+  jewelMat.ambient = [0.6, 0.6, 0.6, 1];
+  jewelMat.diffuse = [0.5, 0.5, 0.5, 1];
+  jewelMat.specular = [1, 1, 1, 1];
+  jewelMat.shininess = 1000;
+  blueJewelSGNode.append(jewelMat);
+  blueJewelTextureNode.append(new RenderSGNode(rect));
+
+  lightingNodes.append(blueJewelSGNode);
+}
+
+/*Add crown*/
+{
+  var rect = makeTexturedRect(0.4, 0.4, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  crownSGNode = new BillboardSGNode(glm.transform({translate: [2,-9.25, 83]}));
+  let crownMat = new MaterialSGNode(crownTextureNode);
+  crownMat.ambient = [0.6, 0.6, 0.6, 1];
+  crownMat.diffuse = [0.5, 0.5, 0.5, 1];
+  crownMat.specular = [1, 1, 1, 1];
+  crownMat.shininess = 1000;
+  crownSGNode.append(crownMat);
+  crownTextureNode.append(new RenderSGNode(rect));
+
+  lightingNodes.append(crownSGNode);
+}
+
+/*Add crystal sword*/
+{
+  var rect = makeTexturedRect(2, 2, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  crystalSwordSGNode = new BillboardSGNode(glm.transform({translate: [-9.3,-8.25, 99.2]}));
+  let swordMat = new MaterialSGNode(crystalSwordTextureNode);
+  swordMat.ambient = [0.6, 0.6, 0.6, 1];
+  swordMat.diffuse = [0.5, 0.5, 0.5, 1];
+  swordMat.specular = [1, 1, 1, 1];
+  swordMat.shininess = 1000;
+  crystalSwordSGNode.append(swordMat);
+  crystalSwordTextureNode.append(new RenderSGNode(rect));
+
+  lightingNodes.append(crystalSwordSGNode);
 }
 
 /*Add ribCage*/
