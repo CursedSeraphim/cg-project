@@ -112,7 +112,9 @@ var spiderMoving = 0;
 
 //waypoints
 var cameraWaypoints;
+var cameraWaypoints2;
 var cameraWaypointIndex;
+var cameraWaypointIndex2;
 var lookAtWaypoints;
 var lookAtWaypoints2;
 var lookAtWaypoints3;
@@ -401,6 +403,7 @@ function init(resources) {
   cameraWaypoints = [wpCam1, wpCam2, wpCam3, wpCam4, wpCam5, wpCam6, wpCam7, wpCam8, wpCam9, wpCam10, wpCam11, wpCam12, wpCam13];
   let wpLookAt1 = glm.translate(25,-3,-15);
   lookAtWaypoints = [wpCam2, wpCam3, wpLookAt1];
+  cameraWaypointIndex2 = -1;
 
   spellWayPoints = [glm.translate(0, 0, 0)];
 
@@ -1732,6 +1735,15 @@ function render(timeInMilliseconds) {
   if(!manualCameraEnabled) {
     if(cameraWaypointIndex < cameraWaypoints.length && time() - waitingSince >= waitingFor) {
         cameraWaypointIndex = moveUsingWaypoints(context.invViewMatrix, cameraWaypoints, cameraWaypointIndex, 0.2 * timediff);
+        if(cameraWaypointIndex === cameraWaypoints.length) {
+          setTimeout(function() {
+            bobbSpeed *= 0.5;
+            cameraWaypointIndex2 = 0;
+          }, 1500);
+        }
+    }
+    if(cameraWaypointIndex2 === 0) {
+      moveUsingWaypoints(context.invViewMatrix, [glm.translate(2.4, -8.20, 83.88)], cameraWaypointIndex2, 0.1 * timediff);
     }
     if(lookAtWaypointIndex < lookAtWaypoints.length) {
       lookAtWaypointIndex = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints, lookAtWaypointIndex, 0.1 * timediff);
