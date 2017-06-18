@@ -1,18 +1,7 @@
 # Blender MTL File: 'BACKUP12MapComplete.blend'
-# Material Count: 14
+# Material Count: 11
 
 newmtl None
-Ns 0.000000
-Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.800000 0.800000 0.800000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\cobwebs\web.png
-
-newmtl None_  1
 Ns 0
 Ka 0.000000 0.000000 0.000000
 Kd 0.8 0.8 0.8
@@ -21,7 +10,7 @@ d 1
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\cobwebs\web.png
 
-newmtl None_web.png.001
+newmtl None.003
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -32,7 +21,7 @@ d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\cobwebs\web.png
 
-newmtl None_web.png.002
+newmtl None__1.000
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -43,7 +32,7 @@ d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\cobwebs\web.png
 
-newmtl None_web.png.003
+newmtl None_web.png.000
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -54,7 +43,7 @@ d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\cobwebs\web.png
 
-newmtl None_web.png.004
+newmtl None_web.png.007
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -65,7 +54,7 @@ d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\cobwebs\web.png
 
-newmtl None_web.png.005
+newmtl None_web.png.013
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -76,7 +65,7 @@ d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\cobwebs\web.png
 
-newmtl None_web.png.006
+newmtl None_web.png.016
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -87,7 +76,7 @@ d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\cobwebs\web.png
 
-newmtl None_web.png.008
+newmtl None_web.png.018
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -98,7 +87,7 @@ d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\cobwebs\web.png
 
-newmtl None_web.png.009
+newmtl None_web.png.021
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -109,7 +98,7 @@ d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\cobwebs\web.png
 
-newmtl None_web.png.010
+newmtl None_web.png.022
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -120,29 +109,7 @@ d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\cobwebs\web.png
 
-newmtl None_web.png.011
-Ns 0.000000
-Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.800000 0.800000 0.800000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\cobwebs\web.png
-
-newmtl None_web.png.012
-Ns 0.000000
-Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.800000 0.800000 0.800000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\cobwebs\web.png
-
-newmtl None_web.png.014
+newmtl None_web.png.023
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
