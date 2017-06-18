@@ -85,6 +85,7 @@ var fireSpellVolley = 0;
 
 var diamondRotateNode;
 var diamondTransformationNode;
+var diamondUpDownNode;
 
 //used for spell
 var spellWayPointIndex = -1;
@@ -1202,8 +1203,9 @@ function createSceneGraph(gl, resources) {
   diamondMaterial.diffuse = [1, 1, 1, 1];
   diamondMaterial.specular = [1, 1, 1, 1];
   diamondMaterial.shininess = 100;
-  diamondRotateNode = new TransformationSGNode(glm.translate(0,0,0), diamondMaterial);
-  diamondTransformationNode = new TransformationSGNode(glm.translate(0,-7, 90), diamondRotateNode);
+  diamondUpDownNode = new TransformationSGNode(glm.translate(0,0,0), diamondMaterial);
+  diamondRotateNode = new TransformationSGNode(glm.translate(0,-7, 90), diamondUpDownNode);
+  diamondTransformationNode = new TransformationSGNode(glm.translate(0,-6, 90), diamondRotateNode);
   b2fNodes.append(diamondTransformationNode);
 
   let diamondLight = new AdvancedLightSGNode(false);
@@ -1463,8 +1465,7 @@ function render(timeInMilliseconds) {
     if(lookAtWaypointIndex7 < lookAtWaypoints6.length && lookAtWaypointIndex7 !== -1){
       lookAtWaypointIndex7 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints7, lookAtWaypointIndex7, 0.1 * timediff);
       if(lookAtWaypointIndex7 === lookAtWaypoints7.length) {
-        console.log("auto at diamond");
-        autoCameraLookAt = diamondTransformationNode.matrix;
+        autoCameraLookAt = diamondUpDownNode.matrix;
       }
     }
 
@@ -1509,7 +1510,7 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" + " "+context.invViewMatr
   //translateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(1, -0.75, -2));
   lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
   diamondRotateNode.matrix = glm.rotateY(timeInMilliseconds*-0.01);
-  diamondRotateNode.matrix[13] = Math.sin(timeInMilliseconds * 0.001);
+  diamondUpDownNode.matrix[13] = Math.sin(timeInMilliseconds*0.001);
   //lanternSGNode.matrix = translateLantern.matrix;
 
   //render scenegraph
