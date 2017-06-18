@@ -100,11 +100,13 @@ var lookAtWaypoints2;
 var lookAtWaypoints3;
 var lookAtWaypoints4;
 var lookAtWaypoints5;
+var lookAtWaypoints6;
 var lookAtWaypointIndex;
 var lookAtWaypointIndex2;
 var lookAtWaypointIndex3;
 var lookAtWaypointIndex4;
 var lookAtWaypointIndex5;
+var lookAtWaypointIndex6;
 var orcShamanWaypoints;
 var orcShamanWaypointIndex;
 var diabloWaypoints;
@@ -374,6 +376,9 @@ function init(resources) {
   lookAtWaypoints4 = [wpLookAt2, wpCam8];
   lookAtWaypointIndex5 = -1;
   lookAtWaypoints5 = [spiderPos];
+  let wpLookAt3 = glm.translate(32.3, 2.3, 85);
+  lookAtWaypoints6 = [wpLookAt3, wpCam12];
+  lookAtWaypointIndex6 = -1;
 
   spiderWaypointIndex = 0;
 
@@ -534,10 +539,10 @@ diceTextureNode = diabloTextureNode;
   });
   //trigger spider to stop moving
   triggerSGNode7 = new TriggerSGNode(3, wpCam12, function() {
-    console.log("trigger 7 called");
+    console.log("trigger 7");
     spiderMoving = 0;
+
   });
-  //TODO
   var r = 0.75;r*=10;
   var g = 0.20;
   var b = 0.80;
@@ -552,7 +557,6 @@ diceTextureNode = diabloTextureNode;
   spellSGNode.append(spellLightNode);
   spellParentNode.append(spellSGNode);
   b2fNodes.append(spellParentNode);
-  //TODO xz1
   var target = spiderAndBillBoardNode;
   var fireSpell = function(){
     //remove spellparticle children from spellsgnode before firing a new one
@@ -566,7 +570,7 @@ diceTextureNode = diabloTextureNode;
     spellLightNode.specular = [r/4,g/4,b/4,1.0];
     //set spell position to camera
     spellSGNode.matrix[12] = -cameraPosition[0];
-    spellSGNode.matrix[13] = -cameraPosition[1]-1;
+    spellSGNode.matrix[13] = -cameraPosition[1]-1.5;
     spellSGNode.matrix[14] = -cameraPosition[2];
     //set spell target
     let variedTargetMatrix = glm.translate(target.matrix[12]+Math.random()*0.25*(-cameraPosition[0]-target.matrix[12]), target.matrix[13]+Math.random()*5, target.matrix[14]+Math.random()*0.25*(-cameraPosition[2]-target.matrix[14]));
@@ -602,6 +606,8 @@ diceTextureNode = diabloTextureNode;
 
   triggerSGNode9 = new TriggerSGNode(3, wpCam10, function() {
     fireSpellVolley = 0;
+    lookAtWaypointIndex6 = 0;
+    autoCameraLookAt = glm.translate(spiderAndBillBoardNode.matrix[12], spiderAndBillBoardNode.matrix[13], spiderAndBillBoardNode.matrix[14]);
   });
 
   root.append(triggerSGNode2);
@@ -1423,19 +1429,26 @@ function render(timeInMilliseconds) {
       }
 
     }
+    if(lookAtWaypointIndex6 < lookAtWaypoints6.length && lookAtWaypointIndex6 !== -1){
+      console.log("lookat6 ");
+      lookAtWaypointIndex6 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints6, lookAtWaypointIndex6, 1 * timediff);
+      if(lookAtWaypointIndex6 === lookAtWaypoints6.length) {
+        //autoCameraLookAt = wpCam6;
+      }
+    }
 
     lookAtObject(context, autoCameraLookAt, [0,1,0]);
     context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
   }
-  //TODO xz2
+
   if(spellWayPointIndex < spellWayPoints.length && spellWayPointIndex != -1) {
     spellWayPointIndex = moveUsingWaypoints(spellSGNode.matrix, spellWayPoints, spellWayPointIndex, 3.5);
     //spellSGNode.matrix[12] += 0.5;
-    spellSGNode.matrix[13] += 1;
+    spellSGNode.matrix[13] += 0.5;
     //spellSGNode.matrix[14] += 0.5;
-    mat4.multiply(spellSGNode.matrix, spellSGNode.matrix, glm.rotateX(15));
-    mat4.multiply(spellSGNode.matrix, spellSGNode.matrix, glm.rotateY(15));
-    mat4.multiply(spellSGNode.matrix, spellSGNode.matrix, glm.rotateZ(15));
+    //mat4.multiply(spellSGNode.matrix, spellSGNode.matrix, glm.rotateX(15));
+    //mat4.multiply(spellSGNode.matrix, spellSGNode.matrix, glm.rotateY(15));
+    //mat4.multiply(spellSGNode.matrix, spellSGNode.matrix, glm.rotateZ(15));
   }
 
   ObjectLookAtMatrix(spiderAndBillBoardNode, context.invViewMatrix, [0,1,0]);
