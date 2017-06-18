@@ -954,7 +954,7 @@ function createSceneGraph(gl, resources) {
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
-  dreughSGNode = new BillboardSGNode(glm.transform({translate: [52,2,25]}), [
+  dreughSGNode = new BillboardSGNode(glm.transform({translate: [52,2,26]}), [
     new RenderSGNode(rect)
   ]);
   let dreughMaterialNode = new MaterialSGNode(dreughSGNode);
@@ -1722,7 +1722,6 @@ function render(timeInMilliseconds) {
   if(manualCameraEnabled) {
     mat4.multiply(context.viewMatrix, mouseRotateMatrix, glm.translate(cameraPosition[0], cameraPosition[1], cameraPosition[2]));
   }
-  context.lookAtVector = lookAtVector;
   //get inverse view matrix to allow computing eye-to-light matrix
   context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
 
@@ -1803,7 +1802,7 @@ function render(timeInMilliseconds) {
 
     lookAtObject(context, autoCameraLookAt, [0,1,0]);
     context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
-    context.lookAtVector = vec3.normalize(vec3.create(), vec3.fromValues(autoCameraLookAt[12], autoCameraLookAt[13], autoCameraLookAt[14]));
+    lookAtVector = vec3.normalize(vec3.create(), vec3.fromValues(autoCameraLookAt[12], autoCameraLookAt[13], autoCameraLookAt[14]));
   }
   if(lookAtWaypointIndex7 === 2) {
     autoCameraLookAt = finalDiamondMatrix;
@@ -1854,6 +1853,8 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" + " "+context.invViewMatr
 
     }
   }
+
+  context.lookAtVector = lookAtVector;
   //mat4.multiply(swordSGNode.matrix, swordSGNode.matrix, glm.rotateX(90));
   //lanternSGNode.matrix = translateLantern.matrix;
 
