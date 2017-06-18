@@ -623,10 +623,7 @@ diceTextureNode = diabloTextureNode;
 
 
   triggerSGNode10 = new TriggerSGNode(0.1, wpCam13, function() {
-    waitingSince = time();
-    waitingFor = 2000;
     disableMovementHeadBobbing();
-    setTimeout(enableMovementHeadBobbing, waitingFor);
   });
 
   root.append(triggerSGNode2);
@@ -1428,6 +1425,8 @@ function render(timeInMilliseconds) {
 
   diamondRotateNode.matrix = glm.rotateY(timeInMilliseconds*-0.01);
   diamondUpDownNode.matrix[13] = Math.sin(timeInMilliseconds*0.001);
+  var tempMatrix = mat4.multiply(mat4.create(), diamondTransformationNode.matrix, diamondRotateNode.matrix);
+  mat4.multiply(tempMatrix, tempMatrix, diamondUpDownNode.matrix);
 
   if(!manualCameraEnabled) {
     if(cameraWaypointIndex < cameraWaypoints.length && time() - waitingSince >= waitingFor) {
@@ -1467,17 +1466,18 @@ function render(timeInMilliseconds) {
         lookAtWaypointIndex7 = 0;
       }
     }
-    if(lookAtWaypointIndex7 < lookAtWaypoints6.length && lookAtWaypointIndex7 !== -1){
-      lookAtWaypointIndex7 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints7, lookAtWaypointIndex7, 0.1 * timediff);
-      if(lookAtWaypointIndex7 === lookAtWaypoints7.length) {
-        autoCameraLookAt = diamondMatrixSniffer.sceneMatrix;
-      }
+    if(lookAtWaypointIndex7 < 1 && lookAtWaypointIndex7 !== -1){
+      lookAtWaypointIndex7 = moveUsingWaypoints(autoCameraLookAt, [tempMatrix], lookAtWaypointIndex7, 0.1 * timediff);
     }
-    console.log(diamondMatrixSniffer.sceneMatrix);
 
     lookAtObject(context, autoCameraLookAt, [0,1,0]);
     context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
   }
+  if(lookAtWaypointIndex7 === 1) {
+    autoCameraLookAt = tempMatrix;
+  }
+  console.log(tempMatrix);
+  //console.log(context.sceneMatrix);
 
 
   if(spellWayPointIndex < spellWayPoints.length && spellWayPointIndex != -1) {
