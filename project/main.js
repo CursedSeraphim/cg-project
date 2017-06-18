@@ -1328,10 +1328,9 @@ function createSceneGraph(gl, resources) {
   let bloodParticle = new ParticleSGNode(150, [1,0.025,1], [0.2,0,0,0],[0.05,0,0,1]);
   let bloodPos = new TransformationSGNode(glm.translate(0,2,0),
     new ShaderSGNode(particleShaderProgram,
-    /*new BlendSgNode(gl.SRC_ALPHA, gl.ONE,*/
-      bloodParticle)/*)*/);
+      bloodParticle));
 
-  bloodParticle.fireSpeed = 2;
+  bloodParticle.fireSpeed = 4;
   bloodParticle.windStrength = 0;
   bloodParticle.fireEmmitAngle = 5;
   bloodParticle.sparkEmmitAngle = 1;
@@ -1345,8 +1344,9 @@ function createSceneGraph(gl, resources) {
   bloodParticle.maxDistanceFromStart = 10000;
   bloodParticle.windStrength = 0;
   bloodParticle.newSpawns = 100;
-  bloodParticle.fireHeatDegreeRate = 1;
+  bloodParticle.fireHeatDegreeRate = 2;
   bloodParticle.fireCenterHeatDegreeRate = 0;
+  bloodParticle.variance = 0.05;
 
   bloodPos.append(bloodParticle);
   b2fNodes.append(bloodPos);
@@ -1884,7 +1884,10 @@ function render(timeInMilliseconds) {
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
-displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" + " "+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
+displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
+" " +context.invViewMatrix[12].toFixed(2)+" "
+    +context.invViewMatrix[13].toFixed(2)+" "
+    +context.invViewMatrix[14].toFixed(2));
   //translateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(1, -0.75, -2));
   if(!deathRoll) {
     lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
