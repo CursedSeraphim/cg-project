@@ -1211,9 +1211,10 @@ function createSceneGraph(gl, resources) {
   diamondLight.ambient = [0.0,0.2,0.6,1];
   diamondLight.diffuse = [0.0,0.4,1,1];
   diamondLight.specular = [0,0.4,1,1];
+  diamondLight.position = [0,0.5,0];
   diamondLight.decreaseRate = 7;
 
-  diamondRotateNode.append(diamondLight);
+  diamondUpDownNode.append(diamondLight);
 
   /*place spotlight*/
 
