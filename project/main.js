@@ -1208,6 +1208,9 @@ function createSceneGraph(gl, resources) {
   diamondTransformationNode = new TransformationSGNode(glm.translate(0,-6, 90), diamondRotateNode);
   b2fNodes.append(diamondTransformationNode);
 
+  let diamondLight = new AdvancedLightSGNode(false);
+  diamondLight.ambient = [0.0,0.2,0.6,1];
+  diamondLight.diffuse = [0,0,0,1];
   diamondLight.specular = [0,0,0,1];
   diamondLight.decreaseRate = 1000;
 
@@ -1421,6 +1424,9 @@ function render(timeInMilliseconds) {
 //head bobbing
   context.invViewMatrix[13] += Math.sin(timeInMilliseconds/bobbSpeed)/bobbHeight;
 
+  diamondRotateNode.matrix = glm.rotateY(timeInMilliseconds*-0.01);
+  diamondUpDownNode.matrix[13] = Math.sin(timeInMilliseconds*0.001);
+
   if(!manualCameraEnabled) {
     if(cameraWaypointIndex < cameraWaypoints.length && time() - waitingSince >= waitingFor) {
         cameraWaypointIndex = moveUsingWaypoints(context.invViewMatrix, cameraWaypoints, cameraWaypointIndex, 0.2 * timediff);
@@ -1506,8 +1512,6 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" + " "+context.invViewMatr
 */
   //translateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(1, -0.75, -2));
   lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
-  diamondRotateNode.matrix = glm.rotateY(timeInMilliseconds*-0.01);
-  diamondUpDownNode.matrix[13] = Math.sin(timeInMilliseconds*0.001);
   //lanternSGNode.matrix = translateLantern.matrix;
 
   //render scenegraph
