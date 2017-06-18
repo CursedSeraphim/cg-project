@@ -682,7 +682,7 @@ diceTextureNode = dreughTextureNode;
   });
 
 
-  triggerSGNode10 = new TriggerSGNode(0.1, wpCam13, function() {
+  triggerSGNode10 = new TriggerSGNode(0.1,wpCam13, function() {
     disableMovementHeadBobbing();
   });
 
@@ -695,9 +695,11 @@ diceTextureNode = dreughTextureNode;
   root.append(triggerSGNode8);
   root.append(triggerSGNode9);
   root.append(triggerSGNode10);
-  root.append(new TriggerSGNode(5, wpCam3, function() {
+  root.append(new TriggerSGNode(0.1, glm.translate(2.4, -8.20, 83.88), function() {
     console.log("stabbed");
-    stabbed = 1;
+    setTimeout(function() {
+      stabbed = 1;
+    }, 2000);
   }));
 
   initInteraction(gl.canvas);
@@ -1847,9 +1849,13 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" + " "+context.invViewMatr
   } else {
     if(swordWaypointIndex !== 1) {
       let stabbedPosition = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -0.65, -3));
-      //moveUsingWaypoints(swordSGNode.matrix, [stabbedPosition], 0, 1 * timediff);
+      /*
       swordSGNode.matrix = stabbedPosition;
-       mat4.multiply(swordSGNode.matrix, swordSGNode.matrix, glm.rotateX(90));
+      mat4.multiply(swordSGNode.matrix, swordSGNode.matrix, glm.rotateX(90));
+      */
+      //swordSGNode.matrix = stabbedPosition;
+      moveUsingWaypoints(swordSGNode.matrix, [stabbedPosition], 0, 0.1 * timediff);
+      //mat4.multiply(swordSGNode.matrix,swordSGNode.matrix, glm.rotateX(90));
 
     }
   }
