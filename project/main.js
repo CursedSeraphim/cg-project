@@ -711,7 +711,7 @@ function createSceneGraph(gl, resources) {
 
 /*Add orc shaman*/
 {
-  var rect = makeFloor(2, 2, 1)
+  var rect = makeTexturedRect(2, 2, 1)
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
@@ -848,7 +848,7 @@ function createSceneGraph(gl, resources) {
 
 /*Add diablo*/
 {
-  var rect = makeFloor(2, 2, 1)
+  var rect = makeTexturedRect(2, 2, 1)
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
@@ -867,7 +867,7 @@ function createSceneGraph(gl, resources) {
 
 /*Add skull piles*/
 {
-  var rect = makeFloor(1.25, 1.25, 1)
+  var rect = makeTexturedRect(1.25, 1.25, 1)
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
@@ -881,7 +881,7 @@ function createSceneGraph(gl, resources) {
   skullPile1TextureNode.append(new RenderSGNode(rect));
   lightingNodes.append(skullPileSGNode1);
 
-  var rect = makeFloor(1.25, 1.25, 1)
+  var rect = makeTexturedRect(1.25, 1.25, 1)
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
@@ -898,7 +898,7 @@ function createSceneGraph(gl, resources) {
 
 /*Add bone piles*/
 {
-  var rect = makeFloor(0.3, 0.3, 1)
+  var rect = makeTexturedRect(0.3, 0.3, 1)
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
@@ -913,7 +913,7 @@ function createSceneGraph(gl, resources) {
 
   lightingNodes.append(bones1SGNode1);
 
-  var rect = makeFloor(0.3, 0.3, 1)
+  var rect = makeTexturedRect(0.3, 0.3, 1)
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
@@ -931,7 +931,7 @@ function createSceneGraph(gl, resources) {
 
 /*Add Duriel*/
 {
-  var rect = makeFloor(2.5, 2.5, 1)
+  var rect = makeTexturedRect(2.5, 2.5, 1)
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
@@ -949,7 +949,7 @@ function createSceneGraph(gl, resources) {
 
 /*Add ribCage*/
 {
-  var rect = makeFloor(0.4, 0.4, 1)
+  var rect = makeTexturedRect(0.4, 0.4, 1)
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
@@ -967,7 +967,7 @@ function createSceneGraph(gl, resources) {
 
 /*Add bones*/
 {
-  var rect = makeFloor(0.3, 0.3, 1)
+  var rect = makeTexturedRect(0.3, 0.3, 1)
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
@@ -982,7 +982,7 @@ function createSceneGraph(gl, resources) {
 
   lightingNodes.append(boneSGNode1);
 
-  var rect = makeFloor(0.3, 0.3, 1)
+  var rect = makeTexturedRect(0.3, 0.3, 1)
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
@@ -1000,7 +1000,7 @@ function createSceneGraph(gl, resources) {
 
 /*Add skull*/
 {
-  var rect = makeFloor(0.3, 0.3, 1)
+  var rect = makeTexturedRect(0.3, 0.3, 1)
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
@@ -1018,7 +1018,7 @@ function createSceneGraph(gl, resources) {
 
 /*Add hip*/
 {
-  var rect = makeFloor(0.3, 0.3, 1)
+  var rect = makeTexturedRect(0.3, 0.3, 1)
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
@@ -1122,7 +1122,7 @@ function createSceneGraph(gl, resources) {
   spiderRightHindLegSGNode = new TransformationSGNode(glm.translate(0,0,0));
   spiderRightHindLegSGNode.append(spiderMaterial9);
 
-  var rect = makeFloor(2.5, 2.5, 1)
+  var rect = makeTexturedRect(2.5, 2.5, 1)
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
@@ -1167,10 +1167,10 @@ function createSceneGraph(gl, resources) {
   return root;
 }
 
-function makeFloor(x, y, a) {
-  var floor = makeRect(x, y);
-  floor.texture = [0, 0,   a*x/y, 0,   a*x/y, a,   0, a];
-  return floor;
+function makeTexturedRect(x, y, a) {
+  var rect = makeRect(x, y);
+  rect.texture = [0, 0,   a*x/y, 0,   a*x/y, a,   0, a];
+  return rect;
 }
 
 function initTextures(resources, clampType)
