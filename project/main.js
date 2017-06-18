@@ -83,6 +83,7 @@ var spellLightNode;
 var spellParticle;
 var fireSpellVolley = 0;
 
+var diamondMatrixSniffer;
 var diamondRotateNode;
 var diamondTransformationNode;
 var diamondUpDownNode;
@@ -1203,16 +1204,14 @@ function createSceneGraph(gl, resources) {
   diamondMaterial.diffuse = [1, 1, 1, 1];
   diamondMaterial.specular = [1, 1, 1, 1];
   diamondMaterial.shininess = 100;
-  diamondUpDownNode = new TransformationSGNode(glm.translate(0,0,0), diamondMaterial);
+  diamondUpDownNode = new TransformationSGNode(glm.translate(0,0,0), diamondUpDownNode);
   diamondRotateNode = new TransformationSGNode(glm.translate(0,-7, 90), diamondUpDownNode);
   diamondTransformationNode = new TransformationSGNode(glm.translate(0,-6, 90), diamondRotateNode);
+  diamondMatrixSniffer = new SnifferSGNode(diamondMaterial);
   b2fNodes.append(diamondTransformationNode);
 
   let diamondLight = new AdvancedLightSGNode(false);
   diamondLight.ambient = [0.0,0.2,0.6,1];
-  diamondLight.diffuse = [0,0,0,1];
-  diamondLight.specular = [0,0,0,1];
-  diamondLight.decreaseRate = 1000;
   diamondLight.diffuse = [0.0,0.4,1,1];
   diamondLight.specular = [0,0.4,1,1];
   diamondLight.decreaseRate = 7;
@@ -1471,9 +1470,10 @@ function render(timeInMilliseconds) {
     if(lookAtWaypointIndex7 < lookAtWaypoints6.length && lookAtWaypointIndex7 !== -1){
       lookAtWaypointIndex7 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints7, lookAtWaypointIndex7, 0.1 * timediff);
       if(lookAtWaypointIndex7 === lookAtWaypoints7.length) {
-        autoCameraLookAt = diamondUpDownNode.matrix;
+        autoCameraLookAt = diamondMatrixSniffer.sceneMatrix;
       }
     }
+    console.log(diamondMatrixSniffer.sceneMatrix);
 
     lookAtObject(context, autoCameraLookAt, [0,1,0]);
     context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
