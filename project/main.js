@@ -42,7 +42,7 @@ var translateLantern;
 var translateTorch1;
 var translateTorch2;
 var b2fNodes;
-var diabloSGNode;
+var dreughSGNode;
 var orcShamanSGNode;
 var durielSGNode;
 var andarielSGNode;
@@ -131,8 +131,6 @@ var lookAtWaypointIndex6;
 var lookAtWaypointIndex7;
 var orcShamanWaypoints;
 var orcShamanWaypointIndex;
-var diabloWaypoints;
-var diabloWaypointIndex;
 var spiderWaypointIndex;
 var spiderWaypoints;
 
@@ -162,7 +160,7 @@ var floorTextureNode;
 var cobbleTextureNode;
 var web1TextureNode;
 var lavaTextureNode;
-var diabloTextureNode;
+var dreughTextureNode;
 var orcShamanTextureNode;
 var durielTextureNode;
 var andarielTextureNode;
@@ -261,7 +259,6 @@ loadResources({
   floorTexture: 'textures/dungeon/floor_cobble.jpg',
   stoaqTexture: 'textures/dungeon/stoaquad.jpg',
   cobbleTexture: 'textures/dungeon/dungeon_wall.png',
-  diabloImage: 'textures/diablo/diablo.png',
   metalTexture: 'textures/metal/metal_32.png',//metal.png',
   glassTexture: 'textures/glass/glass.png',//glass_64.png',
   stainedGlassTexture: 'textures/glass/stainedGlass.png',
@@ -453,8 +450,6 @@ function init(resources) {
   waypointd4[12] = -3;
   waypointd4[13] = 2;
   waypointd4[14] = 3;
-  diabloWaypointIndex = 0;
-  diabloWaypoints = [waypointd1, waypointd2, waypointd3, waypointd4];
 
   /*initialize the shaderPrograms*/
   particleShaderProgram = createProgram(gl, resources.vs_particle, resources.fs_particle);
@@ -566,11 +561,11 @@ resources.orcShamanFrame13,
 resources.orcShamanFrame14,
 resources.orcShamanFrame15,
 resources.orcShamanFrame16], gl.CLAMP_TO_EDGE);
-diabloTextureNode = new TextureSGNode(dreughFrames, 0, 75);
+dreughTextureNode = new TextureSGNode(dreughFrames, 0, 75);
 orcShamanTextureNode = new TextureSGNode(orcShamanFrames, 0, 75);
 durielTextureNode = new TextureSGNode(durielFrames, 0, 75);
 andarielTextureNode = new TextureSGNode(andarielFrames, 0, 75);
-diceTextureNode = diabloTextureNode;
+diceTextureNode = dreughTextureNode;
   //initRenderToTexture();
 
   gl.enable(gl.DEPTH_TEST);
@@ -890,8 +885,7 @@ function createSceneGraph(gl, resources) {
   mapGlass.diffuse = [1, 1, 1, 1];
   mapGlass.specular = [1, 1, 1, 1];
   mapGlass.shininess = 1000;
-  lightingNodes.append(mapGlass);
-
+  b2fNodes.append(mapGlass);
 }
 
 {
@@ -908,7 +902,7 @@ function createSceneGraph(gl, resources) {
   torchNode.diffuse = [1.0,0.6,0.2,1.0];
   torchNode.specular = [1.0,0.6,0.2,1.0];
   torchNode.position = [0, 0.15, 0.02];
-  torchNode.decreaseRate = 25;
+  torchNode.decreaseRate = 40;
 
   torchNode.append(lanternFireParticleNode);
 
@@ -944,23 +938,23 @@ function createSceneGraph(gl, resources) {
 
 }
 
-/*Add diablo*/
+/*Add dreugh*/
 {
   var rect = makeTexturedRect(2, 2, 1)
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
-  diabloSGNode = new BillboardSGNode(glm.transform({translate: [2,0,2]}), [
+  dreughSGNode = new BillboardSGNode(glm.transform({translate: [52,2,25]}), [
     new RenderSGNode(rect)
   ]);
-  let diabloMaterialNode = new MaterialSGNode(diabloSGNode);
-  diabloMaterialNode.ambient = [0.6, 0.6, 0.6, 1];
-  diabloMaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
-  diabloMaterialNode.specular = [1, 1, 1, 1];
-  diabloMaterialNode.shininess = 1000;
+  let dreughMaterialNode = new MaterialSGNode(dreughSGNode);
+  dreughMaterialNode.ambient = [0.6, 0.6, 0.6, 1];
+  dreughMaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
+  dreughMaterialNode.specular = [1, 1, 1, 1];
+  dreughMaterialNode.shininess = 1000;
 
-  diabloTextureNode.append(diabloMaterialNode);
-  b2fNodes.append(diabloTextureNode);
+  dreughTextureNode.append(dreughMaterialNode);
+  b2fNodes.append(dreughTextureNode);
 }
 
 /*Add skull piles*/
@@ -1515,9 +1509,10 @@ function createSceneGraph(gl, resources) {
   diamondLight.ambient = [0.0,0.2,0.6,1];
   diamondLight.diffuse = [0.0,0.4,1,1];
   diamondLight.specular = [0,0.4,1,1];
-  diamondLight.decreaseRate = 7;
+  diamondLight.position = [0,0.6,0];
+  diamondLight.decreaseRate = 8;
 
-  diamondRotateNode.append(diamondLight);
+  diamondUpDownNode.append(diamondLight);
 
   /*place spotlight*/
 
@@ -1530,7 +1525,7 @@ function createSceneGraph(gl, resources) {
   b2fNodes.append(moonLight);
 }
 
-  //lightingNodes.append(diabloTextureNode);
+  //lightingNodes.append(dreughTextureNode);
   //lightingNodes.append(b2fNodes);
   //root.append(particleNodes);
   lightingNodes.append(b2fNodes);
@@ -1643,11 +1638,6 @@ function render(timeInMilliseconds) {
   checkForWindowResize(gl);
   //update animations
 
-  diabloWaypointIndex = moveUsingWaypoints(diabloSGNode.matrix, diabloWaypoints, diabloWaypointIndex, 0.1*timediff);
-  if(diabloWaypointIndex == diabloWaypoints.length) {
-    //makes the object patrol back to first waypoint
-    diabloWaypointIndex = 0;
-  }
   if(orcShamanWaypointIndex < orcShamanWaypoints.length && orcShamanWaypointIndex !== -1) {
     orcShamanWaypointIndex = moveUsingWaypoints(orcShamanSGNode.matrix, orcShamanWaypoints, orcShamanWaypointIndex, 0.1*timediff);
   }
@@ -1785,6 +1775,7 @@ function render(timeInMilliseconds) {
 
     lookAtObject(context, autoCameraLookAt, [0,1,0]);
     context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
+    context.lookAtVector = vec3.normalize(vec3.create(), vec3.fromValues(autoCameraLookAt[12], autoCameraLookAt[13], autoCameraLookAt[14]));
   }
   if(lookAtWaypointIndex7 === 2) {
     autoCameraLookAt = finalDiamondMatrix;
@@ -1820,10 +1811,6 @@ function render(timeInMilliseconds) {
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
 displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" + " "+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
-/* moving diablo to camera
-  diabloSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.5, -2.5));
-  diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));
-*/
   //translateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(1, -0.75, -2));
   lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
   //lanternSGNode.matrix = translateLantern.matrix;
