@@ -1,7 +1,7 @@
 # Blender MTL File: 'BACKUP12MapComplete.blend'
 # Material Count: 19
 
-newmtl Material.014_floor_cobble.jpg.009
+newmtl Material.014_floor_cobble.jpg.000
 Ns 92.156863
 Ka 1.000000 1.000000 1.000000
 Kd 0.640000 0.640000 0.640000
@@ -33,15 +33,6 @@ Ni 1.000000
 d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\06_shadow_mapping\models\floor_cobble.jpg
-
-newmtl None
-Ns 0
-Ka 0.000000 0.000000 0.000000
-Kd 0.8 0.8 0.8
-Ks 0.8 0.8 0.8
-d 1
-illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\floor_cobble.jpg
 
 newmtl None.002
 Ns 0.000000
@@ -87,17 +78,7 @@ d 1.000000
 illum 2
 map_Kd black_cobble_rotated.jpg
 
-newmtl None_NONE
-Ns 0.000000
-Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.800000 0.800000 0.800000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-
-newmtl None_floor_cobble.jpg
+newmtl None.015
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -108,7 +89,17 @@ d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\floor_cobble.jpg
 
-newmtl None_floor_cobble.jpg.002
+newmtl None_NONE.001
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+
+newmtl None_floor_cobble.jpg.001
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -119,7 +110,29 @@ d 1.000000
 illum 2
 map_Kd floor_cobble.jpg
 
-newmtl None_floor_cobble.jpg.006
+newmtl None_floor_cobble.jpg.003
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\floor_cobble.jpg
+
+newmtl None_floor_cobble.jpg.004
+Ns 0.000000
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.800000 0.800000
+Ks 0.800000 0.800000 0.800000
+Ke 0.000000 0.000000 0.000000
+Ni 1.000000
+d 1.000000
+illum 2
+map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\floor_cobble.jpg
+
+newmtl None_floor_cobble.jpg.005
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -130,7 +143,7 @@ d 1.000000
 illum 2
 map_Kd floor_cobble.jpg
 
-newmtl None_floor_cobble.jpg.011
+newmtl None_floor_cobble.jpg.007
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -141,18 +154,7 @@ d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\floor_cobble.jpg
 
-newmtl None_floor_cobble.jpg.013
-Ns 0.000000
-Ka 0.000000 0.000000 0.000000
-Kd 0.800000 0.800000 0.800000
-Ks 0.800000 0.800000 0.800000
-Ke 0.000000 0.000000 0.000000
-Ni 1.000000
-d 1.000000
-illum 2
-map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\floor_cobble.jpg
-
-newmtl None_floor_cobble.jpg.014
+newmtl None_floor_cobble.jpg.008
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -163,7 +165,7 @@ d 1.000000
 illum 2
 map_Kd floor_cobble.jpg
 
-newmtl None_floor_cobble.jpg.015
+newmtl None_floor_cobble.jpg.009
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -174,7 +176,7 @@ d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\floor_cobble.jpg
 
-newmtl None_floor_cobble.jpg.017
+newmtl None_floor_cobble.jpg.010
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -185,7 +187,7 @@ d 1.000000
 illum 2
 map_Kd C:\Users\User\Documents\GitHub\cg-project\project\textures\dungeon\floor_cobble.jpg
 
-newmtl None_metal_64.png
+newmtl None_metal_64.png.001
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000
@@ -196,7 +198,7 @@ d 1.000000
 illum 2
 map_Kd metal_64.png
 
-newmtl None_metal_64.png.032
+newmtl None_metal_64.png.002
 Ns 0.000000
 Ka 0.000000 0.000000 0.000000
 Kd 0.800000 0.800000 0.800000

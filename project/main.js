@@ -31,7 +31,7 @@ var waitingFor;
 //matrix used to have camera look at specific points during the automated camera flight
 var firstFrame = 1;
 var autoCameraLookAt;
-var headBobbing = 0;
+var headBobbing = 1;
 var movementSpeedModifier = 1;
 
 //scene graph nodes
@@ -88,9 +88,6 @@ var spellWayPoints;
 
 //activates spider animation and activates waypoint movement toward camera
 var spiderMoving = 0;
-
-//TODO only used to make spider visible while building
-var lightNode;
 
 //waypoints
 var cameraWaypoints;
@@ -528,21 +525,21 @@ diceTextureNode = diabloTextureNode;
   spellParentNode = new TransformationSGNode(glm.translate(0,0,0));
   spellParticle = createParticleNode(500, [1,1,1], [r, g, b], [r/8, g/8, b/8]);
   spellSGNode = new TransformationSGNode(glm.translate(0, 0, 0));
-  lightNode = new AdvancedLightSGNode(true);
-  lightNode.ambient = [0.25,0.25,0.25,1.0];
-  lightNode.diffuse = [r/4,g/4,b/4,1.0];
-  lightNode.specular = [r/4,g/4,b/4,1.0];
-  lightNode.position = [0, 0, 0];
+  spellLightNode = new AdvancedLightSGNode(true);
+  spellLightNode.ambient = [r/8,g/8,b/8,1.0];
+  spellLightNode.diffuse = [r/4,g/4,b/4,1.0];
+  spellLightNode.specular = [r/4,g/4,b/4,1.0];
+  spellLightNode.position = [0, 0, 0];
+  spellSGNode.append(spellParticle);
+  spellSGNode.append(spellLightNode);
 
-  triggerSGNode8 = new TriggerSGNode(0.1, wpCam9, function() {
-    spellParentNode.children.pop();
-    spellSGNode.children.pop();
-    spellParentNode.append(spellSGNode);
-    spellSGNode.append(spellParticle);
-    spellSGNode.append(lightNode);
+  //TODO 1xz
+
+  triggerSGNode8 = new TriggerSGNode(0.1, wpCam4, function() {
     b2fNodes.append(spellParentNode);
     var fireSpell = function(){
-      console.log("executing fireSpell");
+      spellParentNode.append(spellSGNode);
+      console.log("adding spellsgnode");
       spellSGNode.matrix[12] = -cameraPosition[0];
       spellSGNode.matrix[13] = -cameraPosition[1]-1;
       spellSGNode.matrix[14] = -cameraPosition[2];
@@ -1121,7 +1118,6 @@ function createSceneGraph(gl, resources) {
   //andarielSGNode.append(spiderTransformationNode);
   spiderAndBillBoardNode.append(spiderTransformationNode);
   spiderAndBillBoardNode.append(andarielSGNode);
-  //spiderTransformationNode.append(lightNode);
   b2fNodes.append(spiderAndBillBoardNode);
   //lightingNodes.append(spiderTransformationNode);
   //lightingNodes.append(andarielSGNode);
@@ -1319,7 +1315,8 @@ function render(timeInMilliseconds) {
     spiderMovementSet2SGNode.matrix[13] += deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed);
   }
 
-  //context.invViewMatrix[13] += Math.sin(timeInMilliseconds/bobbSpeed)/bobbHeight;
+//head bobbing
+  context.invViewMatrix[13] += Math.sin(timeInMilliseconds/bobbSpeed)/bobbHeight;
 
   if(!manualCameraEnabled) {
     if(cameraWaypointIndex < cameraWaypoints.length && time() - waitingSince >= waitingFor) {
@@ -1354,8 +1351,14 @@ function render(timeInMilliseconds) {
       }
 
     }
+    //TODO 2xz
     if(spellWayPointIndex === 0) {
       spellWayPointIndex = moveUsingWaypoints(spellSGNode.matrix, [spiderAndBillBoardNode.matrix], spellWayPointIndex, 4);
+      if(spellWayPointIndex === 1) {
+        console.log("removing spellsgnode");
+        spellSGNode.remove(spellParticle);
+        spellParentNode.remove(spellSGNode);
+      }
     }
 
     lookAtObject(context, autoCameraLookAt, [0,1,0]);
@@ -1363,6 +1366,8 @@ function render(timeInMilliseconds) {
   }
 
   ObjectLookAtMatrix(spiderAndBillBoardNode, context.invViewMatrix, [0,1,0]);
+
+  //<  context.invViewMatrix[13] += Math.sin(timeInMilliseconds*bobbSpeed)/bobbHeight;
   /*
   {
     var lookAt = mat4.lookAt(mat4.create(), [spiderTransformationNode.matrix[12], 0, spiderTransformationNode.matrix[14]], [context.invViewMatrix[12], 0, context.invViewMatrix[14]], [0, -1, 0]);
@@ -1378,7 +1383,7 @@ function render(timeInMilliseconds) {
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
-displayText(((timeInMilliseconds)/1000).toFixed(2)+"s"+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
+displayText(((timeInMilliseconds)/1000).toFixed(2)+"s bobb:"+headBobbing);//+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
 /* moving diablo to camera
   diabloSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.5, -2.5));
   diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));

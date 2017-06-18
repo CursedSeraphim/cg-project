@@ -213,6 +213,34 @@ function time() {
   return n;
 }
 
+class ToggleSGNode extends SGNode {
+  constructor(enabled, children) {
+    super(children);
+    this.enabled = enabled;
+  }
+  disable() {
+    this.enabled = 0;
+  }
+  enable() {
+    this.enabled = 1;
+  }
+  setRender(enabled) {
+    this.enabled = enabled;
+  }
+  toggle(){
+    if(this.enabled) {
+      this.enabled = 0;
+    } else {
+      this.enabled = 1;
+    }
+  }
+  render(context){
+    if(this.enabled) {
+      super.render(context);
+    }
+  }
+}
+
 class BillboardSGNode extends TransformationSGNode {
   constructor (matrix, children) {
     super(matrix, children);
