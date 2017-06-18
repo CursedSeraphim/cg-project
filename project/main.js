@@ -955,11 +955,11 @@ function createSceneGraph(gl, resources) {
 
 /*Add dreugh*/
 {
-  var rect = makeTexturedRect(2, 2, 1)
+  var rect = makeTexturedRect(2, 2, 1);
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
-  dreughSGNode = new BillboardSGNode(glm.transform({translate: [52,2,26]}), [
+  dreughSGNode = new BillboardSGNode(glm.transform({translate: [52,2,27]}), [
     new RenderSGNode(rect)
   ]);
   let dreughMaterialNode = new MaterialSGNode(dreughSGNode);
