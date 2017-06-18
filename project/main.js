@@ -1210,9 +1210,6 @@ function createSceneGraph(gl, resources) {
 
   let diamondLight = new AdvancedLightSGNode(false);
   diamondLight.ambient = [0.0,0.2,0.6,1];
-  diamondLight.diffuse = [0,0,0,1];
-  diamondLight.specular = [0,0,0,1];
-  diamondLight.decreaseRate = 1000;
   diamondLight.diffuse = [0.0,0.4,1,1];
   diamondLight.specular = [0,0.4,1,1];
   diamondLight.decreaseRate = 7;
