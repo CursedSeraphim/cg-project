@@ -101,12 +101,14 @@ var lookAtWaypoints3;
 var lookAtWaypoints4;
 var lookAtWaypoints5;
 var lookAtWaypoints6;
+var lookAtWaypoints7;
 var lookAtWaypointIndex;
 var lookAtWaypointIndex2;
 var lookAtWaypointIndex3;
 var lookAtWaypointIndex4;
 var lookAtWaypointIndex5;
 var lookAtWaypointIndex6;
+var lookAtWaypointIndex7;
 var orcShamanWaypoints;
 var orcShamanWaypointIndex;
 var diabloWaypoints;
@@ -124,6 +126,7 @@ var triggerSGNode6;
 var triggerSGNode7;
 var triggerSGNode8;
 var triggerSGNode9;
+var triggerSGNode10;
 
 /*DEBUG NODES*/
 
@@ -332,8 +335,8 @@ function init(resources) {
   startTime = time();
 
   /*set camera Start position*/
-  //cameraPosition = vec3.fromValues(3, -1, -10);
-  cameraPosition = vec3.fromValues(0, 3, -87);
+  cameraPosition = vec3.fromValues(3, -1, -10);
+  //cameraPosition = vec3.fromValues(0, 3, -87);
 
   /*set waypoints*/
   cameraWaypointIndex = 0;
@@ -350,7 +353,8 @@ function init(resources) {
   let wpCam10 = glm.translate(32.3, 2.3, 81.3);
   let wpCam11 = glm.translate(29, 2.3, 81.3);
   let wpCam12 = glm.translate(12.5, -7.5, 81.3);
-  cameraWaypoints = [wpCam1, wpCam2, wpCam3, wpCam4, wpCam5, wpCam6, wpCam7, wpCam8, wpCam9, wpCam10, wpCam11, wpCam12];
+  let wpCam13 = glm.translate(7, -7.5, 81.3);
+  cameraWaypoints = [wpCam1, wpCam2, wpCam3, wpCam4, wpCam5, wpCam6, wpCam7, wpCam8, wpCam9, wpCam10, wpCam11, wpCam12, wpCam13];
   let wpLookAt1 = glm.translate(25,-3,-15);
   lookAtWaypoints = [wpCam2, wpCam3, wpLookAt1];
 
@@ -379,6 +383,10 @@ function init(resources) {
   let wpLookAt3 = glm.translate(32.3, 2.3, 85);
   lookAtWaypoints6 = [wpLookAt3, wpCam12];
   lookAtWaypointIndex6 = -1;
+  let wpLookAt4 = glm.translate(wpCam12[12]-2, wpCam12[13], wpCam12[14])
+  let wpLookAt5 = glm.translate(0, -6, 90);
+  lookAtWaypoints7 = [wpLookAt4, wpLookAt5];
+  lookAtWaypointIndex7 = -1;
 
   spiderWaypointIndex = 0;
 
@@ -610,6 +618,14 @@ diceTextureNode = diabloTextureNode;
     autoCameraLookAt = glm.translate(spiderAndBillBoardNode.matrix[12], spiderAndBillBoardNode.matrix[13], spiderAndBillBoardNode.matrix[14]);
   });
 
+
+  triggerSGNode10 = new TriggerSGNode(0.1, wpCam13, function() {
+    waitingSince = time();
+    waitingFor = 2000;
+    disableMovementHeadBobbing();
+    setTimeout(enableMovementHeadBobbing, waitingFor);
+  });
+
   root.append(triggerSGNode2);
   root.append(triggerSGNode3);
   root.append(triggerSGNode4);
@@ -618,6 +634,7 @@ diceTextureNode = diabloTextureNode;
   root.append(triggerSGNode7);
   root.append(triggerSGNode8);
   root.append(triggerSGNode9);
+  root.append(triggerSGNode10);
 
   initInteraction(gl.canvas);
 }
@@ -1418,15 +1435,18 @@ function render(timeInMilliseconds) {
       lookAtWaypointIndex5 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints5, lookAtWaypointIndex5, 0.5 * timediff);
       if(lookAtWaypointIndex5 === lookAtWaypoints5.length) {
         autoCameraLookAt = spiderAndBillBoardNode.matrix;
-        console.log("wp5 reached focussing spider now");
       }
 
     }
     if(lookAtWaypointIndex6 < lookAtWaypoints6.length && lookAtWaypointIndex6 !== -1){
-      console.log("lookat6 ");
       lookAtWaypointIndex6 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints6, lookAtWaypointIndex6, 1 * timediff);
       if(lookAtWaypointIndex6 === lookAtWaypoints6.length) {
-        //autoCameraLookAt = wpCam6;
+        lookAtWaypointIndex7 = 0;
+      }
+    }
+    if(lookAtWaypointIndex7 < lookAtWaypoints6.length && lookAtWaypointIndex7 !== -1){
+      lookAtWaypointIndex7 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints7, lookAtWaypointIndex7, 0.1 * timediff);
+      if(lookAtWaypointIndex7 === lookAtWaypoints7.length) {
       }
     }
 
