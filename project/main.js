@@ -69,6 +69,7 @@ var swordToggleNode;
 var swordParent;
 var stabbed = 0;
 var swordWaypointIndex = 0;
+var youDiedSGNode;
 
 var crownSGNode;
 var crystalSwordSGNode;
@@ -202,6 +203,7 @@ var spiderTextureNode7;
 var spiderTextureNode8;
 var spiderTextureNode9;
 var swordTextureNode;
+var youDiedTextureNode;
 
 var crownTextureNode;
 var crystalSwordTextureNode;
@@ -287,6 +289,7 @@ loadResources({
   pentagramTexture: 'textures/misc/pentagram.png',
   spiderTexture: 'textures/spider/spider.png',
   swordTexture: 'textures/misc/bloody_sword.png',
+  youDiedTexture: 'textures/misc/youdied.png',
 
   crownTexture: 'textures/treasure/crown.png',
   crystalSwordTexture: 'textures/treasure/crystal_sword.png',
@@ -509,6 +512,7 @@ function init(resources) {
   goldSkinTextureNode = new AdvancedTextureSGNode(resources.goldSkinTexture);
   tridentTextureNode = new AdvancedTextureSGNode(resources.tridentTexture);
   swordTextureNode  = new AdvancedTextureSGNode(resources.swordTexture);
+  youDiedTextureNode  = new AdvancedTextureSGNode(resources.youDiedTexture);
 
   goldPile1TextureNode = new AdvancedTextureSGNode(resources.goldPileTexture);
   goldPile2TextureNode = new AdvancedTextureSGNode(resources.goldPileTexture);
@@ -1353,6 +1357,24 @@ function createSceneGraph(gl, resources) {
   b2fNodes.append(crystalSwordSGNode);
 }
 
+/*Add youDied*/
+{
+  var rect = makeTexturedRect(2, 2, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  youDiedSGNode = new BillboardSGNode(glm.transform({translate: [0,1,0]}));
+  let youdiedMatNode = new MaterialSGNode(youDiedTextureNode);
+  youdiedMatNode.ambient = [0.6, 0.6, 0.6, 1];
+  youdiedMatNode.diffuse = [0.5, 0.5, 0.5, 1];
+  youdiedMatNode.specular = [0, 0, 0, 1];
+  youdiedMatNode.shininess = 1;
+  youDiedSGNode.append(youdiedMatNode);
+  youDiedTextureNode.append(new RenderSGNode(rect));
+
+  b2fNodes.append(youDiedSGNode);
+}
+
 /*Add ribCage*/
 {
   var rect = makeTexturedRect(0.4, 0.4, 1)
@@ -1893,6 +1915,7 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
     lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
 
   }
+  youDiedSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, 0, -3));
 
   if(!stabbed) {
     swordParent.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -3, -3));
