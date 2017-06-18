@@ -555,7 +555,7 @@ diceTextureNode = diabloTextureNode;
       spellSGNode.matrix[13] = -cameraPosition[1]-1;
       spellSGNode.matrix[14] = -cameraPosition[2];
       //set spell target
-      let variedTargetMatrix = glm.translate(target.matrix[12]+Math.random()*5, target.matrix[13]+Math.random()*5, target.matrix[14]+Math.random()*5);
+      let variedTargetMatrix = glm.translate(target.matrix[12]+Math.random()*0.2*(-cameraPosition[0]-target.matrix[12]), target.matrix[13]+Math.random()*5, target.matrix[14]+Math.random()*0.2*(-cameraPosition[2]-target.matrix[14]));
       spellWayPoints = [variedTargetMatrix];
       //(re)set spell waypoint index to initialize waypoint movement
       spellWayPointIndex = 0;
@@ -1419,7 +1419,7 @@ function render(timeInMilliseconds) {
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
-displayText(((timeInMilliseconds)/1000).toFixed(2)+"s bobb:"+headBobbing);//+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
+displayText(((timeInMilliseconds)/1000).toFixed(2)+"s");//" "+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
 /* moving diablo to camera
   diabloSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.5, -2.5));
   diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));
