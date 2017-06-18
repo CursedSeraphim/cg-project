@@ -1355,7 +1355,7 @@ function render(timeInMilliseconds) {
 
   //setup context and camera matrices
   const context = createSGContext(gl);
-  context.projectionMatrix = mat4.perspective(mat4.create(), glm.deg2rad(30), gl.drawingBufferWidth / gl.drawingBufferHeight, 0.01, 110);
+  context.projectionMatrix = mat4.perspective(mat4.create(), glm.deg2rad(75), gl.drawingBufferWidth / gl.drawingBufferHeight, 0.01, 110);
   //very primitive camera implementation
   //let lookAtMatrix = mat4.lookAt(mat4.create(), [0,0,0], [0,0,0], [0,1,0]);
   let mouseRotateMatrix = mat4.multiply(mat4.create(),
