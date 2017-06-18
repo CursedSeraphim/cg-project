@@ -896,7 +896,7 @@ function createSceneGraph(gl, resources) {
 
 {
   /*Init lantern*/
-  let lanternParticleNode = new FireSGNode(50, [0.05,0.025,0.05]);
+  let lanternParticleNode = new ParticleSGNode(50, [0.05,0.025,0.05]);
   let lanternFireParticleNode  = createParticleNode(null, null, null, null, lanternParticleNode);
   lanternParticleNode.maxDistanceFromStart = 0.1;
   lanternParticleNode.windStrength = 0;
@@ -1576,7 +1576,7 @@ function initTextures(resources, clampType)
 function createParticleNode(size, area, colorMult, colorMin, partNode) {
   return new ShaderSGNode(particleShaderProgram,
     new BlendSgNode(gl.SRC_ALPHA, gl.ONE,
-      partNode || new FireSGNode(size, area, colorMult, colorMin))
+      partNode || new ParticleSGNode(size, area, colorMult, colorMin))
   );
 }
 
