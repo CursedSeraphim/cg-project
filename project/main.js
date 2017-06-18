@@ -161,6 +161,8 @@ var spiderTextureNode6;
 var spiderTextureNode7;
 var spiderTextureNode8;
 var spiderTextureNode9;
+
+var diamondTextureNode;
 //texture arrays
 var dreughFrames;
 var orcShamanFrames;
@@ -290,7 +292,9 @@ orcShamanFrame12: 'textures/orc_shaman/orc_shaman (12).gif',
 orcShamanFrame13: 'textures/orc_shaman/orc_shaman (13).gif',
 orcShamanFrame14: 'textures/orc_shaman/orc_shaman (14).gif',
 orcShamanFrame15: 'textures/orc_shaman/orc_shaman (15).gif',
-orcShamanFrame16: 'textures/orc_shaman/orc_shaman (16).gif'
+orcShamanFrame16: 'textures/orc_shaman/orc_shaman (16).gif',
+
+diamond: 'textures/diamond/diamond.jpg'
 
 }).then(function (resources /*an object containing our keys with the loaded resources*/) {
 
@@ -415,6 +419,7 @@ function init(resources) {
   spiderTextureNode7 = new AdvancedTextureSGNode(resources.spiderTexture);
   spiderTextureNode8 = new AdvancedTextureSGNode(resources.spiderTexture);
   spiderTextureNode9 = new AdvancedTextureSGNode(resources.spiderTexture);
+  diamondTextureNode = new AdvancedTextureSGNode(resources.diamond);
 
   andarielFrames = initAnimatedTexture([resources.andarielFrame1,
 resources.andarielFrame2,
@@ -1157,6 +1162,19 @@ function createSceneGraph(gl, resources) {
   //lightingNodes.append(spiderTransformationNode);
   //lightingNodes.append(andarielSGNode);
 
+}
+
+/*create Diamond*/
+{
+  //initialize lantern glass
+  diamondTextureNode.append(new RenderSGNode(makeDiamond()));
+  let diamondMaterial = new MaterialSGNode(diamondTextureNode);
+  diamondMaterial.ambient = [1, 1, 1, 1];
+  diamondMaterial.diffuse = [1, 1, 1, 1];
+  diamondMaterial.specular = [1, 1, 1, 1];
+  diamondMaterial.shininess = 100;
+  let diamondTransformationNode = new TransformationSGNode(glm.translate(0,1,0), diamondMaterial);
+  lightingNodes.append(diamondTransformationNode);
 }
 
   //lightingNodes.append(diabloTextureNode);
