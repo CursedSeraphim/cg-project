@@ -24,7 +24,7 @@ var manualCameraEnabled;
 var startTime;
 var lastRenderTime;
 
-//TODO
+//used for camera rotation at the end
 var turned = 0;
 var deathRoll = 0;
 var upX = 0;
@@ -418,12 +418,11 @@ function init(resources) {
 
   spellWayPoints = [glm.translate(0, 0, 0)];
 
-  //-1 is used to trigger the orc shaman at a later point
+  //changing the -1 vales to 0 later on triggers waypoiint movements
   orcShamanWaypointIndex = -1;
   let wpOrcShaman1 = glm.translate(25, -3.5, -22.5);
   let wpOrcShaman2 = glm.translate(20, -3.5, -22.5);
   orcShamanWaypoints = [wpOrcShaman1, wpOrcShaman2];
-
   lookAtWaypointIndex2 = -1;
   lookAtWaypoints2 = [wpOrcShaman2, wpCam6];
   let durielPos = glm.translate(43.25,-2.75,13.5);
@@ -447,7 +446,7 @@ function init(resources) {
   lookAtWaypointIndex7 = -1;
 
   spiderWaypointIndex = 0;
-
+/*
   let waypointd1 = mat4.create();
   waypointd1[12] = -3;
   waypointd1[13] = 2;
@@ -464,6 +463,7 @@ function init(resources) {
   waypointd4[12] = -3;
   waypointd4[13] = 2;
   waypointd4[14] = 3;
+  */
 
   /*initialize the shaderPrograms*/
   particleShaderProgram = createProgram(gl, resources.vs_particle, resources.fs_particle);
@@ -581,7 +581,6 @@ orcShamanTextureNode = new TextureSGNode(orcShamanFrames, 0, 75);
 durielTextureNode = new TextureSGNode(durielFrames, 0, 75);
 andarielTextureNode = new TextureSGNode(andarielFrames, 0, 75);
 diceTextureNode = dreughTextureNode;
-  //initRenderToTexture();
 
   gl.enable(gl.DEPTH_TEST);
 
@@ -594,19 +593,20 @@ diceTextureNode = dreughTextureNode;
     orcShamanWaypointIndex = 0;
     lookAtWaypointIndex = lookAtWaypoints.length;
   });
-  //node triggered by orc reaching is second waypoint
+  //triggered by orc reaching its second waypoint
   triggerSGNode3 = new ObjectTriggerSGNode(0.1, orcShamanSGNode.matrix, wpOrcShaman2, function() {
     autoCameraLookAt = wpOrcShaman2;
     lookAtWaypointIndex = lookAtWaypoints.length;
     lookAtWaypointIndex2 = 0;
   });
+  //triggered when turning around after looking at duriel
   triggerSGNode4 = new TriggerSGNode(0.1, wpCam7, function() {
     waitingSince = time();
     waitingFor = 1000;
     disableMovementHeadBobbing();
     setTimeout(enableMovementHeadBobbing, waitingFor);
   });
-
+  //triggered when first looking at the spider
   triggerSGNode5 = new TriggerSGNode(0.1, wpCam8, function() {
     waitingSince = time();
     waitingFor = 500;
@@ -623,6 +623,7 @@ diceTextureNode = dreughTextureNode;
     spiderMoving = 0;
 
   });
+  //color for spell effect and light
   var r = 0.75;r*=10;
   var g = 0.20;
   var b = 0.80;
@@ -680,19 +681,32 @@ diceTextureNode = dreughTextureNode;
         setTimeout(startInterval, 375+Math.random()*100);
       }
     };
+    //starting interval just after starting to walk after looking at the spider
     setTimeout(startInterval, 1000);
 
   });
 
+  //deactivating spell volley
   triggerSGNode9 = new TriggerSGNode(3, wpCam10, function() {
     fireSpellVolley = 0;
     lookAtWaypointIndex6 = 0;
     autoCameraLookAt = glm.translate(spiderAndBillBoardNode.matrix[12], spiderAndBillBoardNode.matrix[13], spiderAndBillBoardNode.matrix[14]);
   });
 
-
+  //stopping headbobbing near the end of the camera flight
   triggerSGNode10 = new TriggerSGNode(0.1,wpCam13, function() {
     disableMovementHeadBobbing();
+  });
+
+  //triggering death animation
+  let triggerSGNode11 = new TriggerSGNode(0.1, glm.translate(2.4, -8.20, 83.88), function() {
+    setTimeout(function() {
+      stabbed = 1;
+    }, 2000);
+    //triggering death roll with higher dealy
+    setTimeout(function() {
+      deathRoll = 1;
+    }, 2500);
   });
 
   root.append(triggerSGNode2);
@@ -704,14 +718,7 @@ diceTextureNode = dreughTextureNode;
   root.append(triggerSGNode8);
   root.append(triggerSGNode9);
   root.append(triggerSGNode10);
-  root.append(new TriggerSGNode(0.1, glm.translate(2.4, -8.20, 83.88), function() {
-    setTimeout(function() {
-      stabbed = 1;
-    }, 2000);
-    setTimeout(function() {
-      deathRoll = 1;
-    }, 2500);
-  }));
+  root.append(triggerSGNode11);
 
   initInteraction(gl.canvas);
 }
@@ -1858,7 +1865,7 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" + " "+context.invViewMatr
     lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
 
   }
-  //TODO 0, -0.65, -3
+
   if(!stabbed) {
     swordParent.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -3, -3));
 
@@ -1910,7 +1917,6 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" + " "+context.invViewMatr
   lastRenderTime = timeInMilliseconds;
 }
 
-//TODO make head go back down when stopping MovementHeadBobbing so camera doesn't stop midair
 function enableMovementHeadBobbing() {
   MovementHeadBobbing = 1;
 
