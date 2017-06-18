@@ -42,7 +42,7 @@ var translateLantern;
 var translateTorch1;
 var translateTorch2;
 var b2fNodes;
-var dreughSGNode;
+var diabloSGNode;
 var orcShamanSGNode;
 var durielSGNode;
 var andarielSGNode;
@@ -61,6 +61,11 @@ var hipBoneSGNode;
 var crownSGNode;
 var crystalSwordSGNode;
 var blueJewelSGNode;
+var maskSGNode;
+var rubySGNode;
+var emeraldSGNode;
+var tiaraSGNode;
+var goldSkinSGNode;
 
 //spider (compex model) scene graph nodes
 var spiderAbdomenSGNode;
@@ -118,6 +123,8 @@ var lookAtWaypointIndex6;
 var lookAtWaypointIndex7;
 var orcShamanWaypoints;
 var orcShamanWaypointIndex;
+var diabloWaypoints;
+var diabloWaypointIndex;
 var spiderWaypointIndex;
 var spiderWaypoints;
 
@@ -147,7 +154,7 @@ var floorTextureNode;
 var cobbleTextureNode;
 var web1TextureNode;
 var lavaTextureNode;
-var dreughTextureNode;
+var diabloTextureNode;
 var orcShamanTextureNode;
 var durielTextureNode;
 var andarielTextureNode;
@@ -180,6 +187,11 @@ var spiderTextureNode9;
 var crownTextureNode;
 var crystalSwordTextureNode;
 var blueJewelTextureNode;
+var maskTextureNode;
+var rubyTextureNode;
+var emeraldTextureNode;
+var tiaraTextureNode;
+var goldSkinTextureNode;
 
 var diamondTextureNode;
 //texture arrays
@@ -235,6 +247,7 @@ loadResources({
   floorTexture: 'textures/dungeon/floor_cobble.jpg',
   stoaqTexture: 'textures/dungeon/stoaquad.jpg',
   cobbleTexture: 'textures/dungeon/dungeon_wall.png',
+  diabloImage: 'textures/diablo/diablo.png',
   metalTexture: 'textures/metal/metal_32.png',//metal.png',
   glassTexture: 'textures/glass/glass.png',//glass_64.png',
   stainedGlassTexture: 'textures/glass/stainedGlass.png',
@@ -253,6 +266,11 @@ loadResources({
   crownTexture: 'textures/treasure/crown.png',
   crystalSwordTexture: 'textures/treasure/crystal_sword.png',
   blueJewelTexture: 'textures/treasure/jewel_blue.png',
+  maskTexture: 'textures/treasure/mask.png',
+  rubyTexture: 'textures/treasure/ruby.png',
+  emeraldTexture: 'textures/treasure/emerald.png',
+  tiaraTexture: 'textures/treasure/tiara.png',
+  goldSkinTexture: 'textures/treasure/goldskin.png',
 
   andarielFrame1: 'textures/andariel/andariel (1).gif',
   andarielFrame2: 'textures/andariel/andariel (2).gif',
@@ -418,6 +436,8 @@ function init(resources) {
   waypointd4[12] = -3;
   waypointd4[13] = 2;
   waypointd4[14] = 3;
+  diabloWaypointIndex = 0;
+  diabloWaypoints = [waypointd1, waypointd2, waypointd3, waypointd4];
 
   /*initialize the shaderPrograms*/
   particleShaderProgram = createProgram(gl, resources.vs_particle, resources.fs_particle);
@@ -456,6 +476,11 @@ function init(resources) {
   crownTextureNode = new AdvancedTextureSGNode(resources.crownTexture);
   blueJewelTextureNode = new AdvancedTextureSGNode(resources.blueJewelTexture);
   crystalSwordTextureNode = new AdvancedTextureSGNode(resources.crystalSwordTexture);
+  maskTextureNode = new AdvancedTextureSGNode(resources.maskTexture);
+  rubyTextureNode = new AdvancedTextureSGNode(resources.rubyTexture);
+  emeraldTextureNode = new AdvancedTextureSGNode(resources.emeraldTexture);
+  tiaraTextureNode = new AdvancedTextureSGNode(resources.tiaraTexture);
+  goldSkinTextureNode = new AdvancedTextureSGNode(resources.goldSkinTexture);
 
   andarielFrames = initAnimatedTexture([resources.andarielFrame1,
 resources.andarielFrame2,
@@ -517,10 +542,11 @@ resources.orcShamanFrame13,
 resources.orcShamanFrame14,
 resources.orcShamanFrame15,
 resources.orcShamanFrame16], gl.CLAMP_TO_EDGE);
-dreughTextureNode = new TextureSGNode(dreughFrames, 0, 75);
+diabloTextureNode = new TextureSGNode(dreughFrames, 0, 75);
 orcShamanTextureNode = new TextureSGNode(orcShamanFrames, 0, 75);
 durielTextureNode = new TextureSGNode(durielFrames, 0, 75);
 andarielTextureNode = new TextureSGNode(andarielFrames, 0, 75);
+diceTextureNode = diabloTextureNode;
   //initRenderToTexture();
 
   gl.enable(gl.DEPTH_TEST);
@@ -840,8 +866,8 @@ function createSceneGraph(gl, resources) {
   mapGlass.diffuse = [1, 1, 1, 1];
   mapGlass.specular = [1, 1, 1, 1];
   mapGlass.shininess = 1000;
+  lightingNodes.append(mapGlass);
 
-  b2fNodes.append(mapGlass);
 }
 
 {
@@ -853,12 +879,12 @@ function createSceneGraph(gl, resources) {
   lanternParticleNode.maxMovement = 0.5;
 
   /*Init Lantern-Light*/
-  let torchNode = new AdvancedLightSGNode(true, 20, [0,0,1]);
+  let torchNode = new AdvancedLightSGNode(true, 10, [0,0,1]);
   torchNode.ambient = [1.0,0.6,0.2,1.0];
   torchNode.diffuse = [1.0,0.6,0.2,1.0];
   torchNode.specular = [1.0,0.6,0.2,1.0];
   torchNode.position = [0, 0.15, 0.02];
-  torchNode.decreaseRate = 40;
+  torchNode.decreaseRate = 25;
 
   torchNode.append(lanternFireParticleNode);
 
@@ -894,23 +920,23 @@ function createSceneGraph(gl, resources) {
 
 }
 
-/*Add dreugh*/
+/*Add diablo*/
 {
   var rect = makeTexturedRect(2, 2, 1)
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
-  dreughSGNode = new BillboardSGNode(glm.transform({translate: [52,2,25]}), [
+  diabloSGNode = new BillboardSGNode(glm.transform({translate: [2,0,2]}), [
     new RenderSGNode(rect)
   ]);
-  let dreughMaterialNode = new MaterialSGNode(dreughSGNode);
-  dreughMaterialNode.ambient = [0.6, 0.6, 0.6, 1];
-  dreughMaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
-  dreughMaterialNode.specular = [1, 1, 1, 1];
-  dreughMaterialNode.shininess = 1000;
+  let diabloMaterialNode = new MaterialSGNode(diabloSGNode);
+  diabloMaterialNode.ambient = [0.6, 0.6, 0.6, 1];
+  diabloMaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
+  diabloMaterialNode.specular = [1, 1, 1, 1];
+  diabloMaterialNode.shininess = 1000;
 
-  dreughTextureNode.append(dreughMaterialNode);
-  b2fNodes.append(dreughTextureNode);
+  diabloTextureNode.append(diabloMaterialNode);
+  b2fNodes.append(diabloTextureNode);
 }
 
 /*Add skull piles*/
@@ -995,13 +1021,85 @@ function createSceneGraph(gl, resources) {
   lightingNodes.append(durielSGNode);
 }
 
+/*Add goldskin*/
+{
+  var rect = makeTexturedRect(2, 2, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  goldSkinSGNode = new BillboardSGNode(glm.transform({translate: [-9.06,-8.75, 95.48]}));
+  let goldSkinMat = new MaterialSGNode(goldSkinTextureNode);
+  goldSkinMat.ambient = [0.6, 0.6, 0.6, 1];
+  goldSkinMat.diffuse = [0.5, 0.5, 0.5, 1];
+  goldSkinMat.specular = [1, 1, 1, 1];
+  goldSkinMat.shininess = 1000;
+  goldSkinSGNode.append(goldSkinMat);
+  goldSkinTextureNode.append(new RenderSGNode(rect));
+
+  b2fNodes.append(goldSkinSGNode);
+}
+
+/*Add tiara*/
+{
+  var rect = makeTexturedRect(0.4, 0.4, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  tiaraSGNode = new BillboardSGNode(glm.transform({translate: [1.56, -7.8, 88.75]}));
+  let tiaraMat = new MaterialSGNode(tiaraTextureNode);
+  tiaraSGNode.ambient = [0.6, 0.6, 0.6, 1];
+  tiaraSGNode.diffuse = [0.5, 0.5, 0.5, 1];
+  tiaraSGNode.specular = [1, 1, 1, 1];
+  tiaraSGNode.shininess = 1000;
+  tiaraSGNode.append(tiaraMat);
+  tiaraTextureNode.append(new RenderSGNode(rect));
+
+  b2fNodes.append(tiaraSGNode);
+}
+
+/*Add emerald*/
+{
+  var rect = makeTexturedRect(0.2, 0.2, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  emeraldSGNode = new BillboardSGNode(glm.transform({translate: [3.5, -8.45, 90.2]}));
+  let emeraldMat = new MaterialSGNode(emeraldTextureNode);
+  emeraldSGNode.ambient = [0.6, 0.6, 0.6, 1];
+  emeraldSGNode.diffuse = [0.5, 0.5, 0.5, 1];
+  emeraldSGNode.specular = [1, 1, 1, 1];
+  emeraldSGNode.shininess = 1000;
+  emeraldSGNode.append(emeraldMat);
+  emeraldTextureNode.append(new RenderSGNode(rect));
+
+  b2fNodes.append(emeraldSGNode);
+}
+
+/*Add ruby*/
+{
+  var rect = makeTexturedRect(0.2, 0.2, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  rubySGNode = new BillboardSGNode(glm.transform({translate: [2.25, -8.45, 90.98]}));
+  let rubyMat = new MaterialSGNode(rubyTextureNode);
+  rubySGNode.ambient = [0.6, 0.6, 0.6, 1];
+  rubySGNode.diffuse = [0.5, 0.5, 0.5, 1];
+  rubySGNode.specular = [1, 1, 1, 1];
+  rubySGNode.shininess = 1000;
+  rubySGNode.append(rubyMat);
+  rubyTextureNode.append(new RenderSGNode(rect));
+
+  b2fNodes.append(rubySGNode);
+}
+
 /*Add blue jewel*/
 {
   var rect = makeTexturedRect(0.2, 0.2, 1)
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
-  blueJewelSGNode = new BillboardSGNode(glm.transform({translate: [7.3, -9.25, 91.4]}));
+  blueJewelSGNode = new BillboardSGNode(glm.transform({translate: [2.76, -8.45, 86.56]}));
   let jewelMat = new MaterialSGNode(blueJewelTextureNode);
   jewelMat.ambient = [0.6, 0.6, 0.6, 1];
   jewelMat.diffuse = [0.5, 0.5, 0.5, 1];
@@ -1010,7 +1108,25 @@ function createSceneGraph(gl, resources) {
   blueJewelSGNode.append(jewelMat);
   blueJewelTextureNode.append(new RenderSGNode(rect));
 
-  lightingNodes.append(blueJewelSGNode);
+  b2fNodes.append(blueJewelSGNode);
+}
+
+/*Add mask*/
+{
+  var rect = makeTexturedRect(0.4, 0.4, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  maskSGNode = new BillboardSGNode(glm.transform({translate: [3, -8.25, 88.2]}));
+  let maskMat = new MaterialSGNode(maskTextureNode);
+  maskMat.ambient = [0.6, 0.6, 0.6, 1];
+  maskMat.diffuse = [0.5, 0.5, 0.5, 1];
+  maskMat.specular = [1, 1, 1, 1];
+  maskMat.shininess = 1000;
+  maskSGNode.append(maskMat);
+  maskTextureNode.append(new RenderSGNode(rect));
+
+  b2fNodes.append(maskSGNode);
 }
 
 /*Add crown*/
@@ -1019,7 +1135,7 @@ function createSceneGraph(gl, resources) {
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
-  crownSGNode = new BillboardSGNode(glm.transform({translate: [2,-9.25, 83]}));
+  crownSGNode = new BillboardSGNode(glm.transform({translate: [0.247, -8.25, 86.94]}));
   let crownMat = new MaterialSGNode(crownTextureNode);
   crownMat.ambient = [0.6, 0.6, 0.6, 1];
   crownMat.diffuse = [0.5, 0.5, 0.5, 1];
@@ -1028,7 +1144,7 @@ function createSceneGraph(gl, resources) {
   crownSGNode.append(crownMat);
   crownTextureNode.append(new RenderSGNode(rect));
 
-  lightingNodes.append(crownSGNode);
+  b2fNodes.append(crownSGNode);
 }
 
 /*Add crystal sword*/
@@ -1046,7 +1162,7 @@ function createSceneGraph(gl, resources) {
   crystalSwordSGNode.append(swordMat);
   crystalSwordTextureNode.append(new RenderSGNode(rect));
 
-  lightingNodes.append(crystalSwordSGNode);
+  b2fNodes.append(crystalSwordSGNode);
 }
 
 /*Add ribCage*/
@@ -1289,6 +1405,9 @@ function createSceneGraph(gl, resources) {
   b2fNodes.append(moonLight);
 }
 
+  //lightingNodes.append(diabloTextureNode);
+  //lightingNodes.append(b2fNodes);
+  //root.append(particleNodes);
   lightingNodes.append(b2fNodes);
   lightingNodes.append(lanternSGNode);
   return root;
@@ -1399,6 +1518,11 @@ function render(timeInMilliseconds) {
   checkForWindowResize(gl);
   //update animations
 
+  diabloWaypointIndex = moveUsingWaypoints(diabloSGNode.matrix, diabloWaypoints, diabloWaypointIndex, 0.1*timediff);
+  if(diabloWaypointIndex == diabloWaypoints.length) {
+    //makes the object patrol back to first waypoint
+    diabloWaypointIndex = 0;
+  }
   if(orcShamanWaypointIndex < orcShamanWaypoints.length && orcShamanWaypointIndex !== -1) {
     orcShamanWaypointIndex = moveUsingWaypoints(orcShamanSGNode.matrix, orcShamanWaypoints, orcShamanWaypointIndex, 0.1*timediff);
   }
@@ -1527,8 +1651,6 @@ function render(timeInMilliseconds) {
 
     lookAtObject(context, autoCameraLookAt, [0,1,0]);
     context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
-
-    context.lookAtVector = vec3.normalize(vec3.create(), vec3.fromValues(autoCameraLookAt[12], autoCameraLookAt[13], autoCameraLookAt[14]));
   }
   if(lookAtWaypointIndex7 === 2) {
     autoCameraLookAt = finalDiamondMatrix;
@@ -1564,6 +1686,10 @@ function render(timeInMilliseconds) {
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
 displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" + " "+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
+/* moving diablo to camera
+  diabloSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.5, -2.5));
+  diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));
+*/
   //translateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(1, -0.75, -2));
   lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
   //lanternSGNode.matrix = translateLantern.matrix;
