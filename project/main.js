@@ -707,7 +707,7 @@ function createSceneGraph(gl, resources) {
       torch.ambient = [0,0,0,1.0]
       //torch.spotAngle = 105 * Math.PI/180;
       torch.lookAt = lookAt;
-      torch.decreaseRate = 5;
+      torch.decreaseRate = 10;
       return torch;
     }
 
