@@ -1204,18 +1204,23 @@ function createSceneGraph(gl, resources) {
   diamondMaterial.specular = [1, 1, 1, 1];
   diamondMaterial.shininess = 100;
   diamondUpDownNode = new TransformationSGNode(glm.translate(0,0,0), diamondMaterial);
-  diamondRotateNode = new TransformationSGNode(glm.translate(0,-6, 90), diamondUpDownNode);
+  diamondRotateNode = new TransformationSGNode(glm.translate(0,-7, 90), diamondUpDownNode);
   diamondTransformationNode = new TransformationSGNode(glm.translate(0,-6, 90), diamondRotateNode);
   b2fNodes.append(diamondTransformationNode);
 
+  diamondLight.specular = [0,0,0,1];
+  diamondLight.decreaseRate = 1000;
+
+  diamondRotateNode.append(diamondLight);
+
   /*place spotlight*/
 
-  let moonLight = new AdvancedLightSGNode(false, 10, [0,1,0], [0,5,90]);
+  let moonLight = new AdvancedLightSGNode(false, 10, [0,1,-0.8], [0,5,80]);
   moonLight.ambient = [0,0,0,1];
   moonLight.diffuse = [1,1,1,1];
   moonLight.specular = [1,1,1,1];
   moonLight.append(createLightSphere());
-  moonLight.decreaseRate = 100;
+  moonLight.decreaseRate = 1000;
   b2fNodes.append(moonLight);
 }
 
