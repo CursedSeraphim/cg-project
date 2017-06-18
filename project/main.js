@@ -576,6 +576,7 @@ diceTextureNode = diabloTextureNode;
   //trigger volley of spells
   triggerSGNode8 = new TriggerSGNode(3, wpCam8, function() {
     fireSpellVolley = 1;
+    //as long as second waypoint is not reached and fireSpellVolley is 1 spells will continue to fire the spider
     var startInterval = function() {
       if(fireSpellVolley) {
         fireSpell();
@@ -1137,18 +1138,12 @@ function createSceneGraph(gl, resources) {
   spiderMovementSet2SGNode.append(spiderLeftHindLeg2SGNode);
   spiderMovementSet2SGNode.append(spiderRightHindLegSGNode);
 
-  //spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(10));
-  //spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(-10));
   spiderTransformationNode.append(spiderMovementSet1SGNode);
   spiderTransformationNode.append(spiderMovementSet2SGNode);
-  //spiderTransformationNode.append(andarielSGNode);
   spiderTransformationNode.append(spiderAbdomenSGNode);
-  //andarielSGNode.append(spiderTransformationNode);
   spiderAndBillBoardNode.append(spiderTransformationNode);
   spiderAndBillBoardNode.append(andarielSGNode);
   lightingNodes.append(spiderAndBillBoardNode);
-  //lightingNodes.append(spiderTransformationNode);
-  //lightingNodes.append(andarielSGNode);
 
 }
 
@@ -1333,6 +1328,9 @@ function render(timeInMilliseconds) {
   if(spiderMoving) {
     if(spiderWaypointIndex < 1){
       spiderWaypointIndex = moveUsingWaypoints(spiderAndBillBoardNode.matrix, [glm.translate(context.invViewMatrix[12], spiderAndBillBoardNode.matrix[13], context.invViewMatrix[14])], spiderWaypointIndex, 0.15*timediff);
+      if(spiderWaypointIndex === 1) {
+        spiderMoving = 0;
+      }
     }
     var speed = 2.5;
     spiderAbdomenSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
