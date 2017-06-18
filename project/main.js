@@ -608,7 +608,7 @@ diceTextureNode = diabloTextureNode;
         setTimeout(startInterval, 375+Math.random()*100);
       }
     };
-    startInterval();
+    setTimeout(startInterval, 1000);
 
   });
 
@@ -1461,6 +1461,7 @@ function render(timeInMilliseconds) {
     context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
   }
 
+
   if(spellWayPointIndex < spellWayPoints.length && spellWayPointIndex != -1) {
     spellWayPointIndex = moveUsingWaypoints(spellSGNode.matrix, spellWayPoints, spellWayPointIndex, 3.5);
     //spellSGNode.matrix[12] += 0.5;
@@ -1497,6 +1498,7 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" + " "+context.invViewMatr
   //translateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(1, -0.75, -2));
   lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
   diamondRotateNode.matrix = glm.rotateY(timeInMilliseconds*-0.01);
+  diamondRotateNode.matrix[13] = Math.sin(timeInMilliseconds * 0.001);
   //lanternSGNode.matrix = translateLantern.matrix;
 
   //render scenegraph
