@@ -339,6 +339,8 @@ function init(resources) {
   let wpLookAt1 = glm.translate(25,-3,-15);
   lookAtWaypoints = [wpCam2, wpCam3, wpLookAt1];
 
+  spellWayPoints = [glm.translate(0, 0, 0)];
+
   //-1 is used to trigger the orc shaman at a later point
   orcShamanWaypointIndex = -1;
   let wpOrcShaman1 = glm.translate(25, -3.5, -22.5);
@@ -519,48 +521,81 @@ diceTextureNode = diabloTextureNode;
     spiderMoving = 0;
   });
   //TODO
-  var r = 0.75;
+  var r = 0.75;r*=10;
   var g = 0.20;
   var b = 0.80;
   spellParentNode = new TransformationSGNode(glm.translate(0,0,0));
   spellParticle = createParticleNode(500, [1,1,1], [r, g, b], [r/8, g/8, b/8]);
   spellSGNode = new TransformationSGNode(glm.translate(0, 0, 0));
   spellLightNode = new AdvancedLightSGNode(true);
-  spellLightNode.ambient = [r/8,g/8,b/8,1.0];
-  spellLightNode.diffuse = [r/4,g/4,b/4,1.0];
-  spellLightNode.specular = [r/4,g/4,b/4,1.0];
+  spellLightNode.ambient = [0,0,0,1.0];
+  spellLightNode.diffuse = [0,0,0,1.0];
+  spellLightNode.specular = [0,0,0,1.0];
   spellLightNode.position = [0, 0, 0];
-  spellSGNode.append(spellParticle);
   spellSGNode.append(spellLightNode);
+  spellParentNode.append(spellSGNode);
+  b2fNodes.append(spellParentNode);
+  //TODO xz1
 
-  //TODO 1xz
+  triggerSGNode8 = new TriggerSGNode(0.1, wpCam8, function() {
 
-  triggerSGNode8 = new TriggerSGNode(0.1, wpCam4, function() {
-    b2fNodes.append(spellParentNode);
+    var target = spiderAndBillBoardNode;
     var fireSpell = function(){
-      spellParentNode.append(spellSGNode);
-      console.log("adding spellsgnode");
+      //remove spellparticle children from spellsgnode before firing a new one
+      spellSGNode.remove(spellParticle);
+      //add new spell particle
+      spellSGNode.append(spellParticle);
+      //add spell parent to b2fnodes
+      //set spell light
+      spellLightNode.ambient = [r/8,g/8,b/8,1.0];
+      spellLightNode.diffuse = [r/4,g/4,b/4,1.0];
+      spellLightNode.specular = [r/4,g/4,b/4,1.0];
+      //set spell position to camera
       spellSGNode.matrix[12] = -cameraPosition[0];
       spellSGNode.matrix[13] = -cameraPosition[1]-1;
       spellSGNode.matrix[14] = -cameraPosition[2];
-      spellWayPoints = [spiderAndBillBoardNode];
+      //set spell target
+      let variedTargetMatrix = glm.translate(target.matrix[12]+Math.random()*5, target.matrix[13]+Math.random()*5, target.matrix[14]+Math.random()*5);
+      spellWayPoints = [variedTargetMatrix];
+      //(re)set spell waypoint index to initialize waypoint movement
       spellWayPointIndex = 0;
+      //add trigger for when the spell hits the target
+      root.append(new ObjectTriggerSGNode(2.5, spellSGNode.matrix, variedTargetMatrix, function() {
+        //when spell hits the target turn spell light off
+        spellLightNode.ambient = [0,0,0,1.0];
+        spellLightNode.diffuse = [0,0,0,1.0];
+        spellLightNode.specular = [0,0,0,1.0];
+        //remove particle effect
+        spellSGNode.remove(spellParticle);
+        //reomve the trigger
+        root.remove(this);
+      }));
+
     }
     fireSpell();
-    setTimeout(fireSpell, 250);
-    setTimeout(fireSpell, 450);
-    setTimeout(fireSpell, 750);
+    setTimeout(fireSpell, 500);
+    //setTimeout(fireSpell, 450);
+    //setTimeout(fireSpell, 750);
+    /*
+    setTimeout(fireSpell, 800);
+    setTimeout(fireSpell, 850);
+    setTimeout(fireSpell, 900);
+    setTimeout(fireSpell, 950);*/
     setTimeout(fireSpell, 1050);
-    setTimeout(fireSpell, 1250);
+    //setTimeout(fireSpell, 1250);
     setTimeout(fireSpell, 1400);
-    setTimeout(fireSpell, 1600);
+    //setTimeout(fireSpell, 1600);
     setTimeout(fireSpell, 1850);
-    setTimeout(fireSpell, 2050);
+    //setTimeout(fireSpell, 2050);
     setTimeout(fireSpell, 2250);
-    setTimeout(fireSpell, 2500);
+    //setTimeout(fireSpell, 2500);
     setTimeout(fireSpell, 2700);
-    setTimeout(fireSpell, 2975);
+    //setTimeout(fireSpell, 2975);
     setTimeout(fireSpell, 3150);
+    setTimeout(fireSpell, 3450);
+    setTimeout(fireSpell, 3800);
+    setTimeout(fireSpell, 4300);
+    setTimeout(fireSpell, 4750);
   });
 
   root.append(triggerSGNode2);
@@ -1118,7 +1153,7 @@ function createSceneGraph(gl, resources) {
   //andarielSGNode.append(spiderTransformationNode);
   spiderAndBillBoardNode.append(spiderTransformationNode);
   spiderAndBillBoardNode.append(andarielSGNode);
-  b2fNodes.append(spiderAndBillBoardNode);
+  lightingNodes.append(spiderAndBillBoardNode);
   //lightingNodes.append(spiderTransformationNode);
   //lightingNodes.append(andarielSGNode);
 
@@ -1351,18 +1386,19 @@ function render(timeInMilliseconds) {
       }
 
     }
-    //TODO 2xz
-    if(spellWayPointIndex === 0) {
-      spellWayPointIndex = moveUsingWaypoints(spellSGNode.matrix, [spiderAndBillBoardNode.matrix], spellWayPointIndex, 4);
-      if(spellWayPointIndex === 1) {
-        console.log("removing spellsgnode");
-        spellSGNode.remove(spellParticle);
-        spellParentNode.remove(spellSGNode);
-      }
-    }
 
     lookAtObject(context, autoCameraLookAt, [0,1,0]);
     context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
+  }
+  //TODO xz2
+  if(spellWayPointIndex < spellWayPoints.length && spellWayPointIndex != -1) {
+    spellWayPointIndex = moveUsingWaypoints(spellSGNode.matrix, spellWayPoints, spellWayPointIndex, 3.5);
+    //spellSGNode.matrix[12] += 0.5;
+    spellSGNode.matrix[13] += 1;
+    //spellSGNode.matrix[14] += 0.5;
+    mat4.multiply(spellSGNode.matrix, spellSGNode.matrix, glm.rotateX(15));
+    mat4.multiply(spellSGNode.matrix, spellSGNode.matrix, glm.rotateY(15));
+    mat4.multiply(spellSGNode.matrix, spellSGNode.matrix, glm.rotateZ(15));
   }
 
   ObjectLookAtMatrix(spiderAndBillBoardNode, context.invViewMatrix, [0,1,0]);
