@@ -57,6 +57,9 @@ var bones1SGNode2;
 var skullPileSGNode1;
 var skullPileSGNode2;
 var hipBoneSGNode;
+var swordSGNode;
+var stabbed = 0;
+var swordWaypointIndex = 0;
 
 var crownSGNode;
 var crystalSwordSGNode;
@@ -189,6 +192,7 @@ var spiderTextureNode6;
 var spiderTextureNode7;
 var spiderTextureNode8;
 var spiderTextureNode9;
+var swordTextureNode;
 
 var crownTextureNode;
 var crystalSwordTextureNode;
@@ -273,6 +277,7 @@ loadResources({
   skullPileTexture: 'textures/bones/skullPile.png',
   pentagramTexture: 'textures/misc/pentagram.png',
   spiderTexture: 'textures/spider/spider.png',
+  swordTexture: 'textures/misc/bloody_sword.png',
 
   crownTexture: 'textures/treasure/crown.png',
   crystalSwordTexture: 'textures/treasure/crystal_sword.png',
@@ -494,6 +499,7 @@ function init(resources) {
   tiaraTextureNode = new AdvancedTextureSGNode(resources.tiaraTexture);
   goldSkinTextureNode = new AdvancedTextureSGNode(resources.goldSkinTexture);
   tridentTextureNode = new AdvancedTextureSGNode(resources.tridentTexture);
+  swordTextureNode  = new AdvancedTextureSGNode(resources.swordTexture);
 
   goldPile1TextureNode = new AdvancedTextureSGNode(resources.goldPileTexture);
   goldPile2TextureNode = new AdvancedTextureSGNode(resources.goldPileTexture);
@@ -689,6 +695,10 @@ diceTextureNode = dreughTextureNode;
   root.append(triggerSGNode8);
   root.append(triggerSGNode9);
   root.append(triggerSGNode10);
+  root.append(new TriggerSGNode(5, wpCam3, function() {
+    console.log("stabbed");
+    stabbed = 1;
+  }));
 
   initInteraction(gl.canvas);
 }
@@ -1037,6 +1047,24 @@ function createSceneGraph(gl, resources) {
   durielTextureNode.append(new RenderSGNode(rect));
 
   b2fNodes.append(durielSGNode);
+}
+
+/*Add sword*/
+{
+  var rect = makeTexturedRect(2, 2, 1)
+
+    for(var i = 0; i < rect.normal.length; i++)
+      rect.normal[i] = -rect.normal[i];
+  swordSGNode = new TransformationSGNode(glm.transform({translate:[0,0,0], rotateX:90}));
+  let swordMat = new MaterialSGNode(swordTextureNode);
+  swordMat.ambient = [0.6, 0.6, 0.6, 1];
+  swordMat.diffuse = [0.5, 0.5, 0.5, 1];
+  swordMat.specular = [1, 1, 1, 1];
+  swordMat.shininess = 1000;
+  swordSGNode.append(swordMat);
+  swordTextureNode.append(new RenderSGNode(rect));
+
+  b2fNodes.append(swordSGNode);
 }
 
 /*Add trident*/
@@ -1813,6 +1841,20 @@ function render(timeInMilliseconds) {
 displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" + " "+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
   //translateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(1, -0.75, -2));
   lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
+  //TODO 0, -0.65, -3
+  if(!stabbed) {
+    swordSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -3, -3));
+
+  } else {
+    if(swordWaypointIndex !== 1) {
+      let stabbedPosition = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -0.65, -3));
+      //moveUsingWaypoints(swordSGNode.matrix, [stabbedPosition], 0, 1 * timediff);
+      swordSGNode.matrix = stabbedPosition;
+       mat4.multiply(swordSGNode.matrix, swordSGNode.matrix, glm.rotateX(90));
+
+    }
+  }
+  //mat4.multiply(swordSGNode.matrix, swordSGNode.matrix, glm.rotateX(90));
   //lanternSGNode.matrix = translateLantern.matrix;
 
   //render scenegraph
