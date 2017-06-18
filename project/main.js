@@ -699,9 +699,6 @@ function createSceneGraph(gl, resources) {
     b2fNodes.append(createFireTorch([32.0625, -1, 26.675]));
     b2fNodes.append(createFireTorch([43.45, -1, 0.4]));
 
-    b2fNodes.append(createFireTorch([0, -3, 87]));
-
-
     function createGreenTorch(pos, lookAt) {
       var torch = createTorch([0.05,0.3,0.025,1.0],
                           pos,
@@ -1207,6 +1204,16 @@ function createSceneGraph(gl, resources) {
   diamondRotateNode = new TransformationSGNode(glm.translate(0,-6, 90), diamondMaterial);
   let diamondTransformationNode = new TransformationSGNode(glm.translate(0,-6, 90), diamondRotateNode);
   b2fNodes.append(diamondTransformationNode);
+
+  /*place spotlight*/
+
+  let moonLight = new AdvancedLightSGNode(false, 10, [0,1,0], [0,5,90]);
+  moonLight.ambient = [0,0,0,1];
+  moonLight.diffuse = [1,1,1,1];
+  moonLight.specular = [1,1,1,1];
+  moonLight.append(createLightSphere());
+  moonLight.decreaseRate = 100;
+  b2fNodes.append(moonLight);
 }
 
   //lightingNodes.append(diabloTextureNode);
