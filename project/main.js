@@ -1048,7 +1048,7 @@ function createSceneGraph(gl, resources) {
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
-  tridentSGNode = new BillboardSGNode(glm.transform({translate:[-9.06,-8.75, 95.48]}));
+  tridentSGNode = new BillboardSGNode(glm.transform({translate:[-9.06,-8.25, 95.48]}));
   let tridentMat = new MaterialSGNode(tridentTextureNode);
   tridentMat.ambient = [0.6, 0.6, 0.6, 1];
   tridentMat.diffuse = [0.5, 0.5, 0.5, 1];
@@ -1502,6 +1502,10 @@ function createSceneGraph(gl, resources) {
   diamondRotateNode = new TransformationSGNode(glm.translate(0,-7, 90), diamondUpDownNode);
   diamondTransformationNode = new TransformationSGNode(glm.translate(0,-6, 90), diamondRotateNode);
   diamondMatrixSniffer = new SnifferSGNode(diamondTransformationNode);
+  //TODO
+  let particles = createParticleNode(500, [4,30,4], [0.75, 0.6, 1], [0.75/8, 0.6/8, 1/8]);
+  diamondRotateNode.append(particles);
+
   b2fNodes.append(diamondMatrixSniffer);
 
   let diamondLight = new AdvancedLightSGNode(false);
@@ -1652,7 +1656,7 @@ function render(timeInMilliseconds) {
 
   //setup context and camera matrices
   const context = createSGContext(gl);
-  context.projectionMatrix = mat4.perspective(mat4.create(), glm.deg2rad(75), gl.drawingBufferWidth / gl.drawingBufferHeight, 0.01, 110);
+  context.projectionMatrix = mat4.perspective(mat4.create(), glm.deg2rad(30), gl.drawingBufferWidth / gl.drawingBufferHeight, 0.01, 110);
   //very primitive camera implementation
   //let lookAtMatrix = mat4.lookAt(mat4.create(), [0,0,0], [0,0,0], [0,1,0]);
   let mouseRotateMatrix = mat4.multiply(mat4.create(),
