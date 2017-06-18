@@ -1858,10 +1858,11 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" + " "+context.invViewMatr
       mat4.multiply(swordSGNode.matrix, swordSGNode.matrix, glm.rotateX(90));
       */
       //swordParent.matrix = stabbedPosition;
-      moveUsingWaypoints(swordParent.matrix, [stabbedPosition], 0, 0.01 * timediff);
+      moveUsingWaypoints(swordParent.matrix, [stabbedPosition], 0, 0.6 * timediff);
       swordSGNode.matrix = swordParent.matrix;
       if(!turned) {
         mat4.multiply(swordSGNode.matrix,swordSGNode.matrix, glm.rotateX(90));
+        mat4.multiply(swordSGNode.matrix, swordSGNode.matrix, mouseRotateMatrix);
         turned = 1;
 
       }
