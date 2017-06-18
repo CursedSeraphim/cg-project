@@ -65,6 +65,7 @@ var skullPileSGNode1;
 var skullPileSGNode2;
 var hipBoneSGNode;
 var swordSGNode;
+var swordToggleNode;
 var swordParent;
 var stabbed = 0;
 var swordWaypointIndex = 0;
@@ -1076,7 +1077,6 @@ function createSceneGraph(gl, resources) {
   swordMat.shininess = 1000;
   swordSGNode.append(swordMat);
   swordTextureNode.append(new RenderSGNode(rect));
-
   b2fNodes.append(swordSGNode);
 }
 
@@ -1854,7 +1854,10 @@ function render(timeInMilliseconds) {
 
 displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" + " "+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
   //translateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(1, -0.75, -2));
-  lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
+  if(!deathRoll) {
+    lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
+
+  }
   //TODO 0, -0.65, -3
   if(!stabbed) {
     swordParent.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -3, -3));
@@ -2003,6 +2006,8 @@ function initInteraction(canvas) {
         case 'KeyC':
           manualCameraEnabled = true;
           disableMovementHeadBobbing();
+          deathRoll = 0;
+          b2fNodes.remove(swordSGNode);
           break;
       }
     }
