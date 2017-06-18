@@ -315,8 +315,10 @@ function init(resources) {
   //setting manual camera control variable, dependent on link
   //clicked
   var param = window.location.search.substr(1).split("&");
-  if('free=true' == param)
+  if('free=true' == param) {
     manualCameraEnabled = true;
+    disableMovementHeadBobbing();
+  }
   else
     manualCameraEnabled = false;
   //setting initial point to look at
