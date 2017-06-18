@@ -24,6 +24,9 @@ var manualCameraEnabled;
 var startTime;
 var lastRenderTime;
 
+//TODO
+var turned = 0;
+
 //used for waiting between camera movements
 var waitingSince;
 var waitingFor;
@@ -58,6 +61,7 @@ var skullPileSGNode1;
 var skullPileSGNode2;
 var hipBoneSGNode;
 var swordSGNode;
+var swordParent;
 var stabbed = 0;
 var swordWaypointIndex = 0;
 
@@ -1056,6 +1060,7 @@ function createSceneGraph(gl, resources) {
 
     for(var i = 0; i < rect.normal.length; i++)
       rect.normal[i] = -rect.normal[i];
+  swordParent = new TransformationSGNode(glm.transform({translate:[0,0,0]}));
   swordSGNode = new TransformationSGNode(glm.transform({translate:[0,0,0], rotateX:90}));
   let swordMat = new MaterialSGNode(swordTextureNode);
   swordMat.ambient = [0.6, 0.6, 0.6, 1];
@@ -1843,7 +1848,7 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" + " "+context.invViewMatr
   lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
   //TODO 0, -0.65, -3
   if(!stabbed) {
-    swordSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -3, -3));
+    swordParent.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -3, -3));
 
   } else {
     if(swordWaypointIndex !== 1) {
@@ -1852,9 +1857,14 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" + " "+context.invViewMatr
       swordSGNode.matrix = stabbedPosition;
       mat4.multiply(swordSGNode.matrix, swordSGNode.matrix, glm.rotateX(90));
       */
-      swordSGNode.matrix = stabbedPosition;
-      //moveUsingWaypoints(swordSGNode.matrix, [stabbedPosition], 0, 0.1 * timediff);
-      mat4.multiply(swordSGNode.matrix,swordSGNode.matrix, glm.rotateX(90));
+      //swordParent.matrix = stabbedPosition;
+      moveUsingWaypoints(swordParent.matrix, [stabbedPosition], 0, 0.01 * timediff);
+      swordSGNode.matrix = swordParent.matrix;
+      if(!turned) {
+        mat4.multiply(swordSGNode.matrix,swordSGNode.matrix, glm.rotateX(90));
+        turned = 1;
+
+      }
 
     }
   }
