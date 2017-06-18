@@ -1204,11 +1204,11 @@ function createSceneGraph(gl, resources) {
   diamondMaterial.diffuse = [1, 1, 1, 1];
   diamondMaterial.specular = [1, 1, 1, 1];
   diamondMaterial.shininess = 100;
-  diamondUpDownNode = new TransformationSGNode(glm.translate(0,0,0), diamondUpDownNode);
+  diamondUpDownNode = new TransformationSGNode(glm.translate(0,0,0), diamondMaterial);
   diamondRotateNode = new TransformationSGNode(glm.translate(0,-7, 90), diamondUpDownNode);
   diamondTransformationNode = new TransformationSGNode(glm.translate(0,-6, 90), diamondRotateNode);
-  diamondMatrixSniffer = new SnifferSGNode(diamondMaterial);
-  b2fNodes.append(diamondTransformationNode);
+  diamondMatrixSniffer = new SnifferSGNode(diamondTransformationNode);
+  b2fNodes.append(diamondMatrixSniffer);
 
   let diamondLight = new AdvancedLightSGNode(false);
   diamondLight.ambient = [0.0,0.2,0.6,1];
