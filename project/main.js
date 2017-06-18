@@ -26,6 +26,10 @@ var lastRenderTime;
 
 //TODO
 var turned = 0;
+var deathRoll = 0;
+var upX = 0;
+var upY = 1;
+var upZ = 0;
 
 //used for waiting between camera movements
 var waitingSince;
@@ -61,6 +65,7 @@ var skullPileSGNode1;
 var skullPileSGNode2;
 var hipBoneSGNode;
 var swordSGNode;
+var swordToggleNode;
 var swordParent;
 var stabbed = 0;
 var swordWaypointIndex = 0;
@@ -703,6 +708,9 @@ diceTextureNode = dreughTextureNode;
     setTimeout(function() {
       stabbed = 1;
     }, 2000);
+    setTimeout(function() {
+      deathRoll = 1;
+    }, 2500);
   }));
 
   initInteraction(gl.canvas);
@@ -1069,7 +1077,6 @@ function createSceneGraph(gl, resources) {
   swordMat.shininess = 1000;
   swordSGNode.append(swordMat);
   swordTextureNode.append(new RenderSGNode(rect));
-
   b2fNodes.append(swordSGNode);
 }
 
@@ -1558,7 +1565,6 @@ function createSceneGraph(gl, resources) {
   diamondRotateNode = new TransformationSGNode(glm.translate(0,-7, 90), diamondUpDownNode);
   diamondTransformationNode = new TransformationSGNode(glm.translate(0,-6, 90), diamondRotateNode);
   diamondMatrixSniffer = new SnifferSGNode(diamondTransformationNode);
-  //TODO
   let particles = createParticleNode(500, [4,30,4], [0.75, 0.6, 1], [0.75/8, 0.6/8, 1/8]);
   diamondUpDownNode.append(particles);
 
@@ -1831,12 +1837,15 @@ function render(timeInMilliseconds) {
       lookAtWaypointIndex7 = moveUsingWaypoints(autoCameraLookAt, [glm.translate(7, -7.5, 81.3), finalDiamondMatrix], lookAtWaypointIndex7, 0.1 * timediff);
     }
 
-    lookAtObject(context, autoCameraLookAt, [0,1,0]);
+    lookAtObject(context, autoCameraLookAt, [upX,upY,upZ]);
     context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
     lookAtVector = vec3.normalize(vec3.create(), vec3.fromValues(autoCameraLookAt[12], autoCameraLookAt[13], autoCameraLookAt[14]));
   }
   if(lookAtWaypointIndex7 === 2) {
     autoCameraLookAt = finalDiamondMatrix;
+    if(deathRoll) {
+      lookAtWaypointIndex7 = -1;
+    }
   }
 
 
@@ -1870,14 +1879,17 @@ function render(timeInMilliseconds) {
 
 displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" + " "+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
   //translateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(1, -0.75, -2));
-  lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
+  if(!deathRoll) {
+    lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
+
+  }
   //TODO 0, -0.65, -3
   if(!stabbed) {
     swordParent.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -3, -3));
 
   } else {
     if(swordWaypointIndex !== 1) {
-      let stabbedPosition = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -0.65, -3));
+      let stabbedPosition = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -1, -3));
       /*
       swordSGNode.matrix = stabbedPosition;
       mat4.multiply(swordSGNode.matrix, swordSGNode.matrix, glm.rotateX(90));
@@ -1892,6 +1904,21 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" + " "+context.invViewMatr
 
       }
 
+    }
+  }
+  if(deathRoll && !manualCameraEnabled) {
+    moveUsingWaypoints(autoCameraLookAt, [glm.translate(1.56, -7.8, 88.7)], 0, 0.1);
+    if(context.invViewMatrix[13] < -6) {
+      context.invViewMatrix[13]-=0.05;
+    }
+    if(upY > 0) {
+      upY -= 0.025;
+      mat4.multiply(swordSGNode.matrix,swordSGNode.matrix, glm.rotateZ(-1));
+      mat4.multiply(swordSGNode.matrix,swordSGNode.matrix, glm.rotateY(2));
+
+    }
+    if(upX < 1) {
+      upX += 0.025;
     }
   }
 
@@ -2004,6 +2031,8 @@ function initInteraction(canvas) {
         case 'KeyC':
           manualCameraEnabled = true;
           disableMovementHeadBobbing();
+          deathRoll = 0;
+          b2fNodes.remove(swordSGNode);
           break;
       }
     }
