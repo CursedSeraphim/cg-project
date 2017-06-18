@@ -31,7 +31,7 @@ var waitingFor;
 //matrix used to have camera look at specific points during the automated camera flight
 var firstFrame = 1;
 var autoCameraLookAt;
-var headBobbing = 1;
+var MovementHeadBobbing = 1;
 var movementSpeedModifier = 1;
 
 //scene graph nodes
@@ -81,6 +81,7 @@ var spellParentNode;
 var spellSGNode;
 var spellLightNode;
 var spellParticle;
+var fireSpellVolley = 0;
 
 //used for spell
 var spellWayPointIndex = -1;
@@ -118,6 +119,7 @@ var triggerSGNode5;
 var triggerSGNode6;
 var triggerSGNode7;
 var triggerSGNode8;
+var triggerSGNode9;
 
 /*DEBUG NODES*/
 
@@ -508,20 +510,22 @@ diceTextureNode = diabloTextureNode;
   triggerSGNode4 = new TriggerSGNode(0.1, wpCam7, function() {
     waitingSince = time();
     waitingFor = 1000;
-    disableHeadBobbing();
-    setTimeout(enableHeadBobbing, waitingFor);
+    disableMovementHeadBobbing();
+    setTimeout(enableMovementHeadBobbing, waitingFor);
   });
 
   triggerSGNode5 = new TriggerSGNode(0.1, wpCam8, function() {
     waitingSince = time();
     waitingFor = 500;
-    disableHeadBobbing();
-    setTimeout(enableHeadBobbing, waitingFor);
+    disableMovementHeadBobbing();
+    setTimeout(enableMovementHeadBobbing, waitingFor);
   });
-  triggerSGNode6 = new TriggerSGNode(0.1, wpCam8, function() {
+  //trigger spider movement
+  triggerSGNode6 = new TriggerSGNode(3, wpCam8, function() {
     spiderMoving = 1;
   });
-  triggerSGNode7 = new TriggerSGNode(1, wpCam12, function() {
+  //trigger spider to stop moving
+  triggerSGNode7 = new TriggerSGNode(3, wpCam12, function() {
     console.log("trigger 7 called");
     spiderMoving = 0;
   });
@@ -541,66 +545,55 @@ diceTextureNode = diabloTextureNode;
   spellParentNode.append(spellSGNode);
   b2fNodes.append(spellParentNode);
   //TODO xz1
-
-  triggerSGNode8 = new TriggerSGNode(0.1, wpCam8, function() {
-
-    var target = spiderAndBillBoardNode;
-    var fireSpell = function(){
-      //remove spellparticle children from spellsgnode before firing a new one
+  var target = spiderAndBillBoardNode;
+  var fireSpell = function(){
+    //remove spellparticle children from spellsgnode before firing a new one
+    spellSGNode.remove(spellParticle);
+    //add new spell particle
+    spellSGNode.append(spellParticle);
+    //add spell parent to b2fnodes
+    //set spell light
+    spellLightNode.ambient = [r/8,g/8,b/8,1.0];
+    spellLightNode.diffuse = [r/4,g/4,b/4,1.0];
+    spellLightNode.specular = [r/4,g/4,b/4,1.0];
+    //set spell position to camera
+    spellSGNode.matrix[12] = -cameraPosition[0];
+    spellSGNode.matrix[13] = -cameraPosition[1]-1;
+    spellSGNode.matrix[14] = -cameraPosition[2];
+    //set spell target
+    let variedTargetMatrix = glm.translate(target.matrix[12]+Math.random()*0.25*(-cameraPosition[0]-target.matrix[12]), target.matrix[13]+Math.random()*5, target.matrix[14]+Math.random()*0.25*(-cameraPosition[2]-target.matrix[14]));
+    spellWayPoints = [variedTargetMatrix];
+    //(re)set spell waypoint index to initialize waypoint movement
+    spellWayPointIndex = 0;
+    //add trigger for when the spell hits the target
+    root.append(new ObjectTriggerSGNode(2.5, spellSGNode.matrix, variedTargetMatrix, function() {
+      //when spell hits the target turn spell light off
+      spellLightNode.ambient = [0,0,0,1.0];
+      spellLightNode.diffuse = [0,0,0,1.0];
+      spellLightNode.specular = [0,0,0,1.0];
+      //remove particle effect
       spellSGNode.remove(spellParticle);
-      //add new spell particle
-      spellSGNode.append(spellParticle);
-      //add spell parent to b2fnodes
-      //set spell light
-      spellLightNode.ambient = [r/8,g/8,b/8,1.0];
-      spellLightNode.diffuse = [r/4,g/4,b/4,1.0];
-      spellLightNode.specular = [r/4,g/4,b/4,1.0];
-      //set spell position to camera
-      spellSGNode.matrix[12] = -cameraPosition[0];
-      spellSGNode.matrix[13] = -cameraPosition[1]-1;
-      spellSGNode.matrix[14] = -cameraPosition[2];
-      //set spell target
-      let variedTargetMatrix = glm.translate(target.matrix[12]+Math.random()*5, target.matrix[13]+Math.random()*5, target.matrix[14]+Math.random()*5);
-      spellWayPoints = [variedTargetMatrix];
-      //(re)set spell waypoint index to initialize waypoint movement
-      spellWayPointIndex = 0;
-      //add trigger for when the spell hits the target
-      root.append(new ObjectTriggerSGNode(2.5, spellSGNode.matrix, variedTargetMatrix, function() {
-        //when spell hits the target turn spell light off
-        spellLightNode.ambient = [0,0,0,1.0];
-        spellLightNode.diffuse = [0,0,0,1.0];
-        spellLightNode.specular = [0,0,0,1.0];
-        //remove particle effect
-        spellSGNode.remove(spellParticle);
-        //reomve the trigger
-        root.remove(this);
-      }));
+      //reomve the trigger
+      root.remove(this);
+    }));
 
-    }
-    fireSpell();
-    setTimeout(fireSpell, 500);
-    //setTimeout(fireSpell, 450);
-    //setTimeout(fireSpell, 750);
-    /*
-    setTimeout(fireSpell, 800);
-    setTimeout(fireSpell, 850);
-    setTimeout(fireSpell, 900);
-    setTimeout(fireSpell, 950);*/
-    setTimeout(fireSpell, 1050);
-    //setTimeout(fireSpell, 1250);
-    setTimeout(fireSpell, 1400);
-    //setTimeout(fireSpell, 1600);
-    setTimeout(fireSpell, 1850);
-    //setTimeout(fireSpell, 2050);
-    setTimeout(fireSpell, 2250);
-    //setTimeout(fireSpell, 2500);
-    setTimeout(fireSpell, 2700);
-    //setTimeout(fireSpell, 2975);
-    setTimeout(fireSpell, 3150);
-    setTimeout(fireSpell, 3450);
-    setTimeout(fireSpell, 3800);
-    setTimeout(fireSpell, 4300);
-    setTimeout(fireSpell, 4750);
+  }
+  //trigger volley of spells
+  triggerSGNode8 = new TriggerSGNode(3, wpCam8, function() {
+    fireSpellVolley = 1;
+    //as long as second waypoint is not reached and fireSpellVolley is 1 spells will continue to fire the spider
+    var startInterval = function() {
+      if(fireSpellVolley) {
+        fireSpell();
+        setTimeout(startInterval, 375+Math.random()*100);
+      }
+    };
+    startInterval();
+
+  });
+
+  triggerSGNode9 = new TriggerSGNode(3, wpCam10, function() {
+    fireSpellVolley = 0;
   });
 
   root.append(triggerSGNode2);
@@ -610,6 +603,7 @@ diceTextureNode = diabloTextureNode;
   root.append(triggerSGNode6);
   root.append(triggerSGNode7);
   root.append(triggerSGNode8);
+  root.append(triggerSGNode9);
 
   initInteraction(gl.canvas);
 }
@@ -1149,18 +1143,12 @@ function createSceneGraph(gl, resources) {
   spiderMovementSet2SGNode.append(spiderLeftHindLeg2SGNode);
   spiderMovementSet2SGNode.append(spiderRightHindLegSGNode);
 
-  //spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(10));
-  //spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(-10));
   spiderTransformationNode.append(spiderMovementSet1SGNode);
   spiderTransformationNode.append(spiderMovementSet2SGNode);
-  //spiderTransformationNode.append(andarielSGNode);
   spiderTransformationNode.append(spiderAbdomenSGNode);
-  //andarielSGNode.append(spiderTransformationNode);
   spiderAndBillBoardNode.append(spiderTransformationNode);
   spiderAndBillBoardNode.append(andarielSGNode);
   lightingNodes.append(spiderAndBillBoardNode);
-  //lightingNodes.append(spiderTransformationNode);
-  //lightingNodes.append(andarielSGNode);
 
 }
 
@@ -1326,19 +1314,19 @@ function render(timeInMilliseconds) {
   let upLookAtVector = [0, -1, 0];
   if(camera.movement.forward == 1) {
     vec3.subtract(cameraPosition, cameraPosition, vec3.scale(vec3.create(), lookAtVector, 0.25*movementSpeedModifier));
-    enableHeadBobbing();
+    enableMovementHeadBobbing();
   }
   if(camera.movement.backward == 1) {
     vec3.scaleAndAdd(cameraPosition, cameraPosition, lookAtVector, 0.25*movementSpeedModifier);
-    enableHeadBobbing();
+    enableMovementHeadBobbing();
   }
   if(camera.movement.left == 1) {
     vec3.scaleAndAdd(cameraPosition, cameraPosition, crossLookAtVector, 0.25*movementSpeedModifier);
-    enableHeadBobbing();
+    enableMovementHeadBobbing();
   }
   if(camera.movement.right == 1) {
     vec3.subtract(cameraPosition, cameraPosition, vec3.scale(vec3.create(), crossLookAtVector, 0.25*movementSpeedModifier));
-    enableHeadBobbing();
+    enableMovementHeadBobbing();
   }
   if(camera.movement.up == 1) {
     vec3.scaleAndAdd(cameraPosition, cameraPosition, upLookAtVector, 0.25*movementSpeedModifier);
@@ -1358,6 +1346,9 @@ function render(timeInMilliseconds) {
   if(spiderMoving) {
     if(spiderWaypointIndex < 1){
       spiderWaypointIndex = moveUsingWaypoints(spiderAndBillBoardNode.matrix, [glm.translate(context.invViewMatrix[12], spiderAndBillBoardNode.matrix[13], context.invViewMatrix[14])], spiderWaypointIndex, 0.15*timediff);
+      if(spiderWaypointIndex === 1) {
+        spiderMoving = 0;
+      }
     }
     var speed = 2.5;
     spiderAbdomenSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
@@ -1437,7 +1428,7 @@ function render(timeInMilliseconds) {
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
-displayText(((timeInMilliseconds)/1000).toFixed(2)+"s bobb:"+headBobbing);//+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
+displayText(((timeInMilliseconds)/1000).toFixed(2)+"s");//" "+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
 /* moving diablo to camera
   diabloSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.5, -2.5));
   diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));
@@ -1455,15 +1446,15 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s bobb:"+headBobbing);//+con
   lastRenderTime = timeInMilliseconds;
 }
 
-//TODO make head go back down when stopping headbobbing so camera doesn't stop midair
-function enableHeadBobbing() {
-  headBobbing = 1;
+//TODO make head go back down when stopping MovementHeadBobbing so camera doesn't stop midair
+function enableMovementHeadBobbing() {
+  MovementHeadBobbing = 1;
 
   bobbSpeed = 75;
   bobbHeight = 25;
 }
-function disableHeadBobbing() {
-  headBobbing = 0;
+function disableMovementHeadBobbing() {
+  MovementHeadBobbing = 0;
 
   bobbSpeed = 300;
   bobbHeight = 200;
@@ -1550,7 +1541,7 @@ function initInteraction(canvas) {
       switch(event.code) {
         case 'KeyC':
           manualCameraEnabled = true;
-          disableHeadBobbing();
+          disableMovementHeadBobbing();
           break;
       }
     }
@@ -1563,22 +1554,22 @@ function initInteraction(canvas) {
         case 'ArrowUp':
         case 'KeyW':
         camera.movement.forward = 0;
-        disableHeadBobbing();
+        disableMovementHeadBobbing();
         break;
         case 'ArrowDown':
         case 'KeyS':
         camera.movement.backward = 0;
-        disableHeadBobbing();
+        disableMovementHeadBobbing();
           break;
         case 'ArrowLeft':
         case 'KeyA':
         camera.movement.left = 0;
-        disableHeadBobbing();
+        disableMovementHeadBobbing();
           break;
         case 'ArrowRight':
         case 'KeyD':
         camera.movement.right = 0;
-        disableHeadBobbing();
+        disableMovementHeadBobbing();
           break;
         case 'ControlLeft':
         camera.movement.down = 0;
