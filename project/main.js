@@ -555,7 +555,7 @@ diceTextureNode = diabloTextureNode;
       spellSGNode.matrix[13] = -cameraPosition[1]-1;
       spellSGNode.matrix[14] = -cameraPosition[2];
       //set spell target
-      let variedTargetMatrix = glm.translate(target.matrix[12]+Math.random()*0.2*(-cameraPosition[0]-target.matrix[12]), target.matrix[13]+Math.random()*5, target.matrix[14]+Math.random()*0.2*(-cameraPosition[2]-target.matrix[14]));
+      let variedTargetMatrix = glm.translate(target.matrix[12]+Math.random()*0.25*(-cameraPosition[0]-target.matrix[12]), target.matrix[13]+Math.random()*5, target.matrix[14]+Math.random()*0.25*(-cameraPosition[2]-target.matrix[14]));
       spellWayPoints = [variedTargetMatrix];
       //(re)set spell waypoint index to initialize waypoint movement
       spellWayPointIndex = 0;
