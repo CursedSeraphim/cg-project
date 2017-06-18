@@ -83,6 +83,8 @@ var spellLightNode;
 var spellParticle;
 var fireSpellVolley = 0;
 
+var diamondRotateNode;
+
 //used for spell
 var spellWayPointIndex = -1;
 var spellWayPoints;
@@ -330,8 +332,8 @@ function init(resources) {
   startTime = time();
 
   /*set camera Start position*/
-  cameraPosition = vec3.fromValues(3, -1, -10);
-  //cameraPosition = vec3.fromValues(-40, 3, -75);
+  //cameraPosition = vec3.fromValues(3, -1, -10);
+  cameraPosition = vec3.fromValues(0, 3, -87);
 
   /*set waypoints*/
   cameraWaypointIndex = 0;
@@ -680,6 +682,9 @@ function createSceneGraph(gl, resources) {
     b2fNodes.append(createFireTorch([32.0625, -1, 26.675]));
     b2fNodes.append(createFireTorch([43.45, -1, 0.4]));
 
+    b2fNodes.append(createFireTorch([0, -3, 87]));
+
+
     function createGreenTorch(pos, lookAt) {
       var torch = createTorch([0.05,0.3,0.025,1.0],
                           pos,
@@ -826,9 +831,9 @@ function createSceneGraph(gl, resources) {
 
   /*Init Lantern-Light*/
   let torchNode = new AdvancedLightSGNode(true, 10, [0,0,1]);
-  torchNode.ambient = [1.0,0.6,0.05,1.0];
-  torchNode.diffuse = [1.0,0.6,0.05,1.0];
-  torchNode.specular = [1.0,0.6,0.05,1.0];
+  torchNode.ambient = [1.0,0.6,0.2,1.0];
+  torchNode.diffuse = [1.0,0.6,0.2,1.0];
+  torchNode.specular = [1.0,0.6,0.2,1.0];
   torchNode.position = [0, 0.15, 0.02];
   torchNode.decreaseRate = 25;
 
@@ -1182,8 +1187,9 @@ function createSceneGraph(gl, resources) {
   diamondMaterial.diffuse = [1, 1, 1, 1];
   diamondMaterial.specular = [1, 1, 1, 1];
   diamondMaterial.shininess = 100;
-  let diamondTransformationNode = new TransformationSGNode(glm.translate(0,1,0), diamondMaterial);
-  lightingNodes.append(diamondTransformationNode);
+  diamondRotateNode = new TransformationSGNode(glm.translate(0,-6, 90), diamondMaterial);
+  let diamondTransformationNode = new TransformationSGNode(glm.translate(0,-6, 90), diamondRotateNode);
+  b2fNodes.append(diamondTransformationNode);
 }
 
   //lightingNodes.append(diabloTextureNode);
@@ -1457,12 +1463,16 @@ function render(timeInMilliseconds) {
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
 displayText(((timeInMilliseconds)/1000).toFixed(2)+"s"+" "+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
+=======
+displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" + " "+context.invViewMatrix[12]+" "+context.invViewMatrix[13]+" "+context.invViewMatrix[14]);
+>>>>>>> 7680ef022a1869ec1d7cc0ad2550a0b6ae862362
 /* moving diablo to camera
   diabloSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.5, -2.5));
   diabloSGNode.matrix = mat4.multiply(mat4.create(), diabloSGNode.matrix, glm.transform({ translate: [0,0,0], rotateX: 180, scale: 0.0675}));
 */
   //translateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(1, -0.75, -2));
   lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
+  diamondRotateNode.matrix = glm.rotateY(timeInMilliseconds*-0.01);
   //lanternSGNode.matrix = translateLantern.matrix;
 
   //render scenegraph
