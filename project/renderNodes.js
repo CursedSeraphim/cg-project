@@ -307,6 +307,7 @@ class ParticleSGNode extends SGNode {
     this.particleColorMult = (colorMult || vec3.fromValues(0.5,0.5,0.1));
     this.particleColorMin = (colorMin ||vec3.fromValues(0.5,0,0));
     this.windStrength = 0.3;
+    this.newSpawns = 200;
   }
 
   /*Generate a random color within the given parameters
@@ -493,7 +494,7 @@ class ParticleSGNode extends SGNode {
     var sizeGlBuffer = [];
 
     /*create new particles*/
-    for(var i = 0; i < 200*(timeDiff > 100?0.1:timeS); i++){
+    for(var i = 0; i < this.newSpawns*(timeDiff > 100?0.1:timeS); i++){
       this.fireParticles.push(this.createParticle(this.fuelSize ,this.partSize, this.sizeVariance, this.fireSpeed, this.fireEmmitAngle));
     }
 
@@ -541,7 +542,8 @@ class ParticleSGNode extends SGNode {
       /*reduce the visibility of each particle as they rise away*/
       particle.color[3] -= (this.fireHeatDegreeRate*timeS + Math.abs(distanceToCenter)*this.fireCenterHeatDegreeRate*timeS);
       /*also reduce particle size during a particle lifespan*/
-      particle.size -= (particle.size/this.particleSizeReduction*timeS + Math.abs(distanceToCenter)*particle.size/(this.particleSizeReduction*2)*timeS);
+      if(this.particleSizeReduction > 0)
+        particle.size -= (particle.size/this.particleSizeReduction*timeS + Math.abs(distanceToCenter)*particle.size/(this.particleSizeReduction*2)*timeS);
 
       var pos = particle.position.slice(0);
       pos[1] = pos[1] / 2;
