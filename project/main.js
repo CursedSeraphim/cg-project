@@ -83,6 +83,7 @@ var spellLightNode;
 var spellParticle;
 var fireSpellVolley = 0;
 
+var diamondMatrixSniffer;
 var diamondRotateNode;
 var diamondTransformationNode;
 var diamondUpDownNode;
@@ -1206,7 +1207,8 @@ function createSceneGraph(gl, resources) {
   diamondUpDownNode = new TransformationSGNode(glm.translate(0,0,0), diamondMaterial);
   diamondRotateNode = new TransformationSGNode(glm.translate(0,-7, 90), diamondUpDownNode);
   diamondTransformationNode = new TransformationSGNode(glm.translate(0,-6, 90), diamondRotateNode);
-  b2fNodes.append(diamondTransformationNode);
+  diamondMatrixSniffer = new SnifferSGNode(diamondTransformationNode);
+  b2fNodes.append(diamondMatrixSniffer);
 
   let diamondLight = new AdvancedLightSGNode(false);
   diamondLight.ambient = [0.0,0.2,0.6,1];
@@ -1469,9 +1471,10 @@ function render(timeInMilliseconds) {
     if(lookAtWaypointIndex7 < lookAtWaypoints6.length && lookAtWaypointIndex7 !== -1){
       lookAtWaypointIndex7 = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints7, lookAtWaypointIndex7, 0.1 * timediff);
       if(lookAtWaypointIndex7 === lookAtWaypoints7.length) {
-        autoCameraLookAt = diamondUpDownNode.matrix;
+        autoCameraLookAt = diamondMatrixSniffer.sceneMatrix;
       }
     }
+    console.log(diamondMatrixSniffer.sceneMatrix);
 
     lookAtObject(context, autoCameraLookAt, [0,1,0]);
     context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
