@@ -62,7 +62,6 @@ var swordToggleNode;
 var swordParent;
 var stabbed = 0;
 var swordWaypointIndex = 0;
-var youDiedSGNode;
 var bloodPosSGNode;
 var bloodParticle;
 
@@ -165,7 +164,6 @@ var spiderTextureNode7;
 var spiderTextureNode8;
 var spiderTextureNode9;
 var swordTextureNode;
-var youDiedTextureNode;
 
 var crownTextureNode;
 var crystalSwordTextureNode;
@@ -246,7 +244,6 @@ loadResources({
   spiderTexture: 'textures/spider/spider.png',
   spiderBodyTexture: 'textures/spider/spiderBody.png',
   swordTexture: 'textures/misc/bloody_sword.png',
-  youDiedTexture: 'textures/misc/youdied.png',
 
   crownTexture: 'textures/treasure/crown.png',
   crystalSwordTexture: 'textures/treasure/crystal_sword.png',
@@ -453,7 +450,6 @@ function init(resources) {
   goldSkinTextureNode = new AdvancedTextureSGNode(resources.goldSkinTexture);
   tridentTextureNode = new AdvancedTextureSGNode(resources.tridentTexture);
   swordTextureNode  = new AdvancedTextureSGNode(resources.swordTexture);
-  youDiedTextureNode  = new AdvancedTextureSGNode(resources.youDiedTexture);
 
   goldPile1TextureNode = new AdvancedTextureSGNode(resources.goldPileTexture);
   goldPile2TextureNode = new AdvancedTextureSGNode(resources.goldPileTexture);
@@ -668,15 +664,6 @@ andarielTextureNode = new AnimatedTextureSGNode(andarielFrames, 0, 75);
   initInteraction(gl.canvas);
 }
 
-//used to init animation frames
-function initAnimatedTexture(array, clampType) {
-  let animationArray = [];
-  for(var i = 0; i < array.length; i++) {
-    animationArray.push(initTextures(array[i], clampType));
-  }
-  return animationArray;
-}
-
 function createSceneGraph(gl, resources) {
   //create scenegraph
   const root = new ShaderSGNode(createProgram(gl, resources.vs_lighting, resources.fs_lighting));
@@ -685,55 +672,6 @@ function createSceneGraph(gl, resources) {
   b2fNodes = new Back2FrontSGNode();
   root.append(new BlendSgNode(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA, lightingNodes));
 
-  function createTorch(color, pos, colorMult, colorMin) {
-    var particle = createParticleNode(120, [0.2,0.05,0.2], colorMult,colorMin);
-    let torchLight = new AdvancedLightSGNode(true);
-    torchLight.ambient = [0,0,0,1];
-    torchLight.diffuse = color;
-    torchLight.specular = color;
-    torchLight.position = pos;
-    torchLight.append(particle);
-    return torchLight;
-  }
-
-  function createDefaultMaterialNode(specular, children) {
-    var node = new MaterialSGNode(children);
-    node.ambient = [1, 1, 1, 1];
-    node.diffuse = [1, 1, 1, 1];
-    node.specular = [1*specular, 1*specular, 1*specular, 1];
-    node.shininess = 1000;
-    return node;
-  }
-
-  function createBillBoard(position, size) {
-    var rect = makeTexturedRect(size[0], size[1], size[2]);
-    let billboard = new BillboardSGNode(glm.transform({translate: position}), [
-      new RenderSGNode(rect)
-    ]);
-    return createDefaultMaterialNode(0.1, billboard);
-  }
-
-  function createFireTorch(pos) {
-    var torch = createTorch([1.0,0.6,0.05,1.0],
-      pos);
-      torch.ambient = [0.25,0.15,0.0125,1.0];
-      //torch.spotAngle = 105 * Math.PI/180;
-      torch.decreaseRate = 5;
-      return torch;
-    }
-
-  function createGreenTorch(pos, lookAt) {
-    var torch = createTorch([0.05,0.3,0.025,1.0],
-                        pos,
-                        [0.2,0.5,0.1],
-                        [0,0.5,0]);
-    torch.ambient = [0,0,0,1.0]
-    //torch.spotAngle = 105 * Math.PI/180;
-    torch.lookAt = lookAt;
-    torch.decreaseRate = 8;
-    return torch;
-  }
-
   {
     b2fNodes.append(createFireTorch([27.6, 0, -0.125]));
     b2fNodes.append(createFireTorch([-9.5, 3, 0]));
@@ -741,501 +679,388 @@ function createSceneGraph(gl, resources) {
     b2fNodes.append(createFireTorch([43.45, -1, 0.4]));
 
     /*left torches in Spiderhall*/
-    b2fNodes.append(createGreenTorch([40, -3, 50.85], [0,0,-1]));
-    b2fNodes.append(createGreenTorch([80, -3, 50.85], [0,0,-1]));
-    b2fNodes.append(createGreenTorch([90, -3, 50.85], [0,0,-1]));
-    b2fNodes.append(createGreenTorch([100, -3, 50.85], [0,0,-1]));
-    b2fNodes.append(createGreenTorch([110, -3, 50.85], [0,0,-1]));
+    b2fNodes.append(createGreenTorch([40, -3, 50.85]));
+    b2fNodes.append(createGreenTorch([80, -3, 50.85]));
+    b2fNodes.append(createGreenTorch([90, -3, 50.85]));
+    b2fNodes.append(createGreenTorch([100, -3, 50.85]));
+    b2fNodes.append(createGreenTorch([110, -3, 50.85]));
 
     /*right torches in Spiderhall*/
-    b2fNodes.append(createGreenTorch([40, -3, 89.15], [0,0,1]));
-    b2fNodes.append(createGreenTorch([50, -3, 89.15], [0,0,1]));
-    b2fNodes.append(createGreenTorch([70, -3, 89.15], [0,0,1]));
-    b2fNodes.append(createGreenTorch([60, -3, 89.15], [0,0,1]));
-    b2fNodes.append(createGreenTorch([80, -3, 89.15], [0,0,1]));
-    b2fNodes.append(createGreenTorch([90, -3, 89.15], [0,0,1]));
-    b2fNodes.append(createGreenTorch([100, -3, 89.15], [0,0,1]));
-    b2fNodes.append(createGreenTorch([110, -3, 89.15], [0,0,1]));
-}
-
-/*Add orc shaman*/
-{
-  var rect = makeTexturedRect(2, 2, 1)
-
-  orcShamanSGNode = new BillboardSGNode(glm.transform({translate: [25,-3.5,-15]}), [
-    new RenderSGNode(rect)
-  ]);
-  let orc_shamanMaterialNode = new MaterialSGNode(orcShamanSGNode);
-  orc_shamanMaterialNode.ambient = [0.6, 0.6, 0.6, 1];
-  orc_shamanMaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
-  orc_shamanMaterialNode.specular = [1, 1, 1, 1];
-  orc_shamanMaterialNode.shininess = 1000;
-
-  orcShamanTextureNode.append(orcShamanSGNode);
-}
-
-/*Place the Dungeon Layout, e.g. walls, floor,...*/
-{
-
-  //initialize map floor
-  floorTextureNode.append(new RenderSGNode(resources.modelMapFloor));
-  lightingNodes.append(createDefaultMaterialNode(0.1,floorTextureNode));
-
-  //initialize map walls
-  cobbleTextureNode.append(new RenderSGNode(resources.modelMapCobble));
-  lightingNodes.append(createDefaultMaterialNode(0.1,cobbleTextureNode));
-
-  //initialize map spiked bars
-  spikedBarsTextureNode.append(new RenderSGNode(resources.modelMapSpikedBars));
-  lightingNodes.append(orcShamanTextureNode);
-  lightingNodes.append(createDefaultMaterialNode(0.2,spikedBarsTextureNode));
-
-  //initialize map sky
-  skyTextureNode.append(new ShaderSGNode(simpleShaderProgram, new RenderSGNode(resources.modelMapSky)));
-  lightingNodes.append(createDefaultMaterialNode(0.1,
-    new TransformationSGNode(glm.translate(0,-70,0), skyTextureNode)));
-
-  //initialize map torches
-  metalTextureNode2.append(new RenderSGNode(resources.modelMapTorches));
-  lightingNodes.append(createDefaultMaterialNode(0.6,metalTextureNode2));
-
-  //initialize map pentagram
-  pentagramTextureNode.append(new RenderSGNode(resources.modelMapPentagram));
-  lightingNodes.append(createDefaultMaterialNode(0.4,pentagramTextureNode));
-
-  //initialize map cobwebs
-  web1TextureNode.append(new RenderSGNode(resources.modelMapWebs));
-  lightingNodes.append(createDefaultMaterialNode(0,web1TextureNode));
-
-  //initialize map glass
-  stainedGlassTextureNode.append(new RenderSGNode(resources.modelMapGlass));
-  b2fNodes.append(createDefaultMaterialNode(0.7,stainedGlassTextureNode));
-}
-
-{
-  /*Init lantern*/
-  lanternParticleNode = new ParticleSGNode(50, [0.05,0.025,0.05]);
-  let lanternFireParticleNode  = createParticleNode(null, null, null, null, lanternParticleNode);
-  lanternParticleNode.maxDistanceFromStart = 0.1;
-  lanternParticleNode.windStrength = 0;
-  lanternParticleNode.maxMovement = 0.5;
-  lanternParticleNode.varianceOffset = 1;
-  lanternParticleNode.randomVariance = 0.5;
-
-  /*Init Lantern-Light*/
-  lanternLightNode = new AdvancedLightSGNode(true, 10, [0,0,-1]);
-  lanternLightNode.ambient = [1.0,0.6,0.2,1.0];
-  lanternLightNode.diffuse = [1.0,0.6,0.2,1.0];
-  lanternLightNode.specular = [1.0,0.6,0.2,1.0];
-  lanternLightNode.position = [0, 0.15, 0.02];
-  lanternLightNode.decreaseRate = 40;
-
-  //lanternLightNode.append(lanternFireParticleNode);
-
-  rotateLantern = new TransformationSGNode(glm.rotateY(180));
-  lanternSGNode = new TransformationSGNode(glm.translate(0,0,0), [rotateLantern]);
-  lanternFireSGNode = new TransformationSGNode(glm.translate(0,0,0));
-  lanternFireSGNode.append(lanternFireParticleNode);
-
-  //initialize lantern glass
-  glassTextureNode.append(new RenderSGNode(resources.modelLanternGlass));
-  glassMaterial = createDefaultMaterialNode(1,glassTextureNode);
-  rotateLantern.append(glassMaterial);
-  //initialize lantern metal
-  metalTextureNode.append(new RenderSGNode(resources.modelLanternMetal));
-  let metal = createDefaultMaterialNode(1,metalTextureNode)
-  metal.shininess = 50000;
-  rotateLantern.append(metal);
-
-  //initialize lantern grid
-  gridTextureNode.append(new RenderSGNode(resources.modelLanternGrid));
-  let grid = createDefaultMaterialNode(1,gridTextureNode)
-  grid.shininess = 50000;
-  rotateLantern.append(grid);
-  rotateLantern.append(lanternLightNode);
-
-}
-
-/*Add dreugh*/
-{
-  dreughTextureNode.append(createBillBoard([52,2,27], [2, 2, 1]));
-  b2fNodes.append(dreughTextureNode);
-}
-
-/*Add skull piles*/
-{
-  skullPile1TextureNode.append(createBillBoard([39.4,-5,4.1], [1.25, 1.25, 1]));
-  skullPile1TextureNode.append(createBillBoard([48,-5,4.1], [1.25, 1.25, 1]));
-  b2fNodes.append(skullPile1TextureNode);
-}
-
-/*Add bone piles*/
-{
-  bones1TextureNode.append(createBillBoard([44,.25,29.3], [0.3, 0.3, 1]));
-  b2fNodes.append(bones1TextureNode);
-
-  bones2TextureNode.append(createBillBoard([25.6,-5.25,-8.44], [0.3, 0.3, 1]));
-  b2fNodes.append(bones2TextureNode);
-}
-
-/*Add Duriel*/
-{
-  durielTextureNode.append(createBillBoard([43.5,-3.25,13.5], [2.5, 2.5, 1]));
-  b2fNodes.append(durielTextureNode);
-}
-
-/*Add sword*/
-{
-  var rect = makeTexturedRect(2, 2, 1)
-  swordParent = new TransformationSGNode(glm.transform({translate:[0,0,0]}));
-  swordSGNode = new TransformationSGNode(glm.transform({translate:[0,0,0], rotateX:90}));
-  let swordMat = new MaterialSGNode(swordTextureNode);
-  swordSGNode.append(createDefaultMaterialNode(1,swordTextureNode));
-  swordTextureNode.append(new RenderSGNode(rect));
-
-  bloodParticle = new ParticleSGNode(250, [0.7,0.025,0.7], [0.2,0,0,0],[0.05,0,0,1]);
-
-  bloodPosSGNode = new TransformationSGNode(glm.translate(100,100,100),
-    new TransformationSGNode(glm.rotateX(-90),
-    new ShaderSGNode(particleShaderProgram,
-      bloodParticle)));
-
-  bloodParticle.emmitModifier = -1;
-  bloodParticle.fireSpeed = 8;
-  bloodParticle.windStrength = 0;
-  bloodParticle.fireEmmitAngle = -5;
-  bloodParticle.sparkEmmitAngle = -1;
-  bloodParticle.speedVariance = 0.5;
-  bloodParticle.sizeVariance = 0.5;
-  bloodParticle.sparkEmmitRate = 2;
-  bloodParticle.particleSizeReduction = 0;
-  bloodParticle.fireRiseFactor = 1;
-  bloodParticle.movementScaling = 5;
-  bloodParticle.maxMovement = 10000;
-  bloodParticle.maxDistanceFromStart = 10000;
-  bloodParticle.windStrength = 0;
-  bloodParticle.newSpawns = 250;
-  bloodParticle.fireHeatDegreeRate = 4;
-  bloodParticle.fireCenterHeatDegreeRate = 0;
-  bloodParticle.variance = 0.1;
-
-  b2fNodes.append(swordSGNode);
-  b2fNodes.append(bloodPosSGNode);
-}
-
-/*Add trident*/
-{
-  tridentTextureNode.append(createBillBoard([-9.06,-8.25, 95.48], [2, 2, 1]));
-  b2fNodes.append(tridentTextureNode);
-}
-
-/*Add goldskin*/
-{
-  goldSkinTextureNode.append(createBillBoard([-9.12,-8.75, 92.54], [2, 2, 1]));
-  b2fNodes.append(goldSkinTextureNode);
-}
-
-
-/*Add tiara*/
-{
-  tiaraTextureNode.append(createBillBoard([1.56, -7.8, 88.75], [0.4, 0.4, 1]));
-  b2fNodes.append(tiaraTextureNode);
-}
-
-/*Add emerald*/
-{
-  emeraldTextureNode.append(createBillBoard([3.5, -8.45, 90.2], [0.2, 0.2, 1]));
-  b2fNodes.append(emeraldTextureNode);
-}
-
-/*Add ruby*/
-{
-  rubyTextureNode.append(createBillBoard([2.25, -8.45, 90.98], [0.2, 0.2, 1]));
-  b2fNodes.append(rubyTextureNode);
-}
-
-/*Add blue jewel*/
-{
-  blueJewelTextureNode.append(createBillBoard([2.76, -8.45, 86.56], [0.2, 0.2, 1]));
-  b2fNodes.append(blueJewelTextureNode);
-}
-
-/*Add mask*/
-{
-  maskTextureNode.append(createBillBoard([3, -8.25, 88.2], [0.4, 0.4, 1]));
-  b2fNodes.append(maskTextureNode);
-}
-
-/*Add gold piles*/
-{
-  goldPile1TextureNode.append(createBillBoard([3.22, -8.5, 92], [0.4, 0.4, 1]));
-  b2fNodes.append(goldPile1TextureNode);
-
-  goldPile2TextureNode.append(createBillBoard([5, -9, 89.144], [0.4, 0.4, 1]));
-  b2fNodes.append(goldPile2TextureNode);
-
-  goldPile3TextureNode.append(createBillBoard([1.57, -8, 91.5], [0.4, 0.4, 1]));
-  b2fNodes.append(goldPile3TextureNode);
-
-  goldPile4TextureNode.append(createBillBoard([1.0, -8, 89.77], [0.4, 0.4, 1]));
-  b2fNodes.append(goldPile4TextureNode);
-
-  goldPile5TextureNode.append(createBillBoard([0.77, -8, 91.47], [0.4, 0.4, 1]));
-  b2fNodes.append(goldPile5TextureNode);
-}
-
-/*Add crown*/
-{
-  crownTextureNode.append(createBillBoard([0.247, -8.25, 86.94], [0.4, 0.4, 1]));
-  b2fNodes.append(crownTextureNode);
-}
-
-/*Add crystal sword*/
-{
-  crystalSwordTextureNode.append(createBillBoard([-9.3,-8.25, 99.2], [2, 2, 1]));
-  b2fNodes.append(crystalSwordTextureNode);
-}
-
-/*Add youDied*/
-{
-  var rect = makeTexturedRect(2, 2, 1)
-
-    for(var i = 0; i < rect.normal.length; i++)
-      rect.normal[i] = -rect.normal[i];
-  youDiedSGNode = new BillboardSGNode(glm.transform({translate: [0,1,0]}));
-  let youdiedMatNode = new MaterialSGNode(youDiedTextureNode);
-  youdiedMatNode.ambient = [0.6, 0.6, 0.6, 1];
-  youdiedMatNode.diffuse = [0.5, 0.5, 0.5, 1];
-  youdiedMatNode.specular = [0, 0, 0, 1];
-  youdiedMatNode.shininess = 1;
-  youDiedSGNode.append(youdiedMatNode);
-  youDiedTextureNode.append(new RenderSGNode(rect));
-
-  //b2fNodes.append(new ShaderSGNode(simpleShaderProgram, youDiedSGNode));
-}
-
-/*Add ribCage*/
-{
-  ribCageTextureNode.append(createBillBoard([21,-4.75,-9.5], [0.4, 0.4, 1]));
-  lightingNodes.append(ribCageTextureNode);
-}
-
-/*Add bones*/
-{
-  boneTextureNode.append(createBillBoard([25.1,-5.25,-1], [0.3, 0.3, 1]));
-  lightingNodes.append(boneTextureNode);
-
-  bone2TextureNode.append(createBillBoard([40,.25,32.5], [0.3, 0.3, 1]));
-  lightingNodes.append(bone2TextureNode);
-}
-
-/*Add skull*/
-{
-  skullTextureNode.append(createBillBoard([10,0.5,-9.5], [0.3, 0.3, 1]));
-  lightingNodes.append(skullTextureNode);
-}
-
-/*Add hip*/
-{
-  imSoHipTextureNode.append(createBillBoard([9.5,0.5,-4.5], [0.3, 0.3, 1]));
-  lightingNodes.append(imSoHipTextureNode);
-}
-
-/*add spider*/
-{
-  /*
-  * the spider basically consists of abdomen/body/head, 2 movement sets and the humanoid part
-  * the 2 movement sets include those legs that move in the same direction for 8-legged movement
-  */
-  spiderAndBillBoardNode = new TransformationSGNode(glm.transform({translate: [spiderStartingPosition[0], spiderStartingPosition[1], spiderStartingPosition[2]], rotateY: 0}));
-  spiderTransformationNode = new TransformationSGNode(glm.translate(0,0,0));
-  spiderMovementSet1SGNode = new TransformationSGNode(glm.translate(0,0,0));
-  spiderMovementSet2SGNode = new TransformationSGNode(glm.translate(0,0,0));
-
-  spiderTextureNode1.append(new RenderSGNode(resources.modelSpiderAbdomen));
-  spiderAbdomenSGNode = new TransformationSGNode(glm.translate(0,0,0));
-  spiderAbdomenSGNode.append(createDefaultMaterialNode(0.3, spiderTextureNode1));
-
-  spiderTextureNode2.append(new RenderSGNode(resources.modelSpiderLeftFrontLeg));
-  spiderLeftFrontLegSGNode = new TransformationSGNode(glm.translate(0,0,0));
-  spiderLeftFrontLegSGNode.append(createDefaultMaterialNode(0.3, spiderTextureNode2));
-
-  spiderTextureNode3.append(new RenderSGNode(resources.modelSpiderLeftFrontLeg2));
-  spiderLeftFrontLeg2SGNode = new TransformationSGNode(glm.translate(0,0,0));
-  spiderLeftFrontLeg2SGNode.append(createDefaultMaterialNode(0.3, spiderTextureNode3));
-
-  spiderTextureNode4.append(new RenderSGNode(resources.modelSpiderLeftHindLeg2));
-  spiderLeftHindLeg2SGNode = new TransformationSGNode(glm.translate(0,0,0));
-  spiderLeftHindLeg2SGNode.append(createDefaultMaterialNode(0.3, spiderTextureNode4));
-
-  spiderTextureNode5.append(new RenderSGNode(resources.modelSpiderLeftHindLeg));
-  spiderLeftHindLegSGNode = new TransformationSGNode(glm.translate(0,0,0));
-  spiderLeftHindLegSGNode.append(createDefaultMaterialNode(0.3, spiderTextureNode5));
-
-  spiderTextureNode6.append(new RenderSGNode(resources.modelSpiderRightFrontLeg));
-  spiderRightFrontLegSGNode = new TransformationSGNode(glm.translate(0,0,0));
-  spiderRightFrontLegSGNode.append(createDefaultMaterialNode(0.3, spiderTextureNode6));
-
-  spiderTextureNode7.append(new RenderSGNode(resources.modelSpiderRightFrontLeg2));
-  spiderRightFrontLeg2SGNode = new TransformationSGNode(glm.translate(0,0,0));
-  spiderRightFrontLeg2SGNode.append(createDefaultMaterialNode(0.3, spiderTextureNode7));
-
-  spiderTextureNode8.append(new RenderSGNode(resources.modelSpiderRightHindLeg2));
-  spiderRightHindLeg2SGNode = new TransformationSGNode(glm.translate(0,0,0));
-  spiderRightHindLeg2SGNode.append(createDefaultMaterialNode(0.3, spiderTextureNode8));
-
-  spiderTextureNode9.append(new RenderSGNode(resources.modelSpiderRightHindLeg));
-  spiderRightHindLegSGNode = new TransformationSGNode(glm.translate(0,0,0));
-  spiderRightHindLegSGNode.append(createDefaultMaterialNode(0.3, spiderTextureNode9));
-
-  var rect = makeTexturedRect(2.5, 2.5, 1)
-
-    for(var i = 0; i < rect.normal.length; i++)
-      rect.normal[i] = -rect.normal[i];
-  andarielSGNode = new TransformationSGNode(glm.transform({translate: [0,2.65,-2], rotateX:180}));
-  andarielSGNode.append(createDefaultMaterialNode(0.1, andarielTextureNode));
-  andarielTextureNode.append(new RenderSGNode(rect));
-
-  spiderMovementSet1SGNode.append(spiderRightFrontLegSGNode);
-  spiderMovementSet1SGNode.append(spiderLeftFrontLeg2SGNode);
-  spiderMovementSet1SGNode.append(spiderRightHindLeg2SGNode);
-  spiderMovementSet1SGNode.append(spiderLeftHindLegSGNode);
-  spiderMovementSet2SGNode.append(spiderLeftFrontLegSGNode);
-  spiderMovementSet2SGNode.append(spiderRightFrontLeg2SGNode);
-  spiderMovementSet2SGNode.append(spiderLeftHindLeg2SGNode);
-  spiderMovementSet2SGNode.append(spiderRightHindLegSGNode);
-
-  spiderTransformationNode.append(spiderMovementSet1SGNode);
-  spiderTransformationNode.append(spiderMovementSet2SGNode);
-  spiderTransformationNode.append(spiderAbdomenSGNode);
-  spiderAndBillBoardNode.append(spiderTransformationNode);
-  spiderAndBillBoardNode.append(andarielSGNode);
-  lightingNodes.append(spiderAndBillBoardNode);
-}
-
-/*create Diamond*/
-{
-  diamondTextureNode.append(new RenderSGNode(makeDiamond()));
-  let diamondMaterial = createDefaultMaterialNode(1, diamondTextureNode);
-  diamondMaterial.shininess = 100;
-
-  diamondUpDownNode = new TransformationSGNode(glm.translate(0,0,0), diamondMaterial);
-  diamondRotateNode = new TransformationSGNode(glm.translate(0,-7, 90), diamondUpDownNode);
-  diamondTransformationNode = new TransformationSGNode(glm.translate(0,-6, 90), diamondRotateNode);
-  let particles = createParticleNode(500, [4,30,4], [0.75, 0.6, 1], [0.75/8, 0.6/8, 1/8]);
-  diamondUpDownNode.append(particles);
-
-  b2fNodes.append(diamondTransformationNode);
-
-  let diamondLight = new AdvancedLightSGNode(false);
-  diamondLight.ambient = [0.0,0.02,0.06,1];
-  diamondLight.diffuse = [0.0,0.4,1,1];
-  diamondLight.specular = [0,0.4,1,1];
-  diamondLight.position = [0,0.6,0];
-  diamondLight.decreaseRate = 8;
-
-  diamondUpDownNode.append(diamondLight);
-
-  /*place spotlight*/
-  let moonLight = new AdvancedLightSGNode(false, 9, [0,1,-0.8], [0,5,80]);
-  moonLight.ambient = [0.5,0.5,0.5,1];
-  moonLight.diffuse = [1,1,1,1];
-  moonLight.specular = [1,1,1,1];
-  moonLight.decreaseRate = 1000;
-  b2fNodes.append(moonLight);
-}
+    b2fNodes.append(createGreenTorch([40, -3, 89.15]));
+    b2fNodes.append(createGreenTorch([50, -3, 89.15]));
+    b2fNodes.append(createGreenTorch([70, -3, 89.15]));
+    b2fNodes.append(createGreenTorch([60, -3, 89.15]));
+    b2fNodes.append(createGreenTorch([80, -3, 89.15]));
+    b2fNodes.append(createGreenTorch([90, -3, 89.15]));
+    b2fNodes.append(createGreenTorch([100, -3, 89.15]));
+    b2fNodes.append(createGreenTorch([110, -3, 89.15]));
+  }
+
+  /*Add orc shaman*/
+  {
+    var rect = makeTexturedRect(2, 2, 1)
+
+    orcShamanSGNode = new BillboardSGNode(glm.transform({translate: [25,-3.5,-15]}), [
+      new RenderSGNode(rect)
+    ]);
+    let orc_shamanMaterialNode = new MaterialSGNode(orcShamanSGNode);
+    orc_shamanMaterialNode.ambient = [0.6, 0.6, 0.6, 1];
+    orc_shamanMaterialNode.diffuse = [0.5, 0.5, 0.5, 1];
+    orc_shamanMaterialNode.specular = [1, 1, 1, 1];
+    orc_shamanMaterialNode.shininess = 1000;
+
+    orcShamanTextureNode.append(orcShamanSGNode);
+  }
+
+  /*Place the Dungeon Layout, e.g. walls, floor,...*/
+  {
+    //initialize map floor
+    floorTextureNode.append(new RenderSGNode(resources.modelMapFloor));
+    lightingNodes.append(createDefaultMaterialNode(0.1,floorTextureNode));
+
+    //initialize map walls
+    cobbleTextureNode.append(new RenderSGNode(resources.modelMapCobble));
+    lightingNodes.append(createDefaultMaterialNode(0.1,cobbleTextureNode));
+
+    //initialize map spiked bars
+    spikedBarsTextureNode.append(new RenderSGNode(resources.modelMapSpikedBars));
+    lightingNodes.append(orcShamanTextureNode);
+    lightingNodes.append(createDefaultMaterialNode(0.2,spikedBarsTextureNode));
+
+    //initialize map sky
+    skyTextureNode.append(new ShaderSGNode(simpleShaderProgram, new RenderSGNode(resources.modelMapSky)));
+    lightingNodes.append(createDefaultMaterialNode(0.1,
+      new TransformationSGNode(glm.translate(0,-70,0), skyTextureNode)));
+
+    //initialize map torches
+    metalTextureNode2.append(new RenderSGNode(resources.modelMapTorches));
+    lightingNodes.append(createDefaultMaterialNode(0.6,metalTextureNode2));
+
+    //initialize map pentagram
+    pentagramTextureNode.append(new RenderSGNode(resources.modelMapPentagram));
+    lightingNodes.append(createDefaultMaterialNode(0.4,pentagramTextureNode));
+
+    //initialize map cobwebs
+    web1TextureNode.append(new RenderSGNode(resources.modelMapWebs));
+    lightingNodes.append(createDefaultMaterialNode(0,web1TextureNode));
+
+    //initialize map glass
+    stainedGlassTextureNode.append(new RenderSGNode(resources.modelMapGlass));
+    b2fNodes.append(createDefaultMaterialNode(0.7,stainedGlassTextureNode));
+  }
+
+  {
+    /*Init lantern*/
+    lanternParticleNode = new ParticleSGNode(50, [0.05,0.025,0.05]);
+    let lanternFireParticleNode  = createParticleNode(null, null, null, null, lanternParticleNode);
+    lanternParticleNode.maxDistanceFromStart = 0.1;
+    lanternParticleNode.windStrength = 0;
+    lanternParticleNode.maxMovement = 0.5;
+    lanternParticleNode.varianceOffset = 1;
+    lanternParticleNode.randomVariance = 0.5;
+
+    /*Init Lantern-Light*/
+    lanternLightNode = new AdvancedLightSGNode(true, 10, [0,0,-1]);
+    lanternLightNode.ambient = [1.0,0.6,0.2,1.0];
+    lanternLightNode.diffuse = [1.0,0.6,0.2,1.0];
+    lanternLightNode.specular = [1.0,0.6,0.2,1.0];
+    lanternLightNode.position = [0, 0.15, 0.02];
+    lanternLightNode.decreaseRate = 40;
+
+    //lanternLightNode.append(lanternFireParticleNode);
+
+    rotateLantern = new TransformationSGNode(glm.rotateY(180));
+    lanternSGNode = new TransformationSGNode(glm.translate(0,0,0), [rotateLantern]);
+    lanternFireSGNode = new TransformationSGNode(glm.translate(0,0,0));
+    lanternFireSGNode.append(lanternFireParticleNode);
+
+    //initialize lantern glass
+    glassTextureNode.append(new RenderSGNode(resources.modelLanternGlass));
+    glassMaterial = createDefaultMaterialNode(1,glassTextureNode);
+    rotateLantern.append(glassMaterial);
+    //initialize lantern metal
+    metalTextureNode.append(new RenderSGNode(resources.modelLanternMetal));
+    let metal = createDefaultMaterialNode(1,metalTextureNode)
+    metal.shininess = 50000;
+    rotateLantern.append(metal);
+
+    //initialize lantern grid
+    gridTextureNode.append(new RenderSGNode(resources.modelLanternGrid));
+    let grid = createDefaultMaterialNode(1,gridTextureNode)
+    grid.shininess = 50000;
+    rotateLantern.append(grid);
+    rotateLantern.append(lanternLightNode);
+
+  }
+
+  /*Add dreugh*/
+  {
+    dreughTextureNode.append(createBillBoard([52,2,27], [2, 2, 1]));
+    b2fNodes.append(dreughTextureNode);
+  }
+
+  /*Add skull piles*/
+  {
+    skullPile1TextureNode.append(createBillBoard([39.4,-5,4.1], [1.25, 1.25, 1]));
+    skullPile1TextureNode.append(createBillBoard([48,-5,4.1], [1.25, 1.25, 1]));
+    b2fNodes.append(skullPile1TextureNode);
+  }
+
+  /*Add bone piles*/
+  {
+    bones1TextureNode.append(createBillBoard([44,.25,29.3], [0.3, 0.3, 1]));
+    b2fNodes.append(bones1TextureNode);
+
+    bones2TextureNode.append(createBillBoard([25.6,-5.25,-8.44], [0.3, 0.3, 1]));
+    b2fNodes.append(bones2TextureNode);
+  }
+
+  /*Add Duriel*/
+  {
+    durielTextureNode.append(createBillBoard([43.5,-3.25,13.5], [2.5, 2.5, 1]));
+    b2fNodes.append(durielTextureNode);
+  }
+
+  /*Add sword*/
+  {
+    var rect = makeTexturedRect(2, 2, 1)
+    swordParent = new TransformationSGNode(glm.transform({translate:[0,0,0]}));
+    swordSGNode = new TransformationSGNode(glm.transform({translate:[0,0,0], rotateX:90}));
+    let swordMat = new MaterialSGNode(swordTextureNode);
+    swordSGNode.append(createDefaultMaterialNode(1,swordTextureNode));
+    swordTextureNode.append(new RenderSGNode(rect));
+
+    bloodParticle = new ParticleSGNode(250, [0.7,0.025,0.7], [0.2,0,0,0],[0.05,0,0,1]);
+
+    bloodPosSGNode = new TransformationSGNode(glm.translate(100,100,100),
+      new TransformationSGNode(glm.rotateX(-90),
+      new ShaderSGNode(particleShaderProgram,
+        bloodParticle)));
+
+    bloodParticle.emmitModifier = -1;
+    bloodParticle.fireSpeed = 8;
+    bloodParticle.windStrength = 0;
+    bloodParticle.fireEmmitAngle = -5;
+    bloodParticle.sparkEmmitAngle = -1;
+    bloodParticle.speedVariance = 0.5;
+    bloodParticle.sparkEmmitRate = 2;
+    bloodParticle.particleSizeReduction = 0;
+    bloodParticle.fireRiseFactor = 1;
+    bloodParticle.newSpawns = 250;
+    bloodParticle.fireHeatDegreeRate = 4;
+    bloodParticle.fireCenterHeatDegreeRate = 0;
+    bloodParticle.variance = 0.1;
+
+    b2fNodes.append(swordSGNode);
+    b2fNodes.append(bloodPosSGNode);
+  }
+
+  /*Add trident*/
+  {
+    tridentTextureNode.append(createBillBoard([-9.06,-8.25, 95.48], [2, 2, 1]));
+    b2fNodes.append(tridentTextureNode);
+  }
+
+  /*Add goldskin*/
+  {
+    goldSkinTextureNode.append(createBillBoard([-9.12,-8.75, 92.54], [2, 2, 1]));
+    b2fNodes.append(goldSkinTextureNode);
+  }
+
+
+  /*Add tiara*/
+  {
+    tiaraTextureNode.append(createBillBoard([1.56, -7.8, 88.75], [0.4, 0.4, 1]));
+    b2fNodes.append(tiaraTextureNode);
+  }
+
+  /*Add emerald*/
+  {
+    emeraldTextureNode.append(createBillBoard([3.5, -8.45, 90.2], [0.2, 0.2, 1]));
+    b2fNodes.append(emeraldTextureNode);
+  }
+
+  /*Add ruby*/
+  {
+    rubyTextureNode.append(createBillBoard([2.25, -8.45, 90.98], [0.2, 0.2, 1]));
+    b2fNodes.append(rubyTextureNode);
+  }
+
+  /*Add blue jewel*/
+  {
+    blueJewelTextureNode.append(createBillBoard([2.76, -8.45, 86.56], [0.2, 0.2, 1]));
+    b2fNodes.append(blueJewelTextureNode);
+  }
+
+  /*Add mask*/
+  {
+    maskTextureNode.append(createBillBoard([3, -8.25, 88.2], [0.4, 0.4, 1]));
+    b2fNodes.append(maskTextureNode);
+  }
+
+  /*Add gold piles*/
+  {
+    goldPile1TextureNode.append(createBillBoard([3.22, -8.5, 92], [0.4, 0.4, 1]));
+    b2fNodes.append(goldPile1TextureNode);
+
+    goldPile2TextureNode.append(createBillBoard([5, -9, 89.144], [0.4, 0.4, 1]));
+    b2fNodes.append(goldPile2TextureNode);
+
+    goldPile3TextureNode.append(createBillBoard([1.57, -8, 91.5], [0.4, 0.4, 1]));
+    b2fNodes.append(goldPile3TextureNode);
+
+    goldPile4TextureNode.append(createBillBoard([1.0, -8, 89.77], [0.4, 0.4, 1]));
+    b2fNodes.append(goldPile4TextureNode);
+
+    goldPile5TextureNode.append(createBillBoard([0.77, -8, 91.47], [0.4, 0.4, 1]));
+    b2fNodes.append(goldPile5TextureNode);
+  }
+
+  /*Add crown*/
+  {
+    crownTextureNode.append(createBillBoard([0.247, -8.25, 86.94], [0.4, 0.4, 1]));
+    b2fNodes.append(crownTextureNode);
+  }
+
+  /*Add crystal sword*/
+  {
+    crystalSwordTextureNode.append(createBillBoard([-9.3,-8.25, 99.2], [2, 2, 1]));
+    b2fNodes.append(crystalSwordTextureNode);
+  }
+
+  /*Add ribCage*/
+  {
+    ribCageTextureNode.append(createBillBoard([21,-4.75,-9.5], [0.4, 0.4, 1]));
+    lightingNodes.append(ribCageTextureNode);
+  }
+
+  /*Add bones*/
+  {
+    boneTextureNode.append(createBillBoard([25.1,-5.25,-1], [0.3, 0.3, 1]));
+    lightingNodes.append(boneTextureNode);
+
+    bone2TextureNode.append(createBillBoard([40,.25,32.5], [0.3, 0.3, 1]));
+    lightingNodes.append(bone2TextureNode);
+  }
+
+  /*Add skull*/
+  {
+    skullTextureNode.append(createBillBoard([10,0.5,-9.5], [0.3, 0.3, 1]));
+    lightingNodes.append(skullTextureNode);
+  }
+
+  /*Add hip*/
+  {
+    imSoHipTextureNode.append(createBillBoard([9.5,0.5,-4.5], [0.3, 0.3, 1]));
+    lightingNodes.append(imSoHipTextureNode);
+  }
+
+  /*add spider*/
+  {
+    /*
+    * the spider basically consists of abdomen/body/head, 2 movement sets and the humanoid part
+    * the 2 movement sets include those legs that move in the same direction for 8-legged movement
+    */
+    spiderAndBillBoardNode = new TransformationSGNode(glm.transform({translate: [spiderStartingPosition[0], spiderStartingPosition[1], spiderStartingPosition[2]], rotateY: 0}));
+    spiderTransformationNode = new TransformationSGNode(glm.translate(0,0,0));
+    spiderMovementSet1SGNode = new TransformationSGNode(glm.translate(0,0,0));
+    spiderMovementSet2SGNode = new TransformationSGNode(glm.translate(0,0,0));
+
+    spiderTextureNode1.append(new RenderSGNode(resources.modelSpiderAbdomen));
+    spiderAbdomenSGNode = new TransformationSGNode(glm.translate(0,0,0));
+    spiderAbdomenSGNode.append(createDefaultMaterialNode(0.3, spiderTextureNode1));
+
+    spiderTextureNode2.append(new RenderSGNode(resources.modelSpiderLeftFrontLeg));
+    spiderLeftFrontLegSGNode = new TransformationSGNode(glm.translate(0,0,0));
+    spiderLeftFrontLegSGNode.append(createDefaultMaterialNode(0.3, spiderTextureNode2));
+
+    spiderTextureNode3.append(new RenderSGNode(resources.modelSpiderLeftFrontLeg2));
+    spiderLeftFrontLeg2SGNode = new TransformationSGNode(glm.translate(0,0,0));
+    spiderLeftFrontLeg2SGNode.append(createDefaultMaterialNode(0.3, spiderTextureNode3));
+
+    spiderTextureNode4.append(new RenderSGNode(resources.modelSpiderLeftHindLeg2));
+    spiderLeftHindLeg2SGNode = new TransformationSGNode(glm.translate(0,0,0));
+    spiderLeftHindLeg2SGNode.append(createDefaultMaterialNode(0.3, spiderTextureNode4));
+
+    spiderTextureNode5.append(new RenderSGNode(resources.modelSpiderLeftHindLeg));
+    spiderLeftHindLegSGNode = new TransformationSGNode(glm.translate(0,0,0));
+    spiderLeftHindLegSGNode.append(createDefaultMaterialNode(0.3, spiderTextureNode5));
+
+    spiderTextureNode6.append(new RenderSGNode(resources.modelSpiderRightFrontLeg));
+    spiderRightFrontLegSGNode = new TransformationSGNode(glm.translate(0,0,0));
+    spiderRightFrontLegSGNode.append(createDefaultMaterialNode(0.3, spiderTextureNode6));
+
+    spiderTextureNode7.append(new RenderSGNode(resources.modelSpiderRightFrontLeg2));
+    spiderRightFrontLeg2SGNode = new TransformationSGNode(glm.translate(0,0,0));
+    spiderRightFrontLeg2SGNode.append(createDefaultMaterialNode(0.3, spiderTextureNode7));
+
+    spiderTextureNode8.append(new RenderSGNode(resources.modelSpiderRightHindLeg2));
+    spiderRightHindLeg2SGNode = new TransformationSGNode(glm.translate(0,0,0));
+    spiderRightHindLeg2SGNode.append(createDefaultMaterialNode(0.3, spiderTextureNode8));
+
+    spiderTextureNode9.append(new RenderSGNode(resources.modelSpiderRightHindLeg));
+    spiderRightHindLegSGNode = new TransformationSGNode(glm.translate(0,0,0));
+    spiderRightHindLegSGNode.append(createDefaultMaterialNode(0.3, spiderTextureNode9));
+
+    var rect = makeTexturedRect(2.5, 2.5, 1)
+
+    andarielSGNode = new TransformationSGNode(glm.transform({translate: [0,2.65,-2], rotateX:180}));
+    andarielSGNode.append(createDefaultMaterialNode(0.1, andarielTextureNode));
+    andarielTextureNode.append(new RenderSGNode(rect));
+
+    spiderMovementSet1SGNode.append(spiderRightFrontLegSGNode);
+    spiderMovementSet1SGNode.append(spiderLeftFrontLeg2SGNode);
+    spiderMovementSet1SGNode.append(spiderRightHindLeg2SGNode);
+    spiderMovementSet1SGNode.append(spiderLeftHindLegSGNode);
+    spiderMovementSet2SGNode.append(spiderLeftFrontLegSGNode);
+    spiderMovementSet2SGNode.append(spiderRightFrontLeg2SGNode);
+    spiderMovementSet2SGNode.append(spiderLeftHindLeg2SGNode);
+    spiderMovementSet2SGNode.append(spiderRightHindLegSGNode);
+
+    spiderTransformationNode.append(spiderMovementSet1SGNode);
+    spiderTransformationNode.append(spiderMovementSet2SGNode);
+    spiderTransformationNode.append(spiderAbdomenSGNode);
+    spiderAndBillBoardNode.append(spiderTransformationNode);
+    spiderAndBillBoardNode.append(andarielSGNode);
+    lightingNodes.append(spiderAndBillBoardNode);
+  }
+
+  /*create Diamond*/
+  {
+    diamondTextureNode.append(new RenderSGNode(makeDiamond()));
+    let diamondMaterial = createDefaultMaterialNode(1, diamondTextureNode);
+    diamondMaterial.shininess = 100;
+
+    diamondUpDownNode = new TransformationSGNode(glm.translate(0,0,0), diamondMaterial);
+    diamondRotateNode = new TransformationSGNode(glm.translate(0,-7, 90), diamondUpDownNode);
+    diamondTransformationNode = new TransformationSGNode(glm.translate(0,-6, 90), diamondRotateNode);
+    let particles = createParticleNode(500, [4,30,4], [0.75, 0.6, 1], [0.75/8, 0.6/8, 1/8]);
+    diamondUpDownNode.append(particles);
+
+    b2fNodes.append(diamondTransformationNode);
+
+    let diamondLight = new AdvancedLightSGNode(false);
+    diamondLight.ambient = [0.0,0.02,0.06,1];
+    diamondLight.diffuse = [0.0,0.4,1,1];
+    diamondLight.specular = [0,0.4,1,1];
+    diamondLight.position = [0,0.6,0];
+    diamondLight.decreaseRate = 8;
+
+    diamondUpDownNode.append(diamondLight);
+
+    /*place spotlight*/
+    let moonLight = new AdvancedLightSGNode(false, 9, [0,1,-0.8], [0,5,80]);
+    moonLight.ambient = [0.5,0.5,0.5,1];
+    moonLight.diffuse = [1,1,1,1];
+    moonLight.specular = [1,1,1,1];
+    moonLight.decreaseRate = 1000;
+    b2fNodes.append(moonLight);
+  }
 
   lightingNodes.append(b2fNodes);
   lightingNodes.append(lanternFireSGNode);
   lightingNodes.append(lanternSGNode);
   return root;
-}
-
-function makeTexturedRect(x, y, a) {
-  var rect = makeRect(x, y);
-
-  /*flip the normal vector*/
-  for(var i = 0; i < rect.normal.length; i++)
-    rect.normal[i] = -rect.normal[i];
-
-  rect.texture = [0, 0,   a*x/y, 0,   a*x/y, a,   0, a];
-  return rect;
-}
-
-function initTextures(resources, clampType)
-{
-    var texture = resources;
-    //create texture object
-    var textureEnv = gl.createTexture();
-    //select a texture unit
-    gl.activeTexture(gl.TEXTURE0);
-    //bind texture to active texture unit
-    gl.bindTexture(gl.TEXTURE_2D, textureEnv);
-    //set sampling parameters
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
-    //TASK 4: change texture sampling behaviour
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, clampType);
-    gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, clampType);
-
-    //upload texture data
-    gl.texImage2D(gl.TEXTURE_2D, //texture unit targe t == texture type
-      0, //level of detail level (default 0)
-      gl.RGBA, //internal format of the data in memory
-      gl.RGBA, //image format (should match internal format)
-      gl.UNSIGNED_BYTE, //image data type
-      texture); //actual image data
-    //clean up/unbind texture
-    gl.bindTexture(gl.TEXTURE_2D, null);
-    return textureEnv;
-
-}
-
-function createParticleNode(size, area, colorMult, colorMin, partNode) {
-  return new ShaderSGNode(particleShaderProgram,
-    new BlendSgNode(gl.SRC_ALPHA, gl.ONE,
-      partNode || new ParticleSGNode(size, area, colorMult, colorMin))
-  );
-}
-
-/*
-changes the objectMatrix towards a waypointMatrix of the waypointMatrixArray using the waypointIndex and a specified speed
-returns the current waypointIndex which might be incremented by the function when the current waypoint has been reached
-*/
-function moveUsingWaypoints(objectMatrix, waypointMatrixArray, waypointIndex, speed) {
-  var x = objectMatrix[12];
-  var y = objectMatrix[13];
-  var z = objectMatrix[14];
-
-  var waypointMatrix = waypointMatrixArray[waypointIndex];
-  var wx = waypointMatrix[12];
-  var wy = waypointMatrix[13];
-  var wz = waypointMatrix[14];
-
-  //distances
-  var dx = wx - x;
-  var dy = wy - y;
-  var dz = wz - z;
-  var distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
-
-  //factor used to multiply with distance of each axis in order to achieve a total moved distance of "speed"
-  var f = Math.sqrt((speed * speed) / (dx * dx + dy * dy + dz * dz));
-  if(distance < speed) {
-    //if waypoint is reached (last step will only walk remaining distance and therefore might be slightly slower)
-    objectMatrix[12] = wx;
-    objectMatrix[13] = wy;
-    objectMatrix[14] = wz;
-    waypointIndex++;
-  } else {
-    objectMatrix[12] += dx*f;
-    objectMatrix[13] += dy*f;
-    objectMatrix[14] += dz*f;
-  }
-  return waypointIndex;
-}
-
-function deg2rad(degrees) {
-  return degrees * Math.PI / 180;
 }
 
 function reduceBloodParticle() {
@@ -1297,25 +1122,6 @@ function breakLanternGlass() {
     glassMaterial.append(brokenGlassTextureNode);
     glassMaterial.remove(glassTextureNode);
   }
-}
-
-
-//function used to make camera look at point given in matrix[12-15]
-function lookAtObject(context, matrix, up) {
-  var eye = [context.invViewMatrix[12], context.invViewMatrix[13], context.invViewMatrix[14]];
-  var center = [matrix[12], matrix[13], matrix[14]];
-  var lookAtMatrix = mat4.lookAt(mat4.create(), eye, center, up);
-  context.viewMatrix = lookAtMatrix;
-}
-
-//used to make object look at target
-function ObjectLookAtMatrix(object, targetMatrix, up) {
-  var lookAt = mat4.lookAt(mat4.create(), [object.matrix[12], 0, object.matrix[14]], [targetMatrix[12], 0, targetMatrix[14]], [0, -1, 0]);
-
-  for(var i = 0; i < 12; i++) {
-    object.matrix[i] = lookAt[i];
-  }
-  mat4.multiply(object.matrix, object.matrix, glm.transform({rotateX:180}));
 }
 
 //a scene graph node for setting texture parameters
@@ -1485,42 +1291,39 @@ function render(timeInMilliseconds) {
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
-if(timeInMilliseconds < 4600) {
-  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture");
-} else if(timeInMilliseconds < 6500) {
-  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture, animated texture");
-} else if(timeInMilliseconds < 7500) {
-  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture");
-} else if(timeInMilliseconds < 8000){
-  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
-} else if(timeInMilliseconds < 9000){
-  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, semi-transparent texture, animated texture");
-} else if(timeInMilliseconds < 11500){
-  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture, animated texture");
-} else if(timeInMilliseconds < 13000){
-  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
-} else if(timeInMilliseconds < 20000){
-  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture, animated texture");
-} else if(timeInMilliseconds < 21500){
-  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
-} else if(timeInMilliseconds < 25000){
-  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, semi-transparent texture");
-} else if(timeInMilliseconds < 27000){
-  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
-} else if(timeInMilliseconds < 30000){
-  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, semi-transparent texture");
-} else {
-  displayText("30.00s");
-}
+  if(timeInMilliseconds < 4600) {
+    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture");
+  } else if(timeInMilliseconds < 6500) {
+    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture, animated texture");
+  } else if(timeInMilliseconds < 7500) {
+    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture");
+  } else if(timeInMilliseconds < 8000){
+    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
+  } else if(timeInMilliseconds < 9000){
+    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, semi-transparent texture, animated texture");
+  } else if(timeInMilliseconds < 11500){
+    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture, animated texture");
+  } else if(timeInMilliseconds < 13000){
+    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
+  } else if(timeInMilliseconds < 20000){
+    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture, animated texture");
+  } else if(timeInMilliseconds < 21500){
+    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
+  } else if(timeInMilliseconds < 25000){
+    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, semi-transparent texture");
+  } else if(timeInMilliseconds < 27000){
+    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
+  } else if(timeInMilliseconds < 30000){
+    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, semi-transparent texture");
+  } else {
+    displayText("30.00s");
+  }
 
   if(!deathRoll) {
     //stopping lantern from moving with camera and rotation when falling over
     rotateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
     lanternFireSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.45, -2));
     mat4.multiply(rotateLantern.matrix, rotateLantern.matrix, glm.rotateY(180));
-
-    youDiedSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, 0, -3));
-
   } else {
     let tempRotationMatrix = mat4.multiply(mat4.create(), glm.rotateY(0), glm.rotateX(-10));
     mat4.multiply(tempRotationMatrix, tempRotationMatrix, glm.rotateZ(90));
@@ -1532,7 +1335,6 @@ if(timeInMilliseconds < 4600) {
     lanternFireSGNode.matrix[12] = rotateLantern.matrix[12]-0.15;
     lanternFireSGNode.matrix[13] = rotateLantern.matrix[13];
     lanternFireSGNode.matrix[14] = rotateLantern.matrix[14];
-    youDiedSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, 0, -3));
   }
 
 
