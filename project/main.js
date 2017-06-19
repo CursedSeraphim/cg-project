@@ -118,18 +118,6 @@ var orcShamanWaypointIndex;
 var spiderWaypointIndex;
 var spiderWaypoints;
 
-//TriggerSGNode
-var triggerTestNode;
-var triggerSGNode2;
-var triggerSGNode3;
-var triggerSGNode4;
-var triggerSGNode5;
-var triggerSGNode6;
-var triggerSGNode7;
-var triggerSGNode8;
-var triggerSGNode9;
-var triggerSGNode10;
-
 /*Shader Programs*/
 var particleShaderProgram;
 var simpleShaderProgram;
@@ -552,37 +540,37 @@ andarielTextureNode = new TextureSGNode(andarielFrames, 0, 75);
   root = createSceneGraph(gl, resources);
 
   /*set triggers*/
-  triggerSGNode2 = new TriggerSGNode(2, glm.translate(25, -3.5, -8.5), function() {
+  let triggerSGNode2 = new TriggerSGNode(2, glm.translate(25, -3.5, -8.5), function() {
     autoCameraLookAt = orcShamanSGNode.matrix;
     orcShamanWaypointIndex = 0;
     lookAtWaypointIndex = lookAtWaypoints.length;
   });
   //triggered by orc reaching its second waypoint
-  triggerSGNode3 = new ObjectTriggerSGNode(0.1, orcShamanSGNode.matrix, wpOrcShaman2, function() {
+  let triggerSGNode3 = new ObjectTriggerSGNode(0.1, orcShamanSGNode.matrix, wpOrcShaman2, function() {
     autoCameraLookAt = wpOrcShaman2;
     lookAtWaypointIndex = lookAtWaypoints.length;
     lookAtWaypointIndex2 = 0;
   });
   //triggered when turning around after looking at duriel
-  triggerSGNode4 = new TriggerSGNode(0.1, wpCam7, function() {
+  let triggerSGNode4 = new TriggerSGNode(0.1, wpCam7, function() {
     waitingSince = time();
     waitingFor = 1000;
     disableMovementHeadBobbing();
     setTimeout(enableMovementHeadBobbing, waitingFor);
   });
   //triggered when first looking at the spider
-  triggerSGNode5 = new TriggerSGNode(0.1, wpCam8, function() {
+  let triggerSGNode5 = new TriggerSGNode(0.1, wpCam8, function() {
     waitingSince = time();
     waitingFor = 500;
     disableMovementHeadBobbing();
     setTimeout(enableMovementHeadBobbing, waitingFor);
   });
   //trigger spider movement
-  triggerSGNode6 = new TriggerSGNode(3, wpCam8, function() {
+  let triggerSGNode6 = new TriggerSGNode(3, wpCam8, function() {
     spiderMoving = 1;
   });
   //trigger spider to stop moving
-  triggerSGNode7 = new TriggerSGNode(3, wpCam12, function() {
+  let triggerSGNode7 = new TriggerSGNode(3, wpCam12, function() {
     console.log("trigger 7");
     spiderMoving = 0;
 
@@ -636,7 +624,7 @@ andarielTextureNode = new TextureSGNode(andarielFrames, 0, 75);
 
   }
   //trigger volley of spells
-  triggerSGNode8 = new TriggerSGNode(3, wpCam8, function() {
+  let triggerSGNode8 = new TriggerSGNode(3, wpCam8, function() {
     fireSpellVolley = 1;
     //as long as second waypoint is not reached and fireSpellVolley is 1 spells will continue to fire the spider
     var startInterval = function() {
@@ -651,14 +639,14 @@ andarielTextureNode = new TextureSGNode(andarielFrames, 0, 75);
   });
 
   //deactivating spell volley
-  triggerSGNode9 = new TriggerSGNode(3, wpCam10, function() {
+  let triggerSGNode9 = new TriggerSGNode(3, wpCam10, function() {
     fireSpellVolley = 0;
     lookAtWaypointIndex6 = 0;
     autoCameraLookAt = glm.translate(spiderAndBillBoardNode.matrix[12], spiderAndBillBoardNode.matrix[13], spiderAndBillBoardNode.matrix[14]);
   });
 
   //stopping headbobbing near the end of the camera flight
-  triggerSGNode10 = new TriggerSGNode(0.1,wpCam13, function() {
+  let triggerSGNode10 = new TriggerSGNode(0.1,wpCam13, function() {
     disableMovementHeadBobbing();
   });
 
@@ -914,7 +902,7 @@ function createSceneGraph(gl, resources) {
   swordSGNode.append(createDefaultMaterialNode(1,swordTextureNode));
   swordTextureNode.append(new RenderSGNode(rect));
 
-  bloodParticle = new ParticleSGNode(150, [0.7,0.025,0.7], [0.2,0,0,0],[0.05,0,0,1]);
+  bloodParticle = new ParticleSGNode(250, [0.7,0.025,0.7], [0.2,0,0,0],[0.05,0,0,1]);
 
   bloodPosSGNode = new TransformationSGNode(glm.translate(100,100,100),
     new TransformationSGNode(glm.rotateX(-90),
@@ -1494,10 +1482,14 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
     if(swordWaypointIndex !== 1) {
       let stabbedPosition = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -1, -3));
 
-      //changing blood position to swordParent position (but not rotation)
-      bloodPosSGNode.matrix[12] = swordParent.matrix[12];
-      bloodPosSGNode.matrix[13] = swordParent.matrix[13];
-      bloodPosSGNode.matrix[14] = swordParent.matrix[14];
+      bloodPosSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -0.75, -4));
+
+      for(var i = 0; i < 12; i++) {
+        bloodPosSGNode.matrix[i] = andarielSGNode.matrix[i];
+      }
+
+      mat4.multiply(bloodPosSGNode.matrix, bloodPosSGNode.matrix, glm.rotateX(-90));
+      //bloodPosSGNode.matrix = mat4.multiply(mat4.create(), swordParent.matrix, glm.translate(0, -1, -5));
 
       moveUsingWaypoints(swordParent.matrix, [stabbedPosition], 0, 0.6 * timediff);
       swordSGNode.matrix = swordParent.matrix;
