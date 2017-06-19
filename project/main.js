@@ -50,6 +50,7 @@ var rotateLantern;
 var b2fNodes;
 var orcShamanSGNode;
 var andarielSGNode;
+var torchNode;
 var lanternSGNode;
 var lanternFireSGNode;
 var swordSGNode;
@@ -812,7 +813,7 @@ function createSceneGraph(gl, resources) {
   lanternParticleNode.maxMovement = 0.5;
 
   /*Init Lantern-Light*/
-  let torchNode = new AdvancedLightSGNode(true, 10, [0,0,1]);
+  torchNode = new AdvancedLightSGNode(true, 10, [0,0,-1]);
   torchNode.ambient = [1.0,0.6,0.2,1.0];
   torchNode.diffuse = [1.0,0.6,0.2,1.0];
   torchNode.specular = [1.0,0.6,0.2,1.0];
@@ -1433,7 +1434,14 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
   if(!deathRoll) {
     //stopping lantern from moving with camera and rotation when falling over
     rotateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
+    console.log(torchNode.matrix);
 
+    mat4.multiply(rotateLantern.matrix, rotateLantern.matrix, glm.rotateY(180));
+
+    lanternFireSGNode.matrix[12] = rotateLantern.matrix[12];//rotateLantern.matrix[12];
+    lanternFireSGNode.matrix[13] = rotateLantern.matrix[13]+0.15;//;rotateLantern.matrix[13];
+    lanternFireSGNode.matrix[14] = rotateLantern.matrix[14];//rotateLantern.matrix[14];
+    youDiedSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, 0, -3));
     //mat4.multiply(lanternSGNode.matrix, lanternSGNode.matrix, mat4.translate(rotateLantern.matrix[12], rotateLantern.matrix[13], rotateLantern.matrix[14]));
 
   } else {
@@ -1443,13 +1451,14 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
       rotateLantern.matrix[i] = tempRotationMatrix[i];
     }
     moveUsingWaypoints(rotateLantern.matrix, [glm.translate(1.75, -8.45, 87.75)], 0, 0.125*timediff);
-  }
-  mat4.multiply(rotateLantern.matrix, rotateLantern.matrix, glm.rotateY(180));
+    mat4.multiply(rotateLantern.matrix, rotateLantern.matrix, glm.rotateY(180));
 
-  lanternFireSGNode.matrix[12] = rotateLantern.matrix[12];//rotateLantern.matrix[12];
-  lanternFireSGNode.matrix[13] = rotateLantern.matrix[13];//;rotateLantern.matrix[13];
-  lanternFireSGNode.matrix[14] = rotateLantern.matrix[14];//rotateLantern.matrix[14];
-  youDiedSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, 0, -3));
+    lanternFireSGNode.matrix[12] = rotateLantern.matrix[12]-0.15;//rotateLantern.matrix[12];
+    lanternFireSGNode.matrix[13] = rotateLantern.matrix[13];//;rotateLantern.matrix[13];
+    lanternFireSGNode.matrix[14] = rotateLantern.matrix[14];//rotateLantern.matrix[14];
+    youDiedSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, 0, -3));
+  }
+
 
   if(!stabbed) {
     //sword follows camera around
