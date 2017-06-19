@@ -1569,6 +1569,7 @@ function initInteraction(canvas) {
     if (event.code === 'KeyR' && manualCameraEnabled) {
       camera.rotation.x = 0;
   		camera.rotation.y = 0;
+      fov = 30;
     }
   });
   document.addEventListener('keydown', function(event) {
