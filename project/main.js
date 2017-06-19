@@ -1027,6 +1027,10 @@ function createSceneGraph(gl, resources) {
 
 /*add spider*/
 {
+  /*
+  * the spider basically consists of abdomen/body/head, 2 movement sets and the humanoid part
+  * the 2 movement sets include those legs that move in the same direction for 8-legged movement
+  */
   spiderAndBillBoardNode = new TransformationSGNode(glm.transform({translate: [spiderStartingPosition[0], spiderStartingPosition[1], spiderStartingPosition[2]], rotateY: 0}));
   spiderTransformationNode = new TransformationSGNode(glm.translate(0,0,0));
   spiderMovementSet1SGNode = new TransformationSGNode(glm.translate(0,0,0));
@@ -1200,6 +1204,7 @@ function moveUsingWaypoints(objectMatrix, waypointMatrixArray, waypointIndex, sp
   var dz = wz - z;
   var distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
 
+  //factor used to multiply with distance of each axis in order to achieve a total moved distance of "speed"
   var f = Math.sqrt((speed * speed) / (dx * dx + dy * dy + dz * dz));
   if(distance < speed) {
     //if waypoint is reached (last step will only walk remaining distance and therefore might be slightly slower)
@@ -1238,6 +1243,7 @@ function lookAtObject(context, matrix, up) {
   context.viewMatrix = lookAtMatrix;
 }
 
+//used to make object look at target
 function ObjectLookAtMatrix(object, targetMatrix, up) {
   var lookAt = mat4.lookAt(mat4.create(), [object.matrix[12], 0, object.matrix[14]], [targetMatrix[12], 0, targetMatrix[14]], [0, -1, 0]);
 
@@ -1265,23 +1271,18 @@ function render(timeInMilliseconds) {
   //setup context and camera matrices
   const context = createSGContext(gl);
   context.projectionMatrix = mat4.perspective(mat4.create(), glm.deg2rad(fov), gl.drawingBufferWidth / gl.drawingBufferHeight, 0.01, 110);
-  //very primitive camera implementation
-  //let lookAtMatrix = mat4.lookAt(mat4.create(), [0,0,0], [0,0,0], [0,1,0]);
   let mouseRotateMatrix = mat4.multiply(mat4.create(),
                           glm.rotateX(-camera.rotation.y),
                           glm.rotateY(-camera.rotation.x));
-  //context.viewMatrix = mat4.multiply(mat4.create(), lookAtMatrix, mouseRotateMatrix);
-  /*let inverseRotateMatrix = mat4.multiply(mat4.create(),
-                          glm.rotateY(camera.rotation.x),
-                          glm.rotateX(camera.rotation.y)
-                          );
-                          */
+
   let inverseRotateMatrix = mat4.invert(mat4.create(), mouseRotateMatrix);
   let lookAtVector = vec3.transformMat4(vec3.create(), [0, 0, -1], inverseRotateMatrix);
   vec3.normalize(lookAtVector, lookAtVector);
   let crossLookAtVector = vec3.cross(vec3.create(), lookAtVector, [0, 1, 0]);
   vec3.normalize(crossLookAtVector, crossLookAtVector);
   let upLookAtVector = [0, -1, 0];
+
+  //keyboard movement
   if(camera.movement.forward == 1) {
     vec3.subtract(cameraPosition, cameraPosition, vec3.scale(vec3.create(), lookAtVector, 0.25*movementSpeedModifier));
     enableMovementHeadBobbing();
@@ -1314,11 +1315,13 @@ function render(timeInMilliseconds) {
 
   if(spiderMoving) {
     if(spiderWaypointIndex < 1){
+      //have spider move towards camera but stay at same y coordinate
       spiderWaypointIndex = moveUsingWaypoints(spiderAndBillBoardNode.matrix, [glm.translate(context.invViewMatrix[12], spiderAndBillBoardNode.matrix[13], context.invViewMatrix[14])], spiderWaypointIndex, 0.15*timediff);
       if(spiderWaypointIndex === 1) {
         spiderMoving = 0;
       }
     }
+    //animate spider
     var speed = 2.5;
     spiderAbdomenSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
     andarielSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
@@ -1328,14 +1331,16 @@ function render(timeInMilliseconds) {
     spiderMovementSet2SGNode.matrix[13] += deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed);
   }
 
-//head bobbing
+  //head bobbing
   context.invViewMatrix[13] += Math.sin(timeInMilliseconds/bobbSpeed)/bobbHeight;
 
+  //rotate diamond and have it look up and down
   diamondRotateNode.matrix = glm.rotateY(timeInMilliseconds*-0.01);
   diamondUpDownNode.matrix[13] = Math.sin(timeInMilliseconds*0.001);
   var finalDiamondMatrix = mat4.multiply(mat4.create(), diamondTransformationNode.matrix, diamondRotateNode.matrix);
   mat4.multiply(finalDiamondMatrix, finalDiamondMatrix, diamondUpDownNode.matrix);
 
+  //automatic camera flight
   if(!manualCameraEnabled) {
     if(cameraWaypointIndex < cameraWaypoints.length && time() - waitingSince >= waitingFor) {
         cameraWaypointIndex = moveUsingWaypoints(context.invViewMatrix, cameraWaypoints, cameraWaypointIndex, 0.2 * timediff);
@@ -1346,9 +1351,11 @@ function render(timeInMilliseconds) {
           }, 1500);
         }
     }
+    //for camera movement
     if(cameraWaypointIndex2 === 0) {
       moveUsingWaypoints(context.invViewMatrix, [glm.translate(2.4, -8.20, 83.88)], cameraWaypointIndex2, 0.1 * timediff);
     }
+    //for camera rotation (camera looks towards autoCameraLookAt)
     if(lookAtWaypointIndex < lookAtWaypoints.length) {
       lookAtWaypointIndex = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints, lookAtWaypointIndex, 0.1 * timediff);
     }
@@ -1386,7 +1393,7 @@ function render(timeInMilliseconds) {
     if(lookAtWaypointIndex7 < 2 && lookAtWaypointIndex7 !== -1){
       lookAtWaypointIndex7 = moveUsingWaypoints(autoCameraLookAt, [glm.translate(7, -7.5, 81.3), finalDiamondMatrix], lookAtWaypointIndex7, 0.1 * timediff);
     }
-
+    //camera looks at autoCameraLookAt with given up vector (altered in final scene)
     lookAtObject(context, autoCameraLookAt, [upX,upY,upZ]);
     context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
     lookAtVector = vec3.normalize(vec3.create(), vec3.fromValues(autoCameraLookAt[12], autoCameraLookAt[13], autoCameraLookAt[14]));
@@ -1401,50 +1408,41 @@ function render(timeInMilliseconds) {
 
   if(spellWayPointIndex < spellWayPoints.length && spellWayPointIndex != -1) {
     spellWayPointIndex = moveUsingWaypoints(spellSGNode.matrix, spellWayPoints, spellWayPointIndex, 3.5);
-    //spellSGNode.matrix[12] += 0.5;
     spellSGNode.matrix[13] += 0.5;
-    //spellSGNode.matrix[14] += 0.5;
-    //mat4.multiply(spellSGNode.matrix, spellSGNode.matrix, glm.rotateX(15));
-    //mat4.multiply(spellSGNode.matrix, spellSGNode.matrix, glm.rotateY(15));
-    //mat4.multiply(spellSGNode.matrix, spellSGNode.matrix, glm.rotateZ(15));
   }
 
+  //have spider look at camera
   ObjectLookAtMatrix(spiderAndBillBoardNode, context.invViewMatrix, [0,1,0]);
 
-  //<  context.invViewMatrix[13] += Math.sin(timeInMilliseconds*bobbSpeed)/bobbHeight;
-  /*
-  {
-    var lookAt = mat4.lookAt(mat4.create(), [spiderTransformationNode.matrix[12], 0, spiderTransformationNode.matrix[14]], [context.invViewMatrix[12], 0, context.invViewMatrix[14]], [0, -1, 0]);
-
-    for(var i = 0; i < 12; i++) {
-      spiderTransformationNode.matrix[i] = lookAt[i];
-    }
-    mat4.multiply(spiderTransformationNode.matrix, spiderTransformationNode.matrix, glm.transform({rotateX:180}));
-  }
-  */
-//updating camera position variables
+  //updating camera position variables
   cameraPosition[0] = 0-context.invViewMatrix[12];
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
+//TODO display according information
 displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
 " " +context.invViewMatrix[12].toFixed(2)+" "
     +context.invViewMatrix[13].toFixed(2)+" "
     +context.invViewMatrix[14].toFixed(2));
-  //translateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(1, -0.75, -2));
+
   if(!deathRoll) {
+    //stopping lantern from moving with camera and rotation when falling over
     lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
 
   }
+
   youDiedSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, 0, -3));
 
   if(!stabbed) {
+    //sword follows camera around
     swordParent.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -3, -3));
 
   } else {
     if(swordWaypointIndex !== 1) {
+      //sword stabs and moves accordingly
       let stabbedPosition = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -1, -3));
 
+      //blood particles move accordingly
       bloodPosSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -0.75, -4));
 
       for(var i = 0; i < 12; i++) {
@@ -1452,7 +1450,6 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
       }
 
       mat4.multiply(bloodPosSGNode.matrix, bloodPosSGNode.matrix, glm.rotateX(-90));
-      //bloodPosSGNode.matrix = mat4.multiply(mat4.create(), swordParent.matrix, glm.translate(0, -1, -5));
 
       moveUsingWaypoints(swordParent.matrix, [stabbedPosition], 0, 0.6 * timediff);
       swordSGNode.matrix = swordParent.matrix;
@@ -1466,6 +1463,7 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
     }
   }
   if(deathRoll && !manualCameraEnabled) {
+    //rolling sideways and rotating sword
     moveUsingWaypoints(autoCameraLookAt, [glm.translate(1.56, -7.8, 88.7)], 0, 0.1);
     if(context.invViewMatrix[13] < -6) {
       context.invViewMatrix[13]-=0.05;
@@ -1482,8 +1480,6 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
   }
 
   context.lookAtVector = lookAtVector;
-  //mat4.multiply(swordSGNode.matrix, swordSGNode.matrix, glm.rotateX(90));
-  //lanternSGNode.matrix = translateLantern.matrix;
 
   //render scenegraph
   root.render(context);
@@ -1502,7 +1498,7 @@ function enableMovementHeadBobbing() {
 }
 function disableMovementHeadBobbing() {
   MovementHeadBobbing = 0;
-
+  //bobb slower
   bobbSpeed = 300;
   bobbHeight = 200;
 }
