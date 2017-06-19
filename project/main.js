@@ -28,6 +28,7 @@ var lastRenderTime;
 //used for camera rotation at the end
 var turned = 0;
 var deathRoll = 0;
+var lanternOut = 0;
 var upX = 0;
 var upY = 1;
 var upZ = 0;
@@ -50,8 +51,9 @@ var b2fNodes;
 var orcShamanSGNode;
 var andarielSGNode;
 var lanternSGNode;
-var landernLightNode;
+var lanternLightNode;
 var lanternParticleNode;
+var glassMaterial;
 
 var swordSGNode;
 var swordToggleNode;
@@ -140,6 +142,7 @@ var pentagramTextureNode;
 var stainedGlassTextureNode;
 var gridTextureNode;
 var glassTextureNode;
+var brokenGlassTextureNode;
 var spikedBarsTextureNode;
 var skyTextureNode;
 var imSoHipTextureNode;
@@ -271,53 +274,55 @@ loadResources({
   andarielFrame16: 'textures/andariel/andariel (16).gif',
 
   durielFrame1: 'textures/duriel/duriel (1).gif',
-durielFrame2: 'textures/duriel/duriel (2).gif',
-durielFrame3: 'textures/duriel/duriel (3).gif',
-durielFrame4: 'textures/duriel/duriel (4).gif',
-durielFrame5: 'textures/duriel/duriel (5).gif',
-durielFrame6: 'textures/duriel/duriel (6).gif',
-durielFrame7: 'textures/duriel/duriel (7).gif',
-durielFrame8: 'textures/duriel/duriel (8).gif',
-durielFrame9: 'textures/duriel/duriel (9).gif',
-durielFrame10: 'textures/duriel/duriel (10).gif',
-durielFrame11: 'textures/duriel/duriel (11).gif',
-durielFrame12: 'textures/duriel/duriel (12).gif',
+  durielFrame2: 'textures/duriel/duriel (2).gif',
+  durielFrame3: 'textures/duriel/duriel (3).gif',
+  durielFrame4: 'textures/duriel/duriel (4).gif',
+  durielFrame5: 'textures/duriel/duriel (5).gif',
+  durielFrame6: 'textures/duriel/duriel (6).gif',
+  durielFrame7: 'textures/duriel/duriel (7).gif',
+  durielFrame8: 'textures/duriel/duriel (8).gif',
+  durielFrame9: 'textures/duriel/duriel (9).gif',
+  durielFrame10: 'textures/duriel/duriel (10).gif',
+  durielFrame11: 'textures/duriel/duriel (11).gif',
+  durielFrame12: 'textures/duriel/duriel (12).gif',
 
   dreughFrame1: 'textures/dreugh/dreugh (1).gif',
-dreughFrame2: 'textures/dreugh/dreugh (2).gif',
-dreughFrame3: 'textures/dreugh/dreugh (3).gif',
-dreughFrame4: 'textures/dreugh/dreugh (4).gif',
-dreughFrame5: 'textures/dreugh/dreugh (5).gif',
-dreughFrame6: 'textures/dreugh/dreugh (6).gif',
-dreughFrame7: 'textures/dreugh/dreugh (7).gif',
-dreughFrame8: 'textures/dreugh/dreugh (8).gif',
-dreughFrame9: 'textures/dreugh/dreugh (9).gif',
-dreughFrame10: 'textures/dreugh/dreugh (10).gif',
-dreughFrame11: 'textures/dreugh/dreugh (11).gif',
-dreughFrame12: 'textures/dreugh/dreugh (12).gif',
-dreughFrame13: 'textures/dreugh/dreugh (13).gif',
-dreughFrame14: 'textures/dreugh/dreugh (14).gif',
-dreughFrame15: 'textures/dreugh/dreugh (15).gif',
-dreughFrame16: 'textures/dreugh/dreugh (16).gif',
+  dreughFrame2: 'textures/dreugh/dreugh (2).gif',
+  dreughFrame3: 'textures/dreugh/dreugh (3).gif',
+  dreughFrame4: 'textures/dreugh/dreugh (4).gif',
+  dreughFrame5: 'textures/dreugh/dreugh (5).gif',
+  dreughFrame6: 'textures/dreugh/dreugh (6).gif',
+  dreughFrame7: 'textures/dreugh/dreugh (7).gif',
+  dreughFrame8: 'textures/dreugh/dreugh (8).gif',
+  dreughFrame9: 'textures/dreugh/dreugh (9).gif',
+  dreughFrame10: 'textures/dreugh/dreugh (10).gif',
+  dreughFrame11: 'textures/dreugh/dreugh (11).gif',
+  dreughFrame12: 'textures/dreugh/dreugh (12).gif',
+  dreughFrame13: 'textures/dreugh/dreugh (13).gif',
+  dreughFrame14: 'textures/dreugh/dreugh (14).gif',
+  dreughFrame15: 'textures/dreugh/dreugh (15).gif',
+  dreughFrame16: 'textures/dreugh/dreugh (16).gif',
 
-orcShamanFrame1: 'textures/orc_shaman/orc_shaman (1).gif',
-orcShamanFrame2: 'textures/orc_shaman/orc_shaman (2).gif',
-orcShamanFrame3: 'textures/orc_shaman/orc_shaman (3).gif',
-orcShamanFrame4: 'textures/orc_shaman/orc_shaman (4).gif',
-orcShamanFrame5: 'textures/orc_shaman/orc_shaman (5).gif',
-orcShamanFrame6: 'textures/orc_shaman/orc_shaman (6).gif',
-orcShamanFrame7: 'textures/orc_shaman/orc_shaman (7).gif',
-orcShamanFrame8: 'textures/orc_shaman/orc_shaman (8).gif',
-orcShamanFrame9: 'textures/orc_shaman/orc_shaman (9).gif',
-orcShamanFrame10: 'textures/orc_shaman/orc_shaman (10).gif',
-orcShamanFrame11: 'textures/orc_shaman/orc_shaman (11).gif',
-orcShamanFrame12: 'textures/orc_shaman/orc_shaman (12).gif',
-orcShamanFrame13: 'textures/orc_shaman/orc_shaman (13).gif',
-orcShamanFrame14: 'textures/orc_shaman/orc_shaman (14).gif',
-orcShamanFrame15: 'textures/orc_shaman/orc_shaman (15).gif',
-orcShamanFrame16: 'textures/orc_shaman/orc_shaman (16).gif',
+  orcShamanFrame1: 'textures/orc_shaman/orc_shaman (1).gif',
+  orcShamanFrame2: 'textures/orc_shaman/orc_shaman (2).gif',
+  orcShamanFrame3: 'textures/orc_shaman/orc_shaman (3).gif',
+  orcShamanFrame4: 'textures/orc_shaman/orc_shaman (4).gif',
+  orcShamanFrame5: 'textures/orc_shaman/orc_shaman (5).gif',
+  orcShamanFrame6: 'textures/orc_shaman/orc_shaman (6).gif',
+  orcShamanFrame7: 'textures/orc_shaman/orc_shaman (7).gif',
+  orcShamanFrame8: 'textures/orc_shaman/orc_shaman (8).gif',
+  orcShamanFrame9: 'textures/orc_shaman/orc_shaman (9).gif',
+  orcShamanFrame10: 'textures/orc_shaman/orc_shaman (10).gif',
+  orcShamanFrame11: 'textures/orc_shaman/orc_shaman (11).gif',
+  orcShamanFrame12: 'textures/orc_shaman/orc_shaman (12).gif',
+  orcShamanFrame13: 'textures/orc_shaman/orc_shaman (13).gif',
+  orcShamanFrame14: 'textures/orc_shaman/orc_shaman (14).gif',
+  orcShamanFrame15: 'textures/orc_shaman/orc_shaman (15).gif',
+  orcShamanFrame16: 'textures/orc_shaman/orc_shaman (16).gif',
 
-diamond: 'textures/diamond/gem.png',
+  diamond: 'textures/diamond/gem.png',
+
+  brokenGlass: 'textures/glass/the glass that was broken and not reforged.png'
 
 }).then(function (resources /*an object containing our keys with the loaded resources*/) {
 
@@ -407,6 +412,7 @@ function init(resources) {
 
   floorTextureNode = new AdvancedTextureSGNode(resources.floorTexture);
   glassTextureNode = new AdvancedTextureSGNode(resources.glassTexture);
+  brokenGlassTextureNode = new AdvancedTextureSGNode(resources.brokenGlass);
   gridTextureNode = new AdvancedTextureSGNode(resources.gridTexture);
   metalTextureNode = new AdvancedTextureSGNode(resources.metalTexture);
   metalTextureNode2 = new AdvancedTextureSGNode(resources.metalTexture);
@@ -813,22 +819,23 @@ function createSceneGraph(gl, resources) {
   lanternParticleNode.maxMovement = 0.5;
 
   /*Init Lantern-Light*/
-  landernLightNode = new AdvancedLightSGNode(true, 10, [0,0,1]);
-  landernLightNode.ambient = [1.0,0.6,0.2,1.0];
-  landernLightNode.diffuse = [1.0,0.6,0.2,1.0];
-  landernLightNode.specular = [1.0,0.6,0.2,1.0];
-  landernLightNode.position = [0, 0.15, 0.02];
-  landernLightNode.decreaseRate = 40;
+  lanternLightNode = new AdvancedLightSGNode(true, 10, [0,0,1]);
+  lanternLightNode.ambient = [1.0,0.6,0.2,1.0];
+  lanternLightNode.diffuse = [1.0,0.6,0.2,1.0];
+  lanternLightNode.specular = [1.0,0.6,0.2,1.0];
+  lanternLightNode.position = [0, 0.15, 0.02];
+  lanternLightNode.decreaseRate = 40;
 
-  landernLightNode.append(lanternFireParticleNode);
+  lanternLightNode.append(lanternFireParticleNode);
 
   let rotatelantern = new TransformationSGNode(glm.rotateY(180));
   lanternSGNode = new TransformationSGNode(glm.translate(0,2,0),
-        [landernLightNode, rotatelantern]);
+        [lanternLightNode, rotatelantern]);
 
   //initialize lantern glass
   glassTextureNode.append(new RenderSGNode(resources.modelLanternGlass));
-  rotatelantern.append(createDefaultMaterialNode(1,glassTextureNode));
+  glassMaterial = createDefaultMaterialNode(1,glassTextureNode);
+  rotatelantern.append(glassMaterial);
   //initialize lantern metal
   metalTextureNode.append(new RenderSGNode(resources.modelLanternMetal));
   let metal = createDefaultMaterialNode(1,metalTextureNode)
@@ -1228,12 +1235,55 @@ function deg2rad(degrees) {
 }
 
 function reduceBloodParticle() {
+  bloodParticle.newSpawns -= 15;
   if(bloodParticle.newSpawns > 0) {
-    bloodParticle.newSpawns -= 15;
     setTimeout(reduceBloodParticle, 400);
   }
   else {
     bloodParticle.newSpawns = 0;
+  }
+}
+
+function reduceLanternParticle() {
+  if(lanternOut) {
+    lanternParticleNode.newSpawns -= 5;
+    if(lanternParticleNode.newSpawns > 0) {
+        setTimeout(reduceLanternParticle, 400);
+    }
+    else {
+      lanternParticleNode.newSpawns = 0;
+      lanternParticleNode.sparkEmmitRate = 2;
+
+      vec3.scale(lanternLightNode.ambient, lanternLightNode.ambient, 0);
+      vec3.scale(lanternLightNode.diffuse, lanternLightNode.diffuse, 0);
+      vec3.scale(lanternLightNode.specular, lanternLightNode.specular, 0);
+    }
+  }
+}
+
+function reduceLanternLight() {
+  if(lanternOut) {
+    if(lanternLightNode.ambient[0] > 0.001) {
+      vec3.scale(lanternLightNode.ambient, lanternLightNode.ambient, 0.95);
+      vec3.scale(lanternLightNode.diffuse, lanternLightNode.diffuse, 0.95);
+      vec3.scale(lanternLightNode.specular, lanternLightNode.specular, 0.95);
+        setTimeout(reduceLanternLight, 400);
+    }
+    else {
+      lanternParticleNode.newSpawns = 0;
+      lanternParticleNode.sparkEmmitRate = 2;
+      vec3.scale(lanternLightNode.ambient, lanternLightNode.ambient, 0);
+      vec3.scale(lanternLightNode.diffuse, lanternLightNode.diffuse, 0);
+      vec3.scale(lanternLightNode.specular, lanternLightNode.specular, 0);
+    }
+  }
+}
+
+function breakLanternGlass() {
+  if(lanternOut) {
+    brokenGlassTextureNode.children = glassTextureNode.children;
+    glassMaterial.append(brokenGlassTextureNode);
+    glassMaterial.remove(glassTextureNode);
   }
 }
 
@@ -1463,13 +1513,19 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
 
       moveUsingWaypoints(swordParent.matrix, [stabbedPosition], 0, 0.6 * timediff);
       swordSGNode.matrix = swordParent.matrix;
-      if(!turned) {
+      if(!lanternOut) {
+        lanternOut = 1;
         reduceBloodParticle();
+        reduceLanternParticle();
+        reduceLanternLight();
+        breakLanternGlass();
+      }
+
+      if(!turned) {
         mat4.multiply(swordSGNode.matrix,swordSGNode.matrix, glm.rotateX(90));
         mat4.multiply(swordSGNode.matrix, swordSGNode.matrix, mouseRotateMatrix);
         turned = 1;
       }
-
     }
   }
   if(deathRoll && !manualCameraEnabled) {
@@ -1604,6 +1660,17 @@ function initInteraction(canvas) {
           disableMovementHeadBobbing();
           deathRoll = 0;
           b2fNodes.remove(swordSGNode);
+
+          lanternOut = 0;
+          stabbed = 0;
+          lanternLightNode.ambient = [1.0,0.6,0.2,1.0];
+          lanternLightNode.diffuse = [1.0,0.6,0.2,1.0];
+          lanternLightNode.specular = [1.0,0.6,0.2,1.0];
+
+          lanternParticleNode.newSpawns = 200;
+
+          glassMaterial.append(glassTextureNode);
+          glassMaterial.remove(brokenGlassTextureNode);
           break;
       }
     }
