@@ -1606,10 +1606,10 @@ function initInteraction(canvas) {
         case 'ShiftLeft':
           movementSpeedModifier = 5;
         break;
-        case 'KeyR':
+        case 'KeyO':
           fov = Math.min(175, fov+5);
         break;
-        case 'KeyT':
+        case 'KeyP':
           fov = Math.max(5, fov-5);
         break;
       }
