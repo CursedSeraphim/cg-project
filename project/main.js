@@ -1031,6 +1031,10 @@ function createSceneGraph(gl, resources) {
 
 /*add spider*/
 {
+  /*
+  * the spider basically consists of abdomen/body/head, 2 movement sets and the humanoid part
+  * the 2 movement sets include those legs that move in the same direction for 8-legged movement
+  */
   spiderAndBillBoardNode = new TransformationSGNode(glm.transform({translate: [spiderStartingPosition[0], spiderStartingPosition[1], spiderStartingPosition[2]], rotateY: 0}));
   spiderTransformationNode = new TransformationSGNode(glm.translate(0,0,0));
   spiderMovementSet1SGNode = new TransformationSGNode(glm.translate(0,0,0));
@@ -1216,6 +1220,7 @@ function moveUsingWaypoints(objectMatrix, waypointMatrixArray, waypointIndex, sp
   var dz = wz - z;
   var distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
 
+  //factor used to multiply with distance of each axis in order to achieve a total moved distance of "speed"
   var f = Math.sqrt((speed * speed) / (dx * dx + dy * dy + dz * dz));
   if(distance < speed) {
     //if waypoint is reached (last step will only walk remaining distance and therefore might be slightly slower)
@@ -1254,6 +1259,7 @@ function lookAtObject(context, matrix, up) {
   context.viewMatrix = lookAtMatrix;
 }
 
+//used to make object look at target
 function ObjectLookAtMatrix(object, targetMatrix, up) {
   var lookAt = mat4.lookAt(mat4.create(), [object.matrix[12], 0, object.matrix[14]], [targetMatrix[12], 0, targetMatrix[14]], [0, -1, 0]);
 
@@ -1281,23 +1287,18 @@ function render(timeInMilliseconds) {
   //setup context and camera matrices
   const context = createSGContext(gl);
   context.projectionMatrix = mat4.perspective(mat4.create(), glm.deg2rad(fov), gl.drawingBufferWidth / gl.drawingBufferHeight, 0.01, 110);
-  //very primitive camera implementation
-  //let lookAtMatrix = mat4.lookAt(mat4.create(), [0,0,0], [0,0,0], [0,1,0]);
   let mouseRotateMatrix = mat4.multiply(mat4.create(),
                           glm.rotateX(-camera.rotation.y),
                           glm.rotateY(-camera.rotation.x));
-  //context.viewMatrix = mat4.multiply(mat4.create(), lookAtMatrix, mouseRotateMatrix);
-  /*let inverseRotateMatrix = mat4.multiply(mat4.create(),
-                          glm.rotateY(camera.rotation.x),
-                          glm.rotateX(camera.rotation.y)
-                          );
-                          */
+
   let inverseRotateMatrix = mat4.invert(mat4.create(), mouseRotateMatrix);
   let lookAtVector = vec3.transformMat4(vec3.create(), [0, 0, -1], inverseRotateMatrix);
   vec3.normalize(lookAtVector, lookAtVector);
   let crossLookAtVector = vec3.cross(vec3.create(), lookAtVector, [0, 1, 0]);
   vec3.normalize(crossLookAtVector, crossLookAtVector);
   let upLookAtVector = [0, -1, 0];
+
+  //keyboard movement
   if(camera.movement.forward == 1) {
     vec3.subtract(cameraPosition, cameraPosition, vec3.scale(vec3.create(), lookAtVector, 0.25*movementSpeedModifier));
     enableMovementHeadBobbing();
@@ -1330,11 +1331,13 @@ function render(timeInMilliseconds) {
 
   if(spiderMoving) {
     if(spiderWaypointIndex < 1){
+      //have spider move towards camera but stay at same y coordinate
       spiderWaypointIndex = moveUsingWaypoints(spiderAndBillBoardNode.matrix, [glm.translate(context.invViewMatrix[12], spiderAndBillBoardNode.matrix[13], context.invViewMatrix[14])], spiderWaypointIndex, 0.15*timediff);
       if(spiderWaypointIndex === 1) {
         spiderMoving = 0;
       }
     }
+    //animate spider
     var speed = 2.5;
     spiderAbdomenSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
     andarielSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
@@ -1344,9 +1347,10 @@ function render(timeInMilliseconds) {
     spiderMovementSet2SGNode.matrix[13] += deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed);
   }
 
-//head bobbing
+  //head bobbing
   context.invViewMatrix[13] += Math.sin(timeInMilliseconds/bobbSpeed)/bobbHeight;
 
+  //rotate diamond and have it look up and down
   diamondRotateNode.matrix = glm.rotateY(timeInMilliseconds*-0.01);
   diamondUpDownNode.matrix[13] = Math.sin(timeInMilliseconds*0.001);
   var finalDiamondMatrix = mat4.multiply(mat4.create(), diamondTransformationNode.matrix, diamondRotateNode.matrix);
