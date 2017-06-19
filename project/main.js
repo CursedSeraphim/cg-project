@@ -643,7 +643,7 @@ andarielTextureNode = new TextureSGNode(andarielFrames, 0, 75);
   });
 
   //triggering death animation
-  let triggerSGNode11 = new TriggerSGNode(0.1, glm.translate(2.4, -8.20, 83.88), function() {
+  let triggerSGNode11 = new TriggerSGNode(3, glm.translate(2.4, -8.20, 83.88), function() {
     setTimeout(function() {
       stabbed = 1;
     }, 2000);
@@ -1149,8 +1149,8 @@ function createSceneGraph(gl, resources) {
   //lightingNodes.append(dreughTextureNode);
   //lightingNodes.append(b2fNodes);
   lightingNodes.append(b2fNodes);
-  lightingNodes.append(lanternFireSGNode);
-  lightingNodes.append(lanternSGNode);
+  b2fNodes.append(lanternFireSGNode);
+  b2fNodes.append(lanternSGNode);
   return root;
 }
 
@@ -1485,11 +1485,11 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
 " " +context.invViewMatrix[12].toFixed(2)+" "
     +context.invViewMatrix[13].toFixed(2)+" "
     +context.invViewMatrix[14].toFixed(2));
-
+console.log("deathRoll: "+deathRoll);
   if(!deathRoll) {
     //stopping lantern from moving with camera and rotation when falling over
     rotateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
-
+    console.log("should move lantern");
     mat4.multiply(rotateLantern.matrix, rotateLantern.matrix, glm.rotateY(180));
 
     lanternFireSGNode.matrix[12] = rotateLantern.matrix[12];//rotateLantern.matrix[12];
@@ -1549,7 +1549,7 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
       }
     }
   }
-  if(deathRoll && !manualCameraEnabled) {
+  if(deathRoll) {
     //rolling sideways and rotating sword
     moveUsingWaypoints(autoCameraLookAt, [glm.translate(1.56, -7.8, 88.7)], 0, 0.1);
     if(context.invViewMatrix[13] < -6) {
