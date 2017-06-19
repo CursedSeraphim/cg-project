@@ -47,13 +47,16 @@ var movementSpeedModifier = 1;
 var root = null;
 var lightingNodes;
 var translateLantern;
+var rotateLantern;
 var b2fNodes;
 var orcShamanSGNode;
 var andarielSGNode;
+var torchNode;
 var lanternSGNode;
 var lanternLightNode;
 var lanternParticleNode;
 var glassMaterial;
+var lanternFireSGNode;
 
 var swordSGNode;
 var swordToggleNode;
@@ -232,7 +235,7 @@ loadResources({
   glassTexture: 'textures/glass/glass.png',//glass_64.png',
   stainedGlassTexture: 'textures/glass/stainedGlass.png',
   gridTexture: 'textures/metal/bars.png',
-  skyTexture: 'textures/sky/nightsky.png',
+  skyTexture: 'textures/sky/sky.png',
   spikedBarsTexture: 'textures/metal/spiked_bars.png',
   hipBoneTexture: 'textures/bones/imsohip.png',
   ribCageTexture: 'textures/bones/ribCage.png',
@@ -819,18 +822,19 @@ function createSceneGraph(gl, resources) {
   lanternParticleNode.maxMovement = 0.5;
 
   /*Init Lantern-Light*/
-  lanternLightNode = new AdvancedLightSGNode(true, 10, [0,0,1]);
+  lanternLightNode = new AdvancedLightSGNode(true, 10, [0,0,-1]);
   lanternLightNode.ambient = [1.0,0.6,0.2,1.0];
   lanternLightNode.diffuse = [1.0,0.6,0.2,1.0];
   lanternLightNode.specular = [1.0,0.6,0.2,1.0];
   lanternLightNode.position = [0, 0.15, 0.02];
   lanternLightNode.decreaseRate = 40;
 
-  lanternLightNode.append(lanternFireParticleNode);
+  //torchNode.append(lanternFireParticleNode);
 
-  let rotatelantern = new TransformationSGNode(glm.rotateY(180));
-  lanternSGNode = new TransformationSGNode(glm.translate(0,2,0),
-        [lanternLightNode, rotatelantern]);
+  rotateLantern = new TransformationSGNode(glm.rotateY(180));
+  lanternSGNode = new TransformationSGNode(glm.translate(0,0,0), [rotateLantern]);
+  lanternFireSGNode = new TransformationSGNode(glm.translate(0,0,0));
+  lanternFireSGNode.append(lanternFireParticleNode);
 
   //initialize lantern glass
   glassTextureNode.append(new RenderSGNode(resources.modelLanternGlass));
@@ -840,13 +844,14 @@ function createSceneGraph(gl, resources) {
   metalTextureNode.append(new RenderSGNode(resources.modelLanternMetal));
   let metal = createDefaultMaterialNode(1,metalTextureNode)
   metal.shininess = 50000;
-  rotatelantern.append(metal);
+  rotateLantern.append(metal);
 
   //initialize lantern grid
   gridTextureNode.append(new RenderSGNode(resources.modelLanternGrid));
   let grid = createDefaultMaterialNode(1,gridTextureNode)
   grid.shininess = 50000;
-  rotatelantern.append(grid);
+  rotateLantern.append(grid);
+  rotateLantern.append(torchNode);
 
 }
 
@@ -1143,6 +1148,7 @@ function createSceneGraph(gl, resources) {
   //lightingNodes.append(dreughTextureNode);
   //lightingNodes.append(b2fNodes);
   lightingNodes.append(b2fNodes);
+  lightingNodes.append(lanternFireSGNode);
   lightingNodes.append(lanternSGNode);
   return root;
 }
@@ -1480,18 +1486,32 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
 
   if(!deathRoll) {
     //stopping lantern from moving with camera and rotation when falling over
-    lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
+    rotateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
+    console.log(torchNode.matrix);
+
+    mat4.multiply(rotateLantern.matrix, rotateLantern.matrix, glm.rotateY(180));
+
+    lanternFireSGNode.matrix[12] = rotateLantern.matrix[12];//rotateLantern.matrix[12];
+    lanternFireSGNode.matrix[13] = rotateLantern.matrix[13]+0.15;//;rotateLantern.matrix[13];
+    lanternFireSGNode.matrix[14] = rotateLantern.matrix[14];//rotateLantern.matrix[14];
+    youDiedSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, 0, -3));
+    //mat4.multiply(lanternSGNode.matrix, lanternSGNode.matrix, mat4.translate(rotateLantern.matrix[12], rotateLantern.matrix[13], rotateLantern.matrix[14]));
 
   } else {
     let tempRotationMatrix = mat4.multiply(mat4.create(), glm.rotateY(0), glm.rotateX(-10));
     mat4.multiply(tempRotationMatrix, tempRotationMatrix, glm.rotateZ(90));
     for(var i = 0; i < 12; i++) {
-      lanternSGNode.matrix[i] = tempRotationMatrix[i];
+      rotateLantern.matrix[i] = tempRotationMatrix[i];
     }
-    moveUsingWaypoints(lanternSGNode.matrix, [glm.translate(1.75, -8.45, 87.75)], 0, 0.125*timediff);
+    moveUsingWaypoints(rotateLantern.matrix, [glm.translate(1.75, -8.45, 87.75)], 0, 0.125*timediff);
+    mat4.multiply(rotateLantern.matrix, rotateLantern.matrix, glm.rotateY(180));
+
+    lanternFireSGNode.matrix[12] = rotateLantern.matrix[12]-0.15;//rotateLantern.matrix[12];
+    lanternFireSGNode.matrix[13] = rotateLantern.matrix[13];//;rotateLantern.matrix[13];
+    lanternFireSGNode.matrix[14] = rotateLantern.matrix[14];//rotateLantern.matrix[14];
+    youDiedSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, 0, -3));
   }
 
-  youDiedSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, 0, -3));
 
   if(!stabbed) {
     //sword follows camera around
