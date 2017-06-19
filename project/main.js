@@ -657,6 +657,7 @@ andarielTextureNode = new TextureSGNode(andarielFrames, 0, 75);
   initInteraction(gl.canvas);
 }
 
+//used to init animation frames
 function initAnimatedTexture(array, clampType) {
   let animationArray = [];
   for(var i = 0; i < array.length; i++) {
@@ -750,13 +751,6 @@ function createSceneGraph(gl, resources) {
     b2fNodes.append(createGreenTorch([90, -3, 89.15], [0,0,1]));
     b2fNodes.append(createGreenTorch([100, -3, 89.15], [0,0,1]));
     b2fNodes.append(createGreenTorch([110, -3, 89.15], [0,0,1]));
-
-/*
-    let torchTransNode5 = new TransformationSGNode(glm.translate(49.7, -1, 18.95));
-    torchTransNode5.append(torchNode5);
-    torchTransNode5.append(torchLight5);
-    b2fNodes.append(torchTransNode5);
-    */
 }
 
 /*Add orc shaman*/
@@ -1555,6 +1549,7 @@ function initInteraction(canvas) {
     if (event.code === 'KeyR' && manualCameraEnabled) {
       camera.rotation.x = 0;
   		camera.rotation.y = 0;
+      fov = 30;
     }
   });
   document.addEventListener('keydown', function(event) {
@@ -1591,10 +1586,10 @@ function initInteraction(canvas) {
         case 'ShiftLeft':
           movementSpeedModifier = 5;
         break;
-        case 'KeyR':
+        case 'KeyO':
           fov = Math.min(175, fov+5);
         break;
-        case 'KeyT':
+        case 'KeyP':
           fov = Math.max(5, fov-5);
         break;
       }
