@@ -1342,6 +1342,7 @@ function render(timeInMilliseconds) {
   var finalDiamondMatrix = mat4.multiply(mat4.create(), diamondTransformationNode.matrix, diamondRotateNode.matrix);
   mat4.multiply(finalDiamondMatrix, finalDiamondMatrix, diamondUpDownNode.matrix);
 
+  //automatic camera flight
   if(!manualCameraEnabled) {
     if(cameraWaypointIndex < cameraWaypoints.length && time() - waitingSince >= waitingFor) {
         cameraWaypointIndex = moveUsingWaypoints(context.invViewMatrix, cameraWaypoints, cameraWaypointIndex, 0.2 * timediff);
@@ -1352,9 +1353,11 @@ function render(timeInMilliseconds) {
           }, 1500);
         }
     }
+    //for camera movement
     if(cameraWaypointIndex2 === 0) {
       moveUsingWaypoints(context.invViewMatrix, [glm.translate(2.4, -8.20, 83.88)], cameraWaypointIndex2, 0.1 * timediff);
     }
+    //for camera rotation (camera looks towards autoCameraLookAt)
     if(lookAtWaypointIndex < lookAtWaypoints.length) {
       lookAtWaypointIndex = moveUsingWaypoints(autoCameraLookAt, lookAtWaypoints, lookAtWaypointIndex, 0.1 * timediff);
     }
@@ -1392,7 +1395,7 @@ function render(timeInMilliseconds) {
     if(lookAtWaypointIndex7 < 2 && lookAtWaypointIndex7 !== -1){
       lookAtWaypointIndex7 = moveUsingWaypoints(autoCameraLookAt, [glm.translate(7, -7.5, 81.3), finalDiamondMatrix], lookAtWaypointIndex7, 0.1 * timediff);
     }
-
+    //camera looks at autoCameraLookAt with given up vector (altered in final scene)
     lookAtObject(context, autoCameraLookAt, [upX,upY,upZ]);
     context.invViewMatrix = mat4.invert(mat4.create(), context.viewMatrix);
     lookAtVector = vec3.normalize(vec3.create(), vec3.fromValues(autoCameraLookAt[12], autoCameraLookAt[13], autoCameraLookAt[14]));
@@ -1407,28 +1410,13 @@ function render(timeInMilliseconds) {
 
   if(spellWayPointIndex < spellWayPoints.length && spellWayPointIndex != -1) {
     spellWayPointIndex = moveUsingWaypoints(spellSGNode.matrix, spellWayPoints, spellWayPointIndex, 3.5);
-    //spellSGNode.matrix[12] += 0.5;
     spellSGNode.matrix[13] += 0.5;
-    //spellSGNode.matrix[14] += 0.5;
-    //mat4.multiply(spellSGNode.matrix, spellSGNode.matrix, glm.rotateX(15));
-    //mat4.multiply(spellSGNode.matrix, spellSGNode.matrix, glm.rotateY(15));
-    //mat4.multiply(spellSGNode.matrix, spellSGNode.matrix, glm.rotateZ(15));
   }
 
+  //have spider look at camera
   ObjectLookAtMatrix(spiderAndBillBoardNode, context.invViewMatrix, [0,1,0]);
 
-  //<  context.invViewMatrix[13] += Math.sin(timeInMilliseconds*bobbSpeed)/bobbHeight;
-  /*
-  {
-    var lookAt = mat4.lookAt(mat4.create(), [spiderTransformationNode.matrix[12], 0, spiderTransformationNode.matrix[14]], [context.invViewMatrix[12], 0, context.invViewMatrix[14]], [0, -1, 0]);
-
-    for(var i = 0; i < 12; i++) {
-      spiderTransformationNode.matrix[i] = lookAt[i];
-    }
-    mat4.multiply(spiderTransformationNode.matrix, spiderTransformationNode.matrix, glm.transform({rotateX:180}));
-  }
-  */
-//updating camera position variables
+  //updating camera position variables
   cameraPosition[0] = 0-context.invViewMatrix[12];
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
