@@ -1251,9 +1251,14 @@ function reduceBloodParticle() {
 
 function reduceLanternParticle() {
   if(lanternOut) {
-    lanternParticleNode.newSpawns -= 15;
+    if(lanternParticleNode.partSize > 20)
+      lanternParticleNode.partSize --;
+
+    console.log(lanternParticleNode.fireHeatDegreeRate);
+    lanternParticleNode.fireHeatDegreeRate += 0.1;
+    lanternParticleNode.newSpawns -= Math.max(lanternParticleNode.newSpawns/20,1);
     if(lanternParticleNode.newSpawns > 0) {
-        setTimeout(reduceLanternParticle, 200);
+        setTimeout(reduceLanternParticle, 100);
     }
     else {
       lanternParticleNode.newSpawns = 0;
@@ -1268,18 +1273,12 @@ function reduceLanternParticle() {
 
 function reduceLanternLight() {
   if(lanternOut) {
-    if(lanternLightNode.ambient[0] > 0.005) {
+    if(lanternLightNode.ambient[0] > 0.05) {
+      lanternLightNode.flickerSize = 3;
       vec3.scale(lanternLightNode.ambient, lanternLightNode.ambient, 0.95);
       vec3.scale(lanternLightNode.diffuse, lanternLightNode.diffuse, 0.95);
       vec3.scale(lanternLightNode.specular, lanternLightNode.specular, 0.95);
-        setTimeout(reduceLanternLight, 200);
-    }
-    else {
-      lanternParticleNode.newSpawns = 0;
-      lanternParticleNode.sparkEmmitRate = 2;
-      vec3.scale(lanternLightNode.ambient, lanternLightNode.ambient, 0);
-      vec3.scale(lanternLightNode.diffuse, lanternLightNode.diffuse, 0);
-      vec3.scale(lanternLightNode.specular, lanternLightNode.specular, 0);
+        setTimeout(reduceLanternLight, 400);
     }
   }
 }
@@ -1487,7 +1486,6 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
   if(!deathRoll) {
     //stopping lantern from moving with camera and rotation when falling over
     rotateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
-    console.log(lanternLightNode.matrix);
 
     mat4.multiply(rotateLantern.matrix, rotateLantern.matrix, glm.rotateY(180));
 
@@ -1686,8 +1684,11 @@ function initInteraction(canvas) {
           lanternLightNode.ambient = [1.0,0.6,0.2,1.0];
           lanternLightNode.diffuse = [1.0,0.6,0.2,1.0];
           lanternLightNode.specular = [1.0,0.6,0.2,1.0];
+          lanternLightNode.flickerSize = 8;
 
           lanternParticleNode.newSpawns = 200;
+          lanternParticleNode.partSize = 50;
+          lanternParticleNode.fireHeatDegreeRate = 0.5*lanternParticleNode.scalefactor;
 
           glassMaterial.append(glassTextureNode);
           glassMaterial.remove(brokenGlassTextureNode);

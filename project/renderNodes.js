@@ -98,6 +98,8 @@ class AdvancedLightSGNode extends LightSGNode {
     this.uniform = this.uniform + '['+ this.nr + ']';
     this.decreaseRate = 15.0;
 
+    this.flickerSize = 8;
+
     this.counter = 0;
   }
 
@@ -116,8 +118,8 @@ class AdvancedLightSGNode extends LightSGNode {
   render(context) {
     /*get some random flickering into this*/
     if(this.flicker) {
-      var flicker = 1 + Math.cos(this.counter)/8;
-      flicker *= (1.0 + Math.random()/8);
+      var flicker = 1 + Math.cos(this.counter)/this.flickerSize;
+      flicker *= (1.0 + Math.random()/this.flickerSize);
       this.ambientOrig = this.ambient.slice(0);
       this.diffuseOrig = this.diffuse.slice(0);
       this.specularOrig = this.specular.slice(0);
