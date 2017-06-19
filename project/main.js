@@ -563,7 +563,6 @@ andarielTextureNode = new TextureSGNode(andarielFrames, 0, 75);
   });
   //trigger spider to stop moving
   let triggerSGNode7 = new TriggerSGNode(3, wpCam12, function() {
-    console.log("trigger 7");
     spiderMoving = 0;
 
   });
@@ -1149,8 +1148,8 @@ function createSceneGraph(gl, resources) {
   //lightingNodes.append(dreughTextureNode);
   //lightingNodes.append(b2fNodes);
   lightingNodes.append(b2fNodes);
-  b2fNodes.append(lanternFireSGNode);
-  b2fNodes.append(lanternSGNode);
+  lightingNodes.append(lanternFireSGNode);
+  lightingNodes.append(lanternSGNode);
   return root;
 }
 
@@ -1485,16 +1484,17 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
 " " +context.invViewMatrix[12].toFixed(2)+" "
     +context.invViewMatrix[13].toFixed(2)+" "
     +context.invViewMatrix[14].toFixed(2));
-console.log("deathRoll: "+deathRoll);
   if(!deathRoll) {
     //stopping lantern from moving with camera and rotation when falling over
     rotateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
-    console.log("should move lantern");
+    lanternFireSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.45, -2));
     mat4.multiply(rotateLantern.matrix, rotateLantern.matrix, glm.rotateY(180));
-
+//TODO need rotation of lantern to put particle node higher relatively to lantern no absolutely to y axis
+/*
     lanternFireSGNode.matrix[12] = rotateLantern.matrix[12];//rotateLantern.matrix[12];
-    lanternFireSGNode.matrix[13] = rotateLantern.matrix[13]+0.15;//;rotateLantern.matrix[13];
+    lanternFireSGNode.matrix[13] = rotateLantern.matrix[13];//;rotateLantern.matrix[13];
     lanternFireSGNode.matrix[14] = rotateLantern.matrix[14];//rotateLantern.matrix[14];
+    */
     youDiedSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, 0, -3));
     //mat4.multiply(lanternSGNode.matrix, lanternSGNode.matrix, mat4.translate(rotateLantern.matrix[12], rotateLantern.matrix[13], rotateLantern.matrix[14]));
 
@@ -1506,7 +1506,6 @@ console.log("deathRoll: "+deathRoll);
     }
     moveUsingWaypoints(rotateLantern.matrix, [glm.translate(1.75, -8.45, 87.75)], 0, 0.1*timediff);
     mat4.multiply(rotateLantern.matrix, rotateLantern.matrix, glm.rotateY(180));
-
     lanternFireSGNode.matrix[12] = rotateLantern.matrix[12]-0.15;//rotateLantern.matrix[12];
     lanternFireSGNode.matrix[13] = rotateLantern.matrix[13];//;rotateLantern.matrix[13];
     lanternFireSGNode.matrix[14] = rotateLantern.matrix[14];//rotateLantern.matrix[14];
@@ -1673,6 +1672,28 @@ function initInteraction(canvas) {
         case 'KeyP':
           fov = Math.max(5, fov-5);
         break;
+        case 'KeyC':
+          manualCameraEnabled = true;
+          disableMovementHeadBobbing();
+          deathRoll = 0;
+          b2fNodes.remove(swordSGNode);
+
+          lanternOut = 0;
+          stabbed = 0;
+          lanternLightNode.ambient = [1.0,0.6,0.2,1.0];
+          lanternLightNode.diffuse = [1.0,0.6,0.2,1.0];
+          lanternLightNode.specular = [1.0,0.6,0.2,1.0];
+          lanternLightNode.flickerSize = 8;
+
+          lanternParticleNode.newSpawns = 200;
+          lanternParticleNode.partSize = 50;
+          lanternParticleNode.fireHeatDegreeRate = 0.5*lanternParticleNode.scalefactor;
+          lanternParticleNode.variance = 0;
+          lanternParticleNode.fuelSize = [0.05,0.025,0.05];
+
+          glassMaterial.append(glassTextureNode);
+          glassMaterial.remove(brokenGlassTextureNode);
+          break;
       }
     } else {
       switch(event.code) {
