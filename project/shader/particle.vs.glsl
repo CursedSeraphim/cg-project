@@ -16,5 +16,10 @@ void main(void) {
 
   v_Color = a_color;
 	gl_Position = u_projection * eyePosition;
-  gl_PointSize = a_size / abs(length(eyePosition.xyz));
+	float dist = abs(length(eyePosition.xyz));
+	float size = a_size;
+	if(dist > 0.0) {
+		size = size / dist;
+	}
+  gl_PointSize = size;
 }
