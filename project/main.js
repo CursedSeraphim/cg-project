@@ -1382,12 +1382,12 @@ function render(timeInMilliseconds) {
     }
     //animate spider
     var speed = 2.5;
-    spiderAbdomenSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
-    andarielSGNode.matrix[13] += speed*Math.sin(timeInMilliseconds/75)/25;
-    spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, deg2rad(Math.sin(90+timeInMilliseconds*speed/200)*1.75));
-    spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, deg2rad(Math.sin(timeInMilliseconds*speed/200)*1.75));
-    spiderMovementSet1SGNode.matrix[13] += deg2rad(Math.sin(timeInMilliseconds*speed/100)*3*speed);
-    spiderMovementSet2SGNode.matrix[13] += deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed);
+    spiderAbdomenSGNode.matrix[13] = (speed*Math.sin(timeInMilliseconds/75)/25)%3;
+    mat4.multiply(andarielSGNode.matrix, spiderAbdomenSGNode.matrix, glm.transform({translate: [0,2.65,-2], rotateX:180}));
+    spiderMovementSet1SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet1SGNode.matrix, (deg2rad(Math.sin(90+timeInMilliseconds*speed/200)*3))%3);
+    spiderMovementSet2SGNode.matrix = mat4.rotateY(mat4.create(),spiderMovementSet2SGNode.matrix, (deg2rad(Math.sin(timeInMilliseconds*speed/200)*3))%3);
+    spiderMovementSet1SGNode.matrix[13] = (deg2rad(Math.sin(timeInMilliseconds*speed/100)*3*speed))%3;
+    spiderMovementSet2SGNode.matrix[13] = (deg2rad(-Math.sin(timeInMilliseconds*speed/100)*3*speed))%3;
   }
 
   //head bobbing
@@ -1480,16 +1480,47 @@ function render(timeInMilliseconds) {
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
 //TODO display according information
+if(timeInMilliseconds < 4600) {
+  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture");
+} else if(timeInMilliseconds < 6500) {
+  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture, animated texture");
+} else if(timeInMilliseconds < 7500) {
+  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture");
+} else if(timeInMilliseconds < 8000){
+  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
+
+} else if(timeInMilliseconds < 9000){
+  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, semi-transparent texture, animated texture");
+} else if(timeInMilliseconds < 11500){
+  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture, animated texture");
+} else if(timeInMilliseconds < 13000){
+  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
+
+} else if(timeInMilliseconds < 20000){
+  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture, animated texture");
+} else if(timeInMilliseconds < 21500){
+  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
+} else if(timeInMilliseconds < 25000){
+  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, semi-transparent texture");
+} else if(timeInMilliseconds < 27000){
+  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
+} else if(timeInMilliseconds < 30000){
+  displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, semi-transparent texture");
+} else {
+  displayText("30.00s");
+}
+/*
 displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
 " " +context.invViewMatrix[12].toFixed(2)+" "
     +context.invViewMatrix[13].toFixed(2)+" "
     +context.invViewMatrix[14].toFixed(2));
+    */
+
   if(!deathRoll) {
     //stopping lantern from moving with camera and rotation when falling over
     rotateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
     lanternFireSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.45, -2));
     mat4.multiply(rotateLantern.matrix, rotateLantern.matrix, glm.rotateY(180));
-//TODO need rotation of lantern to put particle node higher relatively to lantern no absolutely to y axis
 /*
     lanternFireSGNode.matrix[12] = rotateLantern.matrix[12];//rotateLantern.matrix[12];
     lanternFireSGNode.matrix[13] = rotateLantern.matrix[13];//;rotateLantern.matrix[13];
