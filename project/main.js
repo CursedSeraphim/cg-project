@@ -175,7 +175,6 @@ var goldPile4TextureNode;
 var goldPile5TextureNode;
 
 var diamondTextureNode;
-var nightSkyTextureNode;
 
 //texture arrays
 var dreughFrames;
@@ -316,7 +315,6 @@ orcShamanFrame15: 'textures/orc_shaman/orc_shaman (15).gif',
 orcShamanFrame16: 'textures/orc_shaman/orc_shaman (16).gif',
 
 diamond: 'textures/diamond/gem.png',
-nightSky: 'textures/nightsky/nightsky.png',
 
 }).then(function (resources /*an object containing our keys with the loaded resources*/) {
 
@@ -433,7 +431,6 @@ function init(resources) {
   spiderTextureNode8 = new AdvancedTextureSGNode(resources.spiderTexture);
   spiderTextureNode9 = new AdvancedTextureSGNode(resources.spiderTexture);
   diamondTextureNode = new AdvancedTextureSGNode(resources.diamond);
-  nightSkyTextureNode = new AdvancedTextureSGNode(resources.nightSky);
   crownTextureNode = new AdvancedTextureSGNode(resources.crownTexture);
   blueJewelTextureNode = new AdvancedTextureSGNode(resources.blueJewelTexture);
   crystalSwordTextureNode = new AdvancedTextureSGNode(resources.crystalSwordTexture);
@@ -789,8 +786,9 @@ function createSceneGraph(gl, resources) {
   lightingNodes.append(createDefaultMaterialNode(0.2,spikedBarsTextureNode));
 
   //initialize map sky
-  skyTextureNode.append(new RenderSGNode(resources.modelMapSky));
-  lightingNodes.append(createDefaultMaterialNode(0.1,skyTextureNode));
+  skyTextureNode.append(new ShaderSGNode(simpleShaderProgram, new RenderSGNode(resources.modelMapSky)));
+  lightingNodes.append(createDefaultMaterialNode(0.1,
+    new TransformationSGNode(glm.translate(0,-70,0), skyTextureNode)));
 
   //initialize map torches
   metalTextureNode2.append(new RenderSGNode(resources.modelMapTorches));
@@ -1099,18 +1097,6 @@ function createSceneGraph(gl, resources) {
   spiderAndBillBoardNode.append(spiderTransformationNode);
   spiderAndBillBoardNode.append(andarielSGNode);
   lightingNodes.append(spiderAndBillBoardNode);
-}
-
-{
-  //generate night sky
-  var shaderNode = new ShaderSGNode(simpleShaderProgram);
-    shaderNode.append(new TransformationSGNode(glm.transform({translate: [0,20,0], rotateX:90}),
-      new RenderSGNode(makeTexturedRect(5.12*2,2.56*2,1))));
-    shaderNode.append(new TransformationSGNode(glm.transform({translate: [0,20,90], rotateX:90}),
-      new RenderSGNode(makeTexturedRect(5.12*2,2.56*2,1))));
-
-  nightSkyTextureNode.append(shaderNode);
-  root.append(nightSkyTextureNode);
 }
 
 /*create Diamond*/
