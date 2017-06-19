@@ -693,6 +693,7 @@ function createSceneGraph(gl, resources) {
     node.shininess = 1000;
     return node;
   }
+
   function createBillBoard(position, size) {
     var rect = makeTexturedRect(size[0], size[1], size[2]);
     let billboard = new BillboardSGNode(glm.transform({translate: position}), [
@@ -701,48 +702,41 @@ function createSceneGraph(gl, resources) {
     return createDefaultMaterialNode(0.1, billboard);
   }
 
-
-  {
-    /*Init Light Positions*/
-    //translateLantern = new TransformationSGNode(glm.translate(0, 0, 0));
-    //translateLantern.append(torchNode);
-    //translateLantern.append(lanternFireParticleNode);
-    //b2fNodes.append(translateLantern);
-
-    /*POSITION TEST NODES*/
-
-    function createFireTorch(pos) {
-      var torch = createTorch([1.0,0.6,0.05,1.0],
-                          pos);
+  function createFireTorch(pos) {
+    var torch = createTorch([1.0,0.6,0.05,1.0],
+      pos);
       torch.ambient = [0.25,0.15,0.0125,1.0];
       //torch.spotAngle = 105 * Math.PI/180;
       torch.decreaseRate = 5;
       return torch;
     }
 
+  function createGreenTorch(pos, lookAt) {
+    var torch = createTorch([0.05,0.3,0.025,1.0],
+                        pos,
+                        [0.2,0.5,0.1],
+                        [0,0.5,0]);
+    torch.ambient = [0,0,0,1.0]
+    //torch.spotAngle = 105 * Math.PI/180;
+    torch.lookAt = lookAt;
+    torch.decreaseRate = 8;
+    return torch;
+  }
+
+  {
     b2fNodes.append(createFireTorch([27.6, 0, -0.125]));
     b2fNodes.append(createFireTorch([-9.5, 3, 0]));
     b2fNodes.append(createFireTorch([32.0625, -1, 26.675]));
     b2fNodes.append(createFireTorch([43.45, -1, 0.4]));
 
-    function createGreenTorch(pos, lookAt) {
-      var torch = createTorch([0.05,0.3,0.025,1.0],
-                          pos,
-                          [0.2,0.5,0.1],
-                          [0,0.5,0]);
-      torch.ambient = [0,0,0,1.0]
-      //torch.spotAngle = 105 * Math.PI/180;
-      torch.lookAt = lookAt;
-      torch.decreaseRate = 10;
-      return torch;
-    }
-
+    /*left torches in Spiderhall*/
     b2fNodes.append(createGreenTorch([40, -3, 50.85], [0,0,-1]));
     b2fNodes.append(createGreenTorch([80, -3, 50.85], [0,0,-1]));
     b2fNodes.append(createGreenTorch([90, -3, 50.85], [0,0,-1]));
     b2fNodes.append(createGreenTorch([100, -3, 50.85], [0,0,-1]));
     b2fNodes.append(createGreenTorch([110, -3, 50.85], [0,0,-1]));
 
+    /*right torches in Spiderhall*/
     b2fNodes.append(createGreenTorch([40, -3, 89.15], [0,0,1]));
     b2fNodes.append(createGreenTorch([50, -3, 89.15], [0,0,1]));
     b2fNodes.append(createGreenTorch([70, -3, 89.15], [0,0,1]));
@@ -831,14 +825,18 @@ function createSceneGraph(gl, resources) {
 
   //initialize lantern glass
   glassTextureNode.append(new RenderSGNode(resources.modelLanternGlass));
-  rotatelantern.append(createDefaultMaterialNode(0.1, glassTextureNode));
+  rotatelantern.append(createDefaultMaterialNode(1, glassTextureNode));
   //initialize lantern metal
   metalTextureNode.append(new RenderSGNode(resources.modelLanternMetal));
-  rotatelantern.append(createDefaultMaterialNode(0.3,metalTextureNode));
+  let metal = createDefaultMaterialNode(1,metalTextureNode)
+  metal.shininess = 50000;
+  rotatelantern.append(metal);
 
   //initialize lantern grid
   gridTextureNode.append(new RenderSGNode(resources.modelLanternGrid));
-  rotatelantern.append(createDefaultMaterialNode(0.3,gridTextureNode));
+  let grid = createDefaultMaterialNode(1,gridTextureNode)
+  grid.shininess = 50000;
+  rotatelantern.append(grid);
 
 }
 
@@ -1114,7 +1112,7 @@ function createSceneGraph(gl, resources) {
   b2fNodes.append(diamondTransformationNode);
 
   let diamondLight = new AdvancedLightSGNode(false);
-  diamondLight.ambient = [0.0,0.2,0.6,1];
+  diamondLight.ambient = [0.0,0.02,0.06,1];
   diamondLight.diffuse = [0.0,0.4,1,1];
   diamondLight.specular = [0,0.4,1,1];
   diamondLight.position = [0,0.6,0];
@@ -1124,8 +1122,8 @@ function createSceneGraph(gl, resources) {
 
   /*place spotlight*/
   //TODO Loch in der Decke ans Spotlight anpassen (schräg nicht gerade)
-  let moonLight = new AdvancedLightSGNode(false, 10, [0,1,-0.8], [0,5,80]);
-  moonLight.ambient = [0,0,0,1];
+  let moonLight = new AdvancedLightSGNode(false, 9, [0,1,-0.8], [0,5,80]);
+  moonLight.ambient = [0.5,0.5,0.5,1];
   moonLight.diffuse = [1,1,1,1];
   moonLight.specular = [1,1,1,1];
   moonLight.decreaseRate = 1000;
