@@ -1421,24 +1421,30 @@ function render(timeInMilliseconds) {
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
+//TODO display according information
 displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
 " " +context.invViewMatrix[12].toFixed(2)+" "
     +context.invViewMatrix[13].toFixed(2)+" "
     +context.invViewMatrix[14].toFixed(2));
-  //translateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(1, -0.75, -2));
+
   if(!deathRoll) {
+    //stopping lantern from moving with camera and rotation when falling over
     lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
 
   }
+
   youDiedSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, 0, -3));
 
   if(!stabbed) {
+    //sword follows camera around
     swordParent.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -3, -3));
 
   } else {
     if(swordWaypointIndex !== 1) {
+      //sword stabs and moves accordingly
       let stabbedPosition = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -1, -3));
 
+      //blood particles move accordingly
       bloodPosSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -0.75, -4));
 
       for(var i = 0; i < 12; i++) {
@@ -1446,7 +1452,6 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
       }
 
       mat4.multiply(bloodPosSGNode.matrix, bloodPosSGNode.matrix, glm.rotateX(-90));
-      //bloodPosSGNode.matrix = mat4.multiply(mat4.create(), swordParent.matrix, glm.translate(0, -1, -5));
 
       moveUsingWaypoints(swordParent.matrix, [stabbedPosition], 0, 0.6 * timediff);
       swordSGNode.matrix = swordParent.matrix;
@@ -1460,6 +1465,7 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
     }
   }
   if(deathRoll && !manualCameraEnabled) {
+    //rolling sideways and rotating sword
     moveUsingWaypoints(autoCameraLookAt, [glm.translate(1.56, -7.8, 88.7)], 0, 0.1);
     if(context.invViewMatrix[13] < -6) {
       context.invViewMatrix[13]-=0.05;
@@ -1476,8 +1482,6 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
   }
 
   context.lookAtVector = lookAtVector;
-  //mat4.multiply(swordSGNode.matrix, swordSGNode.matrix, glm.rotateX(90));
-  //lanternSGNode.matrix = translateLantern.matrix;
 
   //render scenegraph
   root.render(context);
@@ -1496,7 +1500,7 @@ function enableMovementHeadBobbing() {
 }
 function disableMovementHeadBobbing() {
   MovementHeadBobbing = 0;
-
+  //bobb slower
   bobbSpeed = 300;
   bobbHeight = 200;
 }
