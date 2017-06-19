@@ -244,6 +244,7 @@ loadResources({
   skullPileTexture: 'textures/bones/skullPile.png',
   pentagramTexture: 'textures/misc/pentagram.png',
   spiderTexture: 'textures/spider/spider.png',
+  spiderBodyTexture: 'textures/spider/spiderBody.png',
   swordTexture: 'textures/misc/bloody_sword.png',
   youDiedTexture: 'textures/misc/youdied.png',
 
@@ -432,7 +433,7 @@ function init(resources) {
   pentagramTextureNode = new AdvancedTextureSGNode(resources.pentagramTexture);
   cobbleTextureNode = new AdvancedTextureSGNode(resources.cobbleTexture);
   web1TextureNode = new AdvancedTextureSGNode(resources.WebTexture1);
-  spiderTextureNode1 = new AdvancedTextureSGNode(resources.spiderTexture);
+  spiderTextureNode1 = new AdvancedTextureSGNode(resources.spiderBodyTexture);
   spiderTextureNode2 = new AdvancedTextureSGNode(resources.spiderTexture);
   spiderTextureNode3 = new AdvancedTextureSGNode(resources.spiderTexture);
   spiderTextureNode4 = new AdvancedTextureSGNode(resources.spiderTexture);
@@ -1144,8 +1145,6 @@ function createSceneGraph(gl, resources) {
   b2fNodes.append(moonLight);
 }
 
-  //lightingNodes.append(dreughTextureNode);
-  //lightingNodes.append(b2fNodes);
   lightingNodes.append(b2fNodes);
   lightingNodes.append(lanternFireSGNode);
   lightingNodes.append(lanternSGNode);
@@ -1486,7 +1485,6 @@ function render(timeInMilliseconds) {
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
-//TODO display according information
 if(timeInMilliseconds < 4600) {
   displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture");
 } else if(timeInMilliseconds < 6500) {
@@ -1495,14 +1493,12 @@ if(timeInMilliseconds < 4600) {
   displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture");
 } else if(timeInMilliseconds < 8000){
   displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
-
 } else if(timeInMilliseconds < 9000){
   displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, semi-transparent texture, animated texture");
 } else if(timeInMilliseconds < 11500){
   displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture, animated texture");
 } else if(timeInMilliseconds < 13000){
   displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
-
 } else if(timeInMilliseconds < 20000){
   displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture, animated texture");
 } else if(timeInMilliseconds < 21500){
@@ -1516,25 +1512,14 @@ if(timeInMilliseconds < 4600) {
 } else {
   displayText("30.00s");
 }
-/*
-displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
-" " +context.invViewMatrix[12].toFixed(2)+" "
-    +context.invViewMatrix[13].toFixed(2)+" "
-    +context.invViewMatrix[14].toFixed(2));
-    */
 
   if(!deathRoll) {
     //stopping lantern from moving with camera and rotation when falling over
     rotateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
     lanternFireSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.45, -2));
     mat4.multiply(rotateLantern.matrix, rotateLantern.matrix, glm.rotateY(180));
-/*
-    lanternFireSGNode.matrix[12] = rotateLantern.matrix[12];//rotateLantern.matrix[12];
-    lanternFireSGNode.matrix[13] = rotateLantern.matrix[13];//;rotateLantern.matrix[13];
-    lanternFireSGNode.matrix[14] = rotateLantern.matrix[14];//rotateLantern.matrix[14];
-    */
+
     youDiedSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, 0, -3));
-    //mat4.multiply(lanternSGNode.matrix, lanternSGNode.matrix, mat4.translate(rotateLantern.matrix[12], rotateLantern.matrix[13], rotateLantern.matrix[14]));
 
   } else {
     let tempRotationMatrix = mat4.multiply(mat4.create(), glm.rotateY(0), glm.rotateX(-10));
@@ -1544,9 +1529,9 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
     }
     moveUsingWaypoints(rotateLantern.matrix, [glm.translate(1.75, -8.45, 87.75)], 0, 0.1*timediff);
     mat4.multiply(rotateLantern.matrix, rotateLantern.matrix, glm.rotateY(180));
-    lanternFireSGNode.matrix[12] = rotateLantern.matrix[12]-0.15;//rotateLantern.matrix[12];
-    lanternFireSGNode.matrix[13] = rotateLantern.matrix[13];//;rotateLantern.matrix[13];
-    lanternFireSGNode.matrix[14] = rotateLantern.matrix[14];//rotateLantern.matrix[14];
+    lanternFireSGNode.matrix[12] = rotateLantern.matrix[12]-0.15;
+    lanternFireSGNode.matrix[13] = rotateLantern.matrix[13];
+    lanternFireSGNode.matrix[14] = rotateLantern.matrix[14];
     youDiedSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, 0, -3));
   }
 
