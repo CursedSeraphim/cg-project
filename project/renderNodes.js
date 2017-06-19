@@ -268,6 +268,7 @@ class ParticleSGNode extends SGNode {
     super(children);
 
     /*parameters to change particle look*/
+    this.emmitModifier = 1;
     this.partSize = partSize;
     this.scalefactor = 300/partSize;
     this.invScalefactor = partSize/300;
@@ -317,11 +318,11 @@ class ParticleSGNode extends SGNode {
 
 /*Get a random start direction for the particles
   it always points towards a positive y-direction*/
-  getRandomVec3Upward(emmitAngle, scale) {
+  getRandomVec3Upward(emmitAngle, scale, emmitModifier) {
     /*get a minimum uprising vector*/
     var out = vec3.create();
     out[0] = Math.random() * 2 - 1;
-    out[1] = emmitAngle + Math.random();
+    out[1] = emmitAngle + emmitModifier * Math.random();
     out[2] = Math.random() * 2 - 1;
 
     vec3.normalize(out, out);
@@ -337,7 +338,7 @@ class ParticleSGNode extends SGNode {
     particle.color = this.getRandomColor();
     particle.position = this.getRandomPosition(limits);
     particle.startPosition = particle.position.slice(0);
-    particle.velocity = this.getRandomVec3Upward(emmitAngle, speed);
+    particle.velocity = this.getRandomVec3Upward(emmitAngle, speed, this.emmitModifier);
 
     return particle;
   }

@@ -915,15 +915,17 @@ function createSceneGraph(gl, resources) {
   swordTextureNode.append(new RenderSGNode(rect));
 
   bloodParticle = new ParticleSGNode(150, [0.7,0.025,0.7], [0.2,0,0,0],[0.05,0,0,1]);
+
   bloodPosSGNode = new TransformationSGNode(glm.translate(100,100,100),
     new TransformationSGNode(glm.rotateX(-90),
     new ShaderSGNode(particleShaderProgram,
       bloodParticle)));
 
+  bloodParticle.emmitModifier = -1;
   bloodParticle.fireSpeed = 8;
   bloodParticle.windStrength = 0;
-  bloodParticle.fireEmmitAngle = 5;
-  bloodParticle.sparkEmmitAngle = 1;
+  bloodParticle.fireEmmitAngle = -5;
+  bloodParticle.sparkEmmitAngle = -1;
   bloodParticle.speedVariance = 0.5;
   bloodParticle.sizeVariance = 0.5;
   bloodParticle.sparkEmmitRate = 2;
@@ -1492,13 +1494,11 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
     if(swordWaypointIndex !== 1) {
       let stabbedPosition = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -1, -3));
 
-      bloodPosSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, -1, -5));
+      //changing blood position to swordParent position (but not rotation)
+      bloodPosSGNode.matrix[12] = swordParent.matrix[12];
+      bloodPosSGNode.matrix[13] = swordParent.matrix[13];
+      bloodPosSGNode.matrix[14] = swordParent.matrix[14];
 
-      /*
-      swordSGNode.matrix = stabbedPosition;
-      mat4.multiply(swordSGNode.matrix, swordSGNode.matrix, glm.rotateX(90));
-      */
-      //swordParent.matrix = stabbedPosition;
       moveUsingWaypoints(swordParent.matrix, [stabbedPosition], 0, 0.6 * timediff);
       swordSGNode.matrix = swordParent.matrix;
       if(!turned) {
