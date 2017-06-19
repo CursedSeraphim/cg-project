@@ -1433,11 +1433,12 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
     lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
 
   } else {
-    let tempRotationMatrix = mat4.multiply(mat4.create(), glm.rotateY(-45), glm.rotateZ(90));
+    let tempRotationMatrix = mat4.multiply(mat4.create(), glm.rotateY(0), glm.rotateX(-10));
+    mat4.multiply(tempRotationMatrix, tempRotationMatrix, glm.rotateZ(90));
     for(var i = 0; i < 12; i++) {
       lanternSGNode.matrix[i] = tempRotationMatrix[i];
     }
-    moveUsingWaypoints(lanternSGNode.matrix, [glm.translate(2, -8.45, 86.56)], 0, 0.125*timediff);
+    moveUsingWaypoints(lanternSGNode.matrix, [glm.translate(1.75, -8.45, 87.75)], 0, 0.125*timediff);
   }
 
   youDiedSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, 0, -3));
