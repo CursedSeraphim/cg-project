@@ -3,6 +3,10 @@
  * the light position will be transformed according to the current model view matrix
  */
 
+/*
+* Node to set the uniform for lightingShader with
+* numbers of lights used
+*/
 class LightingSGNode extends SGNode {
   constructor(children) {
       super(children);
@@ -76,6 +80,12 @@ class TriggerSGNode extends TransformationSGNode {
   }
 }
 
+/*
+* Lightnode with additional numbering for lightingShader.
+* Adds a lightReduction over distance factor
+* and some flicker (more less brighter) can be enabled
+* Capable of beeing a Spot-Light
+*/
 class AdvancedLightSGNode extends LightSGNode {
 
   constructor(flicker, spotAngle, lookAt, position, children) {
@@ -89,18 +99,18 @@ class AdvancedLightSGNode extends LightSGNode {
     vec3.normalize(this.lookAt, this.lookAt);
     this.spotAngle *= Math.PI/180;
 
-
+    /*increase nr of lights*/
     AdvancedLightSGNode.nr = (AdvancedLightSGNode.nr + 1 || 0);
-
+    /*set number for this object*/
     this.nr = AdvancedLightSGNode.nr;
 
     this.origUniform = this.uniform;
+    /*change uniform, so an array access can be made*/
     this.uniform = this.uniform + '['+ this.nr + ']';
-    this.decreaseRate = 15.0;
 
-    this.flickerSize = 8;
-
-    this.counter = 0;
+    this.decreaseRate = 15.0; /*how fast light reduces over distance to lightsource*/
+    this.flickerSize = 8; /*determines how strong the flickering is*/
+    this.counter = 0; /*flicker-runtime-variable*/
   }
 
   /*override Original call so the array gets used properly*/
@@ -112,36 +122,46 @@ class AdvancedLightSGNode extends LightSGNode {
     }
 
     const position = this._worldPosition || this.position;
+    /*store the position of the light in the array on position nr*/
     gl.uniform3f(gl.getUniformLocation(context.shader, this.origUniform+'Pos'+'[' + this.nr + ']'), position[0], position[1], position[2]);
   }
 
   render(context) {
     /*get some random flickering into this*/
     if(this.flicker) {
+      /*calculate flicker*/
       var flicker = 1 + Math.cos(this.counter)/this.flickerSize;
       flicker *= (1.0 + Math.random()/this.flickerSize);
+
+      /*store original color*/
       this.ambientOrig = this.ambient.slice(0);
       this.diffuseOrig = this.diffuse.slice(0);
       this.specularOrig = this.specular.slice(0);
+
+      /*set flickered color*/
       this.ambient = vec4.scale(vec4.create(), this.ambientOrig, flicker);
       this.diffuse = vec4.scale(vec4.create(), this.diffuseOrig, flicker);
       this.specular = vec4.scale(vec4.create(), this.specularOrig, flicker);
     }
 
+    /*transform lookAt position for the spotlight into view-world*/
     const modelViewMatrix = mat4.multiply(mat4.create(), context.viewMatrix, context.sceneMatrix);
     const viewNormalMatrix = mat3.normalFromMat4(mat3.create(), modelViewMatrix);
 
     var lookAt = vec3.transformMat3(vec3.create(), this.lookAt, viewNormalMatrix);
-    vec3.normalize(lookAt, lookAt);
+    vec3.normalize(lookAt, lookAt); //normalize after transform
 
+    /*Update uniforms for spotlight*/
     gl.uniform1f(gl.getUniformLocation(context.shader, this.uniform+'.spotAngle'), this.spotAngle);
     gl.uniform3fv(gl.getUniformLocation(context.shader, this.uniform+'.lookAt'), lookAt);
     gl.uniform1f(gl.getUniformLocation(context.shader, this.uniform+'.decreaseRate'), this.decreaseRate);
 
+    /*increase counter-value for next flicker-value*/
     this.counter += Math.random() / 2;
 
     super.render(context);
 
+    /*restore the original color*/
     if(this.flicker) {
       this.ambient = this.ambientOrig;
       this.diffuse = this.diffuseOrig;
@@ -150,11 +170,14 @@ class AdvancedLightSGNode extends LightSGNode {
   }
 }
 
-class TextureSGNode extends SGNode {
+/**
+* TextureSGNode that is capable of rendering
+* an array of textures altering between them
+*/
+class AnimatedTextureSGNode extends SGNode {
   constructor(texture, textureunit, animationSpeed, children) {
       super(children);
       this.texture = texture;
-      //this.texture.push([].concat(texture));
       this.textureunit = textureunit;
       this.lastTime = time();
       this.currentTime = time();
@@ -164,16 +187,15 @@ class TextureSGNode extends SGNode {
 
   render(context)
   {
-    //tell shader to use our texture
-    gl.uniform1i(gl.getUniformLocation(context.shader, 'u_enableObjectTexture'), 1);
-
-    //set additional shader parameters
+    //set the texture shader parameter
     gl.uniform1i(gl.getUniformLocation(context.shader, 'u_tex'), this.textureunit);
 
     this.currentTime = time();
 
     //activate and bind texture
     gl.activeTexture(gl.TEXTURE0 + this.textureunit);
+
+    /*rotate throw the array with animation speed*/
     if(this.lastTime + this.animationSpeed <= this.currentTime) {
       this.animationIndex++;
       this.lastTime = this.currentTime;
@@ -189,22 +211,6 @@ class TextureSGNode extends SGNode {
     //clean up
     gl.activeTexture(gl.TEXTURE0 + this.textureunit);
     gl.bindTexture(gl.TEXTURE_2D, null);
-
-    //disable texturing in shader
-    gl.uniform1i(gl.getUniformLocation(context.shader, 'u_enableObjectTexture'), 0);
-  }
-}
-
-//a scene graph node for setting shadow parameters
-class ParticlePositionSGNode extends SGNode {
-  constructor(children) {
-      super(children);
-      this.matrix = mat4.create();
-  }
-
-  render(context) {
-    this.matrix = context.sceneMatrix.slice();
-    super.render(context);
   }
 }
 
@@ -324,7 +330,7 @@ class ParticleSGNode extends SGNode {
   it always points towards a positive y-direction*/
   getRandomVec3Upward(emmitAngle, scale, emmitModifier) {
     /*get a minimum uprising vector*/
-    var out = vec3.create();
+    const out = vec3.create();
     out[0] = Math.random() * 2 - 1;
     out[1] = emmitAngle + emmitModifier * Math.random();
     out[2] = Math.random() * 2 - 1;
@@ -350,13 +356,15 @@ class ParticleSGNode extends SGNode {
 /*gets the actual position of the particleNode in the Scene
   by using the sceneMatrix*/
   getPosition(sceneMatrix) {
-    var pos = vec3.transformMat4(vec3.create(), vec3.create(), sceneMatrix);
+    const pos = vec3.transformMat4(vec3.create(), vec3.create(), sceneMatrix);
     return pos;
   }
 
+  /*calculates the movement of the particleSpot from
+  posVec and oldPosVec*/
   getMovement(posVec, oldPosVec, sceneMatrix) {
     /*we need negative direction (wind)*/
-    var moveVec = vec4.fromValues(oldPosVec[0] - posVec[0],
+    const moveVec = vec4.fromValues(oldPosVec[0] - posVec[0],
                                   oldPosVec[1] - posVec[1],
                                   oldPosVec[2] - posVec[2],
                                   1);
@@ -370,14 +378,14 @@ class ParticleSGNode extends SGNode {
     vec4.transformMat4(moveVec, moveVec, invSceneMatrix);
 
     /*get the translations out of the inverseMatrix*/
-    var translations = vec4.fromValues(invSceneMatrix[12],invSceneMatrix[13],invSceneMatrix[14],1);
+    const translations = vec4.fromValues(invSceneMatrix[12],invSceneMatrix[13],invSceneMatrix[14],1);
 
     /*subtract the translation-part from the movevector*/
     vec4.subtract(moveVec, moveVec, translations);
 
     /*do some scaling, this values are pretty small*/
     vec4.scale(moveVec, moveVec, this.movementScaling);
-    var length = vec3.length(moveVec);
+    const length = vec3.length(moveVec);
     if(length > this.maxMovement) {
       vec4.scale(moveVec, moveVec, this.maxMovement / length);
     }
@@ -426,6 +434,8 @@ class ParticleSGNode extends SGNode {
     return rndWind;
   }
 
+  /*one time call in renderer, sets up all attributes
+  and uniforms, binds */
   init(context, sceneMatrix) {
     if(!this.isInit) {
         this.isInit = true;
@@ -464,13 +474,7 @@ class ParticleSGNode extends SGNode {
   }
 
   render(context) {
-    var sceneMatrix;
-
-    /*check if a position is given external*/
-    if(this.posSGNode != null)
-      sceneMatrix = this.posSGNode.matrix;
-    else
-      sceneMatrix = context.sceneMatrix;
+    const sceneMatrix = context.sceneMatrix;
 
     this.init(context, sceneMatrix);
 
@@ -484,22 +488,23 @@ class ParticleSGNode extends SGNode {
     /*based on that, calculate movement of particles*/
     var timeS = timeDiff/1000.0;
 
-    var partPosGlBuffer = [];
-    var colorGlBuffer = [];
-    var sizeGlBuffer = [];
+    const partPosGlBuffer = [];
+    const colorGlBuffer = [];
+    const sizeGlBuffer = [];
 
-    /*create new particles*/
+    /*calculate amount of particles to spawn*/
     var toSpawn = this.newSpawns;
     if(this.variance > 0) {
       toSpawn *= (Math.sin(this.spawnVariance)+ this.varianceOffset);
       this.spawnVariance += this.variance + this.randomVariance;
     }
 
-
+    /*create new particles*/
     for(var i = 0; i < toSpawn*(timeDiff > 100?0.1:timeS); i++){
       this.fireParticles.push(this.createParticle(this.fuelSize ,this.partSize, this.sizeVariance, this.fireSpeed, this.fireEmmitAngle));
     }
 
+    /*roll if a new spark should be spawned*/
     if(this.sparkParticles.length < 100 && Math.random() > this.sparkEmmitRate)
       this.sparkParticles.push(this.createParticle(this.fuelSize, this.partSize/5, this.sizeVariance, this.sparkSpeed, this.sparkEmmitAngle));
 
@@ -510,36 +515,39 @@ class ParticleSGNode extends SGNode {
       vec3.add(center, center, this.fireParticles[i].position);
     }
 
+    /*only divide if length is at least 1*/
     if(this.fireParticles.length > 0)
-    vec3.scale(center, center, 1.0 / this.fireParticles.length);
+      vec3.scale(center, center, 1.0 / this.fireParticles.length);
 
     //calculate the movement since last render-call
-    var actPosition = this.getPosition(sceneMatrix);
-    var moveVec = this.getMovement(actPosition, this.oldPos, sceneMatrix);
+    const actPosition = this.getPosition(sceneMatrix);
+    const moveVec = this.getMovement(actPosition, this.oldPos, sceneMatrix);
 
+    /*change the wind direction softly each call*/
     this.alterWind();
 
     //move all particles in their direction
     for(var i = 0; i<this.fireParticles.length;i++) {
-      var particle = this.fireParticles[i];
+      const particle = this.fireParticles[i];
 
       //add constant uprising but speed stays the same (length)
       particle.velocity = this.riseVectorUp(particle.velocity, this.fireRiseFactor);
 
-      //generate some random wind for each particle
-      var wind = this.getWindDir();
+      //generate some random wind for each particle, but based on alterWind()
+      const wind = this.getWindDir();
 
+      //add moved-vector to the velocity of the particle
       var vel = vec3.add(vec3.create(), particle.velocity, moveVec);
-      vec3.add(vel, vel, wind);
+      vec3.add(vel, vel, wind); //also add wind
       //change position of the particle
       vec3.add(particle.position, particle.position, vec3.scale(vec3.create(), vel, timeS));
 
-      var xDistance = particle.position[0] - center[0];
-      var zDistance = particle.position[2] - center[2];
+      const xDistance = particle.position[0] - center[0];
+      const zDistance = particle.position[2] - center[2];
 
       //when the particle distances itself from the center, it gets less bright
       //correct solution
-      var distanceToCenter = Math.sqrt((xDistance*xDistance + zDistance*zDistance));
+      const distanceToCenter = Math.sqrt((xDistance*xDistance + zDistance*zDistance));
       //fast solution
       //var distanceToCenter = xDistance + zDistance;
 
@@ -553,11 +561,14 @@ class ParticleSGNode extends SGNode {
       pos[1] = pos[1] / 2;
       var sPos =particle.startPosition.slice(0);
       sPos[1] = sPos[1] / 2;
-      var distanceFromStart = vec3.length(vec3.subtract(vec3.create(),
+
+      /*calculate distance from the start position*/
+      const distanceFromStart = vec3.length(vec3.subtract(vec3.create(),
                                             pos,
                                             sPos));
 
       //if particle gets invisible e.g. all its energy is used, remove it
+      //or if its size is to small, or if it has travelled to far away from start
       if(particle.color[3] <= 0.0 || particle.size <= 0.0 || distanceFromStart > this.maxDistanceFromStart) {
         this.fireParticles.splice(i, 1);
       }else {
@@ -567,14 +578,7 @@ class ParticleSGNode extends SGNode {
 
     //move all particles in der direction
     for(var i = 0; i<this.sparkParticles.length;i++) {
-      var particle = this.sparkParticles[i];
-
-      //TODO generate some random wind for each particle
-      var wind = vec3.fromValues(0,0,0);
-      //add wind to velocity
-      vec3.add(particle.velocity, particle.velocity, wind);
-
-
+      const particle = this.sparkParticles[i];
 
       particle.velocity = this.riseVectorUp(particle.velocity, this.sparkRiseFactor);
 
@@ -609,7 +613,7 @@ class ParticleSGNode extends SGNode {
       gl.vertexAttribPointer(this.a_size, 1, gl.FLOAT, false, 0, 0);
       gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(sizeGlBuffer), gl.STATIC_DRAW);
 
-      var modelViewMatrix = mat4.multiply(mat4.create(), context.viewMatrix, sceneMatrix);
+      const modelViewMatrix = mat4.multiply(mat4.create(), context.viewMatrix, sceneMatrix);
 
       gl.uniformMatrix4fv(this.u_projection, false, context.projectionMatrix);
       gl.uniformMatrix4fv(this.u_modelView, false, modelViewMatrix);
@@ -621,25 +625,25 @@ class ParticleSGNode extends SGNode {
 
     super.render(context);
 
+    /*reenable depthtest-access*/
     gl.depthMask(true);
-  }
-
-  getPositionSGNode() {
-    let posNode = new ParticlePositionSGNode();
-    this.posSGNode = posNode;
-    return posNode;
   }
 }
 
-
+/*This node sorts all its nodes according to their position,
+  starting with the one closest to the camera, and renders
+  its child in this order*/
 class Back2FrontSGNode extends SGNode {
   constructor(children) {
     super(children);
   }
 
+  /*resorts the children to the render order*/
   getRenderOrder(context, children) {
-    var renderListSort = [];
+    const renderListSort = [];
 
+    /*prepare a list of childs combined with
+     *the distance to the camera*/
     for(var i = 0; i < children.length; i++) {
       renderListSort.push({
         distance: this.getDistanceToCamera(context, children[i]),
@@ -647,6 +651,7 @@ class Back2FrontSGNode extends SGNode {
       });
     }
 
+    /*sort the array now according to distance*/
     renderListSort.sort(function(a,b) {
       return b.distance - a.distance;
     });
@@ -654,28 +659,37 @@ class Back2FrontSGNode extends SGNode {
     return renderListSort;
   }
 
+  /*calculates the distance of a child to the camera by
+  searching through all the TransformationSGNodes*/
   getDistanceToCamera(context, child) {
-    var matrix = mat4.copy(mat4.create(), context.sceneMatrix);
+    const matrix = mat4.copy(mat4.create(), context.sceneMatrix);
 
+    /*get the combined transform-matrices of the child*/
     this.getChildSceneMatrix(child, matrix);
 
-    var pos = vec3.fromValues(    matrix[12],
+    /*get position*/
+    const pos = vec3.fromValues(  matrix[12],
                                   matrix[13],
                                   matrix[14]);
-    var camPos = vec3.fromValues( context.invViewMatrix[12],
+
+    /*get cameraPosition*/
+    const camPos = vec3.fromValues( context.invViewMatrix[12],
                                   context.invViewMatrix[13],
                                   context.invViewMatrix[14]);
 
+    /*calculate distance*/
     vec3.subtract(pos, pos, camPos);
     var distance = vec3.length(pos);
 
-
+    /*if the point is behind the camera, it has a negative distance*/
     if(vec3.dot(context.lookAtVector, pos) < 0.0)
       distance *= -1;
 
     return distance;
   }
 
+  /*recursively go through all childnodes and
+   extract the matrices*/
   getChildSceneMatrix(child, matrix) {
     if(child.matrix != null) {
       mat4.multiply(matrix, matrix, child.matrix);
@@ -687,17 +701,25 @@ class Back2FrontSGNode extends SGNode {
   }
 
   render(context) {
-    var renderList = this.getRenderOrder(context, this.children);
+    const renderList = this.getRenderOrder(context, this.children);
+    /*clear all childs*/
     this.children = [];
-    var parent = this;
+
+    const parent = this;
+
+    /*add new sorted nodes to the child*/
     renderList.forEach(function(c) {
       parent.children.push(c.child);
     });
 
+    /*render childs now*/
     super.render(context);
   }
 }
 
+/*Enables Blending sets the given function
+calls its childs and then restores the oldPos
+blend-settings*/
 class BlendSgNode extends SGNode {
   constructor(srcFunc, destFunc, children) {
     super(children);
@@ -707,7 +729,7 @@ class BlendSgNode extends SGNode {
 
   render(context) {
     const gl = context.gl;
-
+    /*store old blend settings*/
     var enaDis = gl.getParameter(gl.BLEND);
     var src = gl.getParameter(gl.BLEND_SRC_ALPHA);
     var dest = gl.getParameter(gl.BLEND_DST_ALPHA);
@@ -715,11 +737,12 @@ class BlendSgNode extends SGNode {
     gl.enable(gl.BLEND);
     gl.blendFunc(this.srcFunc, this.destFunc);
     super.render(context);
-    gl.blendFunc(src, dest);
 
+
+    /*restore old blend settings*/
+    gl.blendFunc(src, dest);
     if(!enaDis)
       gl.disable(gl.BLEND);
-
   }
 }
 

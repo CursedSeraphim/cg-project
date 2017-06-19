@@ -521,10 +521,10 @@ resources.orcShamanFrame13,
 resources.orcShamanFrame14,
 resources.orcShamanFrame15,
 resources.orcShamanFrame16], gl.CLAMP_TO_EDGE);
-dreughTextureNode = new TextureSGNode(dreughFrames, 0, 75);
-orcShamanTextureNode = new TextureSGNode(orcShamanFrames, 0, 75);
-durielTextureNode = new TextureSGNode(durielFrames, 0, 75);
-andarielTextureNode = new TextureSGNode(andarielFrames, 0, 75);
+dreughTextureNode = new AnimatedTextureSGNode(dreughFrames, 0, 75);
+orcShamanTextureNode = new AnimatedTextureSGNode(orcShamanFrames, 0, 75);
+durielTextureNode = new AnimatedTextureSGNode(durielFrames, 0, 75);
+andarielTextureNode = new AnimatedTextureSGNode(andarielFrames, 0, 75);
 
   gl.enable(gl.DEPTH_TEST);
 
@@ -1136,7 +1136,6 @@ function createSceneGraph(gl, resources) {
   diamondUpDownNode.append(diamondLight);
 
   /*place spotlight*/
-  //TODO Loch in der Decke ans Spotlight anpassen (schräg nicht gerade)
   let moonLight = new AdvancedLightSGNode(false, 9, [0,1,-0.8], [0,5,80]);
   moonLight.ambient = [0.5,0.5,0.5,1];
   moonLight.diffuse = [1,1,1,1];
@@ -1250,19 +1249,38 @@ function reduceBloodParticle() {
   }
 }
 
+/*Reduces the lantern light, after stabbed*/
 function reduceLanternParticle() {
   if(lanternOut) {
+
+    /*reduce particle size*/
     if(lanternParticleNode.partSize > 20)
       lanternParticleNode.partSize --;
 
+    /*reduce the spawn are as it gets smaller*/
     vec3.scale(lanternParticleNode.fuelSize, lanternParticleNode.fuelSize, 0.95);
+
+    /*enable some flickering*/
     lanternParticleNode.variance = 0.5;
     lanternParticleNode.fireHeatDegreeRate += 0.1;
+
+    /*reduce amount of new spawned particles*/
     lanternParticleNode.newSpawns -= Math.max(lanternParticleNode.newSpawns/20,2);
+
+    /*reduce light strength and increase flickering*/
+    if(lanternLightNode.ambient[0] > 0.05) {
+      lanternLightNode.flickerSize = 3;
+      vec3.scale(lanternLightNode.ambient, lanternLightNode.ambient, 0.95);
+      vec3.scale(lanternLightNode.diffuse, lanternLightNode.diffuse, 0.95);
+      vec3.scale(lanternLightNode.specular, lanternLightNode.specular, 0.95);
+    }
+
+    /*as long as there are spawning particles, recursive call this function*/
     if(lanternParticleNode.newSpawns > 0) {
         setTimeout(reduceLanternParticle, 100);
     }
     else {
+      /*disable everything*/
       lanternParticleNode.newSpawns = 0;
       lanternParticleNode.sparkEmmitRate = 2;
 
@@ -1273,18 +1291,7 @@ function reduceLanternParticle() {
   }
 }
 
-function reduceLanternLight() {
-  if(lanternOut) {
-    if(lanternLightNode.ambient[0] > 0.05) {
-      lanternLightNode.flickerSize = 3;
-      vec3.scale(lanternLightNode.ambient, lanternLightNode.ambient, 0.95);
-      vec3.scale(lanternLightNode.diffuse, lanternLightNode.diffuse, 0.95);
-      vec3.scale(lanternLightNode.specular, lanternLightNode.specular, 0.95);
-        setTimeout(reduceLanternLight, 400);
-    }
-  }
-}
-
+/*switch glass texture to a broken one*/
 function breakLanternGlass() {
   if(lanternOut) {
     brokenGlassTextureNode.children = glassTextureNode.children;
@@ -1568,7 +1575,6 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
         lanternOut = 1;
         reduceBloodParticle();
         reduceLanternParticle();
-        reduceLanternLight();
         breakLanternGlass();
       }
 
