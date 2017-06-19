@@ -1045,8 +1045,15 @@ function createSceneGraph(gl, resources) {
     diamondLight.specular = [0,0.4,1,1];
     diamondLight.position = [0,0.6,0];
     diamondLight.decreaseRate = 8;
+    let diamondLight2 = new AdvancedLightSGNode(false);
+    diamondLight2.ambient = [0.0,0.0,1,1];
+    diamondLight2.diffuse = [0,0,0,1];
+    diamondLight2.specular = [0,0,0,1];
+    diamondLight2.position = [0,0.6,0];
+    diamondLight2.decreaseRate = 3;
 
     diamondUpDownNode.append(diamondLight);
+    diamondUpDownNode.append(diamondLight2);
 
     /*place spotlight*/
     let moonLight = new AdvancedLightSGNode(false, 9, [0,1,-0.8], [0,5,80]);
