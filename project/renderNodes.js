@@ -15,18 +15,6 @@ class LightingSGNode extends SGNode {
   }
 }
 
-class SnifferSGNode extends SGNode{
-  constructor(children) {
-    super(children);
-    this.sceneMatrix = glm.translate(0,0,0);
-  }
- render(context) {
-    this.sceneMatrix = mat4.clone(context.sceneMatrix);
-    //this.sceneMatrix = context.sceneMatrix.slice(0);
-    super.render(context);
- }
-}
-
 /**
 * a node which triggers a given function once when the camera is within a given radius of the node
 */
@@ -516,6 +504,8 @@ class ParticleSGNode extends SGNode {
     for(var i = 0; i<this.fireParticles.length;i++) {
       vec3.add(center, center, this.fireParticles[i].position);
     }
+
+    if(this.fireParticles.length > 0)
     vec3.scale(center, center, 1.0 / this.fireParticles.length);
 
     //calculate the movement since last render-call
