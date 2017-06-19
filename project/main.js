@@ -1251,9 +1251,9 @@ function reduceBloodParticle() {
 
 function reduceLanternParticle() {
   if(lanternOut) {
-    lanternParticleNode.newSpawns -= 5;
+    lanternParticleNode.newSpawns -= 15;
     if(lanternParticleNode.newSpawns > 0) {
-        setTimeout(reduceLanternParticle, 400);
+        setTimeout(reduceLanternParticle, 200);
     }
     else {
       lanternParticleNode.newSpawns = 0;
@@ -1268,11 +1268,11 @@ function reduceLanternParticle() {
 
 function reduceLanternLight() {
   if(lanternOut) {
-    if(lanternLightNode.ambient[0] > 0.001) {
+    if(lanternLightNode.ambient[0] > 0.005) {
       vec3.scale(lanternLightNode.ambient, lanternLightNode.ambient, 0.95);
       vec3.scale(lanternLightNode.diffuse, lanternLightNode.diffuse, 0.95);
       vec3.scale(lanternLightNode.specular, lanternLightNode.specular, 0.95);
-        setTimeout(reduceLanternLight, 400);
+        setTimeout(reduceLanternLight, 200);
     }
     else {
       lanternParticleNode.newSpawns = 0;
@@ -1397,6 +1397,7 @@ function render(timeInMilliseconds) {
   diamondUpDownNode.matrix[13] = Math.sin(timeInMilliseconds*0.001);
   var finalDiamondMatrix = mat4.multiply(mat4.create(), diamondTransformationNode.matrix, diamondRotateNode.matrix);
   mat4.multiply(finalDiamondMatrix, finalDiamondMatrix, diamondUpDownNode.matrix);
+  finalDiamondMatrix[13] += 1;
 
   //automatic camera flight
   if(!manualCameraEnabled) {
