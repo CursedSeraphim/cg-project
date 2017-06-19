@@ -1504,7 +1504,7 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
     for(var i = 0; i < 12; i++) {
       rotateLantern.matrix[i] = tempRotationMatrix[i];
     }
-    moveUsingWaypoints(rotateLantern.matrix, [glm.translate(1.75, -8.45, 87.75)], 0, 0.125*timediff);
+    moveUsingWaypoints(rotateLantern.matrix, [glm.translate(1.75, -8.45, 87.75)], 0, 0.1*timediff);
     mat4.multiply(rotateLantern.matrix, rotateLantern.matrix, glm.rotateY(180));
 
     lanternFireSGNode.matrix[12] = rotateLantern.matrix[12]-0.15;//rotateLantern.matrix[12];
