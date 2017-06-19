@@ -51,7 +51,6 @@ var rotateLantern;
 var b2fNodes;
 var orcShamanSGNode;
 var andarielSGNode;
-var torchNode;
 var lanternSGNode;
 var lanternLightNode;
 var lanternParticleNode;
@@ -829,7 +828,7 @@ function createSceneGraph(gl, resources) {
   lanternLightNode.position = [0, 0.15, 0.02];
   lanternLightNode.decreaseRate = 40;
 
-  //torchNode.append(lanternFireParticleNode);
+  //lanternLightNode.append(lanternFireParticleNode);
 
   rotateLantern = new TransformationSGNode(glm.rotateY(180));
   lanternSGNode = new TransformationSGNode(glm.translate(0,0,0), [rotateLantern]);
@@ -839,7 +838,7 @@ function createSceneGraph(gl, resources) {
   //initialize lantern glass
   glassTextureNode.append(new RenderSGNode(resources.modelLanternGlass));
   glassMaterial = createDefaultMaterialNode(1,glassTextureNode);
-  rotatelantern.append(glassMaterial);
+  rotateLantern.append(glassMaterial);
   //initialize lantern metal
   metalTextureNode.append(new RenderSGNode(resources.modelLanternMetal));
   let metal = createDefaultMaterialNode(1,metalTextureNode)
@@ -851,7 +850,7 @@ function createSceneGraph(gl, resources) {
   let grid = createDefaultMaterialNode(1,gridTextureNode)
   grid.shininess = 50000;
   rotateLantern.append(grid);
-  rotateLantern.append(torchNode);
+  rotateLantern.append(lanternLightNode);
 
 }
 
@@ -1487,7 +1486,7 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
   if(!deathRoll) {
     //stopping lantern from moving with camera and rotation when falling over
     rotateLantern.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
-    console.log(torchNode.matrix);
+    console.log(lanternLightNode.matrix);
 
     mat4.multiply(rotateLantern.matrix, rotateLantern.matrix, glm.rotateY(180));
 
