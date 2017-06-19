@@ -20,6 +20,7 @@ const camera = {
 var cameraPosition;
 
 //manual camera control switch
+var fov = 30;
 var manualCameraEnabled;
 var startTime;
 var lastRenderTime;
@@ -82,7 +83,7 @@ var spellSGNode;
 var spellLightNode;
 var spellParticle;
 var fireSpellVolley = 0;
-
+//diamond transformation
 var diamondRotateNode;
 var diamondTransformationNode;
 var diamondUpDownNode;
@@ -368,6 +369,7 @@ function init(resources) {
   lookAtWaypoints = [wpCam2, wpCam3, wpLookAt1];
   cameraWaypointIndex2 = -1;
 
+  //initialize spellWayPoints
   spellWayPoints = [glm.translate(0, 0, 0)];
 
   //changing the -1 vales to 0 later on triggers waypoiint movements
@@ -396,26 +398,7 @@ function init(resources) {
   let wpLookAt5 = glm.translate(0, -6, 90);
   lookAtWaypoints7 = [wpLookAt4, wpLookAt5];
   lookAtWaypointIndex7 = -1;
-
   spiderWaypointIndex = 0;
-/*
-  let waypointd1 = mat4.create();
-  waypointd1[12] = -3;
-  waypointd1[13] = 2;
-  waypointd1[14] = -3;
-  let waypointd2 = mat4.create();
-  waypointd2[12] = 3;
-  waypointd2[13] = 2;
-  waypointd2[14] = -3;
-  let waypointd3 = mat4.create();
-  waypointd3[12] = 3;
-  waypointd3[13] = 2;
-  waypointd3[14] = 3;
-  let waypointd4 = mat4.create();
-  waypointd4[12] = -3;
-  waypointd4[13] = 2;
-  waypointd4[14] = 3;
-  */
 
   /*initialize the shaderPrograms*/
   particleShaderProgram = createProgram(gl, resources.vs_particle, resources.fs_particle);
@@ -469,6 +452,7 @@ function init(resources) {
   goldPile4TextureNode = new AdvancedTextureSGNode(resources.goldPileTexture);
   goldPile5TextureNode = new AdvancedTextureSGNode(resources.goldPileTexture);
 
+//initializing animation frames
   andarielFrames = initAnimatedTexture([resources.andarielFrame1,
 resources.andarielFrame2,
 resources.andarielFrame3,
@@ -661,6 +645,7 @@ andarielTextureNode = new TextureSGNode(andarielFrames, 0, 75);
     }, 2500);
   });
 
+//appending trigger nodes
   root.append(triggerSGNode2);
   root.append(triggerSGNode3);
   root.append(triggerSGNode4);
@@ -1301,7 +1286,7 @@ function render(timeInMilliseconds) {
 
   //setup context and camera matrices
   const context = createSGContext(gl);
-  context.projectionMatrix = mat4.perspective(mat4.create(), glm.deg2rad(30), gl.drawingBufferWidth / gl.drawingBufferHeight, 0.01, 110);
+  context.projectionMatrix = mat4.perspective(mat4.create(), glm.deg2rad(fov), gl.drawingBufferWidth / gl.drawingBufferHeight, 0.01, 110);
   //very primitive camera implementation
   //let lookAtMatrix = mat4.lookAt(mat4.create(), [0,0,0], [0,0,0], [0,1,0]);
   let mouseRotateMatrix = mat4.multiply(mat4.create(),
@@ -1619,6 +1604,12 @@ function initInteraction(canvas) {
           break;
         case 'ShiftLeft':
           movementSpeedModifier = 5;
+        break;
+        case 'KeyR':
+          fov = Math.min(175, fov+5);
+        break;
+        case 'KeyT':
+          fov = Math.max(5, fov-5);
         break;
       }
     } else {
