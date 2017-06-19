@@ -244,6 +244,7 @@ loadResources({
   skullPileTexture: 'textures/bones/skullPile.png',
   pentagramTexture: 'textures/misc/pentagram.png',
   spiderTexture: 'textures/spider/spider.png',
+  spiderBodyTexture: 'textures/spider/spiderBody.png',
   swordTexture: 'textures/misc/bloody_sword.png',
   youDiedTexture: 'textures/misc/youdied.png',
 
@@ -432,7 +433,7 @@ function init(resources) {
   pentagramTextureNode = new AdvancedTextureSGNode(resources.pentagramTexture);
   cobbleTextureNode = new AdvancedTextureSGNode(resources.cobbleTexture);
   web1TextureNode = new AdvancedTextureSGNode(resources.WebTexture1);
-  spiderTextureNode1 = new AdvancedTextureSGNode(resources.spiderTexture);
+  spiderTextureNode1 = new AdvancedTextureSGNode(resources.spiderBodyTexture);
   spiderTextureNode2 = new AdvancedTextureSGNode(resources.spiderTexture);
   spiderTextureNode3 = new AdvancedTextureSGNode(resources.spiderTexture);
   spiderTextureNode4 = new AdvancedTextureSGNode(resources.spiderTexture);
@@ -1488,14 +1489,12 @@ if(timeInMilliseconds < 4600) {
   displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture");
 } else if(timeInMilliseconds < 8000){
   displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
-
 } else if(timeInMilliseconds < 9000){
   displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, semi-transparent texture, animated texture");
 } else if(timeInMilliseconds < 11500){
   displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture, animated texture");
 } else if(timeInMilliseconds < 13000){
   displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
-
 } else if(timeInMilliseconds < 20000){
   displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture, animated texture");
 } else if(timeInMilliseconds < 21500){
