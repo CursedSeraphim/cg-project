@@ -50,6 +50,9 @@ var b2fNodes;
 var orcShamanSGNode;
 var andarielSGNode;
 var lanternSGNode;
+var landernLightNode;
+var lanternParticleNode;
+
 var swordSGNode;
 var swordToggleNode;
 var swordParent;
@@ -226,7 +229,7 @@ loadResources({
   glassTexture: 'textures/glass/glass.png',//glass_64.png',
   stainedGlassTexture: 'textures/glass/stainedGlass.png',
   gridTexture: 'textures/metal/bars.png',
-  skyTexture: 'textures/sky/sky.png',
+  skyTexture: 'textures/sky/nightsky.png',
   spikedBarsTexture: 'textures/metal/spiked_bars.png',
   hipBoneTexture: 'textures/bones/imsohip.png',
   ribCageTexture: 'textures/bones/ribCage.png',
@@ -803,29 +806,29 @@ function createSceneGraph(gl, resources) {
 
 {
   /*Init lantern*/
-  let lanternParticleNode = new ParticleSGNode(50, [0.05,0.025,0.05]);
+  lanternParticleNode = new ParticleSGNode(50, [0.05,0.025,0.05]);
   let lanternFireParticleNode  = createParticleNode(null, null, null, null, lanternParticleNode);
   lanternParticleNode.maxDistanceFromStart = 0.1;
   lanternParticleNode.windStrength = 0;
   lanternParticleNode.maxMovement = 0.5;
 
   /*Init Lantern-Light*/
-  let torchNode = new AdvancedLightSGNode(true, 10, [0,0,1]);
-  torchNode.ambient = [1.0,0.6,0.2,1.0];
-  torchNode.diffuse = [1.0,0.6,0.2,1.0];
-  torchNode.specular = [1.0,0.6,0.2,1.0];
-  torchNode.position = [0, 0.15, 0.02];
-  torchNode.decreaseRate = 40;
+  landernLightNode = new AdvancedLightSGNode(true, 10, [0,0,1]);
+  landernLightNode.ambient = [1.0,0.6,0.2,1.0];
+  landernLightNode.diffuse = [1.0,0.6,0.2,1.0];
+  landernLightNode.specular = [1.0,0.6,0.2,1.0];
+  landernLightNode.position = [0, 0.15, 0.02];
+  landernLightNode.decreaseRate = 40;
 
-  torchNode.append(lanternFireParticleNode);
+  landernLightNode.append(lanternFireParticleNode);
 
   let rotatelantern = new TransformationSGNode(glm.rotateY(180));
   lanternSGNode = new TransformationSGNode(glm.translate(0,2,0),
-        [torchNode, rotatelantern]);
+        [landernLightNode, rotatelantern]);
 
   //initialize lantern glass
   glassTextureNode.append(new RenderSGNode(resources.modelLanternGlass));
-  rotatelantern.append(createDefaultMaterialNode(1, glassTextureNode));
+  rotatelantern.append(createDefaultMaterialNode(1,glassTextureNode));
   //initialize lantern metal
   metalTextureNode.append(new RenderSGNode(resources.modelLanternMetal));
   let metal = createDefaultMaterialNode(1,metalTextureNode)
