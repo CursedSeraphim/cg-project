@@ -1431,6 +1431,12 @@ displayText(((timeInMilliseconds)/1000).toFixed(2)+"s" +
     //stopping lantern from moving with camera and rotation when falling over
     lanternSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0.5, -0.65, -2));
 
+  } else {
+    let tempRotationMatrix = mat4.multiply(mat4.create(), glm.rotateY(-45), glm.rotateZ(90));
+    for(var i = 0; i < 12; i++) {
+      lanternSGNode.matrix[i] = tempRotationMatrix[i];
+    }
+    moveUsingWaypoints(lanternSGNode.matrix, [glm.translate(2, -8.45, 86.56)], 0, 0.125*timediff);
   }
 
   youDiedSGNode.matrix = mat4.multiply(mat4.create(), context.invViewMatrix, glm.translate(0, 0, -3));
