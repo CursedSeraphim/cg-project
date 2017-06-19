@@ -301,6 +301,8 @@ class ParticleSGNode extends SGNode {
     this.newSpawns = 200;
     this.variance = 0;
     this.spawnVariance = 0;
+    this.varianceOffset = 0.9;
+    this.randomVariance = 0;
   }
 
   /*Generate a random color within the given parameters
@@ -489,8 +491,8 @@ class ParticleSGNode extends SGNode {
     /*create new particles*/
     var toSpawn = this.newSpawns;
     if(this.variance > 0) {
-      toSpawn *= (Math.sin(this.spawnVariance)+0.9);
-      this.spawnVariance += this.variance;
+      toSpawn *= (Math.sin(this.spawnVariance)+ this.varianceOffset);
+      this.spawnVariance += this.variance + this.randomVariance;
     }
 
 
@@ -593,25 +595,27 @@ class ParticleSGNode extends SGNode {
 
     this.oldPos = actPosition;
 
-    //Bind buffers used
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.posBuffer);
-    gl.vertexAttribPointer(this.a_position, 3, gl.FLOAT, false, 0, 0);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(partPosGlBuffer), gl.STATIC_DRAW);
+    if(sizeGlBuffer.length > 0) {
+      //Bind buffers used
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.posBuffer);
+      gl.vertexAttribPointer(this.a_position, 3, gl.FLOAT, false, 0, 0);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(partPosGlBuffer), gl.STATIC_DRAW);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
-    gl.vertexAttribPointer(this.a_color, 4, gl.FLOAT, false, 0, 0);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colorGlBuffer), gl.STATIC_DRAW);
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.colorBuffer);
+      gl.vertexAttribPointer(this.a_color, 4, gl.FLOAT, false, 0, 0);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(colorGlBuffer), gl.STATIC_DRAW);
 
-    gl.bindBuffer(gl.ARRAY_BUFFER, this.sizeBuffer);
-    gl.vertexAttribPointer(this.a_size, 1, gl.FLOAT, false, 0, 0);
-    gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(sizeGlBuffer), gl.STATIC_DRAW);
+      gl.bindBuffer(gl.ARRAY_BUFFER, this.sizeBuffer);
+      gl.vertexAttribPointer(this.a_size, 1, gl.FLOAT, false, 0, 0);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(sizeGlBuffer), gl.STATIC_DRAW);
 
-    var modelViewMatrix = mat4.multiply(mat4.create(), context.viewMatrix, sceneMatrix);
+      var modelViewMatrix = mat4.multiply(mat4.create(), context.viewMatrix, sceneMatrix);
 
-    gl.uniformMatrix4fv(this.u_projection, false, context.projectionMatrix);
-    gl.uniformMatrix4fv(this.u_modelView, false, modelViewMatrix);
+      gl.uniformMatrix4fv(this.u_projection, false, context.projectionMatrix);
+      gl.uniformMatrix4fv(this.u_modelView, false, modelViewMatrix);
 
-    gl.drawArrays(gl.POINTS, 0, sizeGlBuffer.length);
+      gl.drawArrays(gl.POINTS, 0, sizeGlBuffer.length);
+    }
 
     this.lastTime = time();
 

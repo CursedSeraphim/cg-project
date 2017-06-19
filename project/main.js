@@ -819,6 +819,8 @@ function createSceneGraph(gl, resources) {
   lanternParticleNode.maxDistanceFromStart = 0.1;
   lanternParticleNode.windStrength = 0;
   lanternParticleNode.maxMovement = 0.5;
+  lanternParticleNode.varianceOffset = 1;
+  lanternParticleNode.randomVariance = 0.5;
 
   /*Init Lantern-Light*/
   lanternLightNode = new AdvancedLightSGNode(true, 10, [0,0,-1]);
@@ -1254,9 +1256,10 @@ function reduceLanternParticle() {
     if(lanternParticleNode.partSize > 20)
       lanternParticleNode.partSize --;
 
-    console.log(lanternParticleNode.fireHeatDegreeRate);
+    vec3.scale(lanternParticleNode.fuelSize, lanternParticleNode.fuelSize, 0.95);
+    lanternParticleNode.variance = 0.5;
     lanternParticleNode.fireHeatDegreeRate += 0.1;
-    lanternParticleNode.newSpawns -= Math.max(lanternParticleNode.newSpawns/20,1);
+    lanternParticleNode.newSpawns -= Math.max(lanternParticleNode.newSpawns/20,2);
     if(lanternParticleNode.newSpawns > 0) {
         setTimeout(reduceLanternParticle, 100);
     }
@@ -1689,6 +1692,8 @@ function initInteraction(canvas) {
           lanternParticleNode.newSpawns = 200;
           lanternParticleNode.partSize = 50;
           lanternParticleNode.fireHeatDegreeRate = 0.5*lanternParticleNode.scalefactor;
+          lanternParticleNode.variance = 0;
+          lanternParticleNode.fuelSize = [0.05,0.025,0.05];
 
           glassMaterial.append(glassTextureNode);
           glassMaterial.remove(brokenGlassTextureNode);
