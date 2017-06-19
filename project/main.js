@@ -1137,7 +1137,6 @@ function createSceneGraph(gl, resources) {
   diamondUpDownNode.append(diamondLight);
 
   /*place spotlight*/
-  //TODO Loch in der Decke ans Spotlight anpassen (schräg nicht gerade)
   let moonLight = new AdvancedLightSGNode(false, 9, [0,1,-0.8], [0,5,80]);
   moonLight.ambient = [0.5,0.5,0.5,1];
   moonLight.diffuse = [1,1,1,1];
