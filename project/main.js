@@ -730,7 +730,7 @@ function createSceneGraph(gl, resources) {
     //initialize map sky
     skyTextureNode.append(new ShaderSGNode(simpleShaderProgram, new RenderSGNode(resources.modelMapSky)));
     lightingNodes.append(createDefaultMaterialNode(0.1,
-      new TransformationSGNode(glm.translate(0,-70,0), skyTextureNode)));
+      new TransformationSGNode(glm.translate(0,-5,0), skyTextureNode)));
 
     //initialize map torches
     metalTextureNode2.append(new RenderSGNode(resources.modelMapTorches));
