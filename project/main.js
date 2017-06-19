@@ -1298,37 +1298,37 @@ function render(timeInMilliseconds) {
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
-if(!manualCameraEnabled) {
-  if(timeInMilliseconds < 4600) {
-    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture");
-  } else if(timeInMilliseconds < 6500) {
-    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture, animated texture");
-  } else if(timeInMilliseconds < 7500) {
-    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture");
-  } else if(timeInMilliseconds < 8000){
-    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
-  } else if(timeInMilliseconds < 9000){
-    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, semi-transparent texture, animated texture");
-  } else if(timeInMilliseconds < 11500){
-    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture, animated texture");
-  } else if(timeInMilliseconds < 13000){
-    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
-  } else if(timeInMilliseconds < 20000){
-    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture, animated texture");
-  } else if(timeInMilliseconds < 21500){
-    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
-  } else if(timeInMilliseconds < 25000){
-    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, semi-transparent texture");
-  } else if(timeInMilliseconds < 27000){
-    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
-  } else if(timeInMilliseconds < 30000){
-    displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, semi-transparent texture");
+  if(!manualCameraEnabled) {
+    if(timeInMilliseconds < 4600) {
+      displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture");
+    } else if(timeInMilliseconds < 6500) {
+      displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture, animated texture");
+    } else if(timeInMilliseconds < 7500) {
+      displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture");
+    } else if(timeInMilliseconds < 8000){
+      displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
+    } else if(timeInMilliseconds < 9000){
+      displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, semi-transparent texture, animated texture");
+    } else if(timeInMilliseconds < 11500){
+      displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture, animated texture");
+    } else if(timeInMilliseconds < 13000){
+      displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
+    } else if(timeInMilliseconds < 20000){
+      displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture, animated texture");
+    } else if(timeInMilliseconds < 21500){
+      displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
+    } else if(timeInMilliseconds < 25000){
+      displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, semi-transparent texture");
+    } else if(timeInMilliseconds < 27000){
+      displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, transparent texture");
+    } else if(timeInMilliseconds < 30000){
+      displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, semi-transparent texture");
+    } else {
+      displayText("30.00s");
+    }
   } else {
-    displayText("30.00s");
+    displayText("");
   }
-} else {
-  displayText("");
-}
 
 
   if(!deathRoll) {
