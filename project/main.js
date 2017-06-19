@@ -939,7 +939,7 @@ function createSceneGraph(gl, resources) {
     boneTextureNode.append(createBillBoard([25.1,-5.25,-1], [0.3, 0.3, 1]));
     lightingNodes.append(boneTextureNode);
 
-    bone2TextureNode.append(createBillBoard([40,.25,32.5], [0.3, 0.3, 1]));
+    bone2TextureNode.append(createBillBoard([40,.25,28], [0.3, 0.3, 1]));
     lightingNodes.append(bone2TextureNode);
   }
 
@@ -1298,6 +1298,7 @@ function render(timeInMilliseconds) {
   cameraPosition[1] = 0-context.invViewMatrix[13];
   cameraPosition[2] = 0-context.invViewMatrix[14];
 
+if(!manualCameraEnabled) {
   if(timeInMilliseconds < 4600) {
     displayText(((timeInMilliseconds)/1000).toFixed(2)+"s, prtEff, spotLight, billboard, transparent texture");
   } else if(timeInMilliseconds < 6500) {
@@ -1325,6 +1326,10 @@ function render(timeInMilliseconds) {
   } else {
     displayText("30.00s");
   }
+} else {
+  displayText("");
+}
+
 
   if(!deathRoll) {
     //stopping lantern from moving with camera and rotation when falling over
