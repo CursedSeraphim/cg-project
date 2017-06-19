@@ -242,6 +242,9 @@ class ToggleSGNode extends SGNode {
   }
 }
 
+/*
+* used to create Billboards that always look towards the camera (ignoring Y axis so they stand upright)
+*/
 class BillboardSGNode extends TransformationSGNode {
   constructor (matrix, children) {
     super(matrix, children);
@@ -250,14 +253,11 @@ class BillboardSGNode extends TransformationSGNode {
   render(context) {
     var prevMat = this.matrix;
 
-    //var lookAt = mat4.lookAt(mat4.create(), [this.matrix[12], 0, this.matrix[14]], [context.invViewMatrix[12], 0, context.invViewMatrix[14]], [0, 1, 0]);
     var lookAt = mat4.lookAt(mat4.create(), [this.matrix[12], 0, this.matrix[14]], [context.invViewMatrix[12], 0, context.invViewMatrix[14]], [0, -1, 0]);
-        //var lookAt = mat4.lookAt(mat4.create(), [0, 0, 0], [0, 0, 0], [0, 1, 0]);
 
     for(var i = 0; i < 12; i++) {
       this.matrix[i] = lookAt[i];
     }
-    //mat4.multiply(this.matrix, this.matrix, lookAt);
     super.render(context);
 
     this.matrix = prevMat;
