@@ -15,10 +15,38 @@ body {
     font-family: 'Press Start 2P', cursive;
     color: #FFD700; /* Gold color to simulate old game text */
     text-align: center;
-    background-image: url('path_to_a_pixelated_bg.jpg'); /* Use a pixelated dungeon or game wallpaper */
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-image: url('path_to_a_pixelated_bg.jpg');
+    background-repeat: repeat;
+    background-attachment: fixed; /* for a simple parallax effect */
 }
+
+body::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: -1;
+    background-image: url('path_to_semi_transparent_pixel_pattern.png');
+    /* Removed the background-size property to allow the image to repeat */
+    background-repeat: repeat;
+}
+
+body::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 999; /* Below the loading screen but above everything else */
+    background-image: url('path_to_transparent_noise.png');
+    opacity: 0.1;
+    pointer-events: none;  /* Important so it doesn't interfere with clicks */
+    background-repeat: repeat;
+}
+
 
 header {
     padding: 10px 0;
@@ -28,6 +56,7 @@ a {
     color: #FF4500; /* Retro Orange */
     text-decoration: none;
     transition: color 0.3s ease;
+    text-shadow: 0 0 5px rgba(255, 70, 0, 0.75);  /* Same orange color with some transparency */
 }
 
 a:hover {
