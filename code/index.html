@@ -1,58 +1,17 @@
+<!-- index.html -->
 <!DOCTYPE html>
 <html lang="en">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- Added viewport -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dungeon Crawl</title>
-    <link rel="icon" href="favicon.ico"> <!-- Add your favicon here -->
+    <link rel="icon" href="favicon.ico">
 
     <!-- Import retro font -->
     <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap" rel="stylesheet">
-
-    <style>
-        /* Basic Reset */
-        body, h1, p, ul, li, a {
-            margin: 0;
-            padding: 0;
-            border: 0;
-            font-size: 100%;
-            font: inherit;
-            vertical-align: baseline;
-        }
-
-        body {
-            background-color: #000;
-            font-family: 'Press Start 2P', cursive;
-            color: #FFD700; /* Gold color to simulate old game text */
-            text-align: center;
-            background-image: url('path_to_a_pixelated_bg.jpg'); /* Use a pixelated dungeon or game wallpaper */
-            background-repeat: no-repeat;
-            background-size: cover;
-        }
-
-        header {
-            padding: 10px 0;
-        }
-
-        a {
-            color: #FF4500; /* Retro Orange */
-            text-decoration: none;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        ul {
-            list-style-type: none;
-        }
-
-        li {
-            margin: 10px 0;
-        }
-
-    </style>
+    <!-- Link to the separated CSS file -->
+    <link rel="stylesheet" type="text/css" href="styles.css">
 </head>
 
 <body>
@@ -62,6 +21,13 @@
     </header>
 
     <main>
+        <div id="loadingScreen" class="loading-overlay">
+            <div class="loader-content">
+                <div class="pixel-progress-bar"></div>
+                <p class="loading-text">Loading...</p>
+            </div>
+        </div>
+
         <section>
             <h1>Repository</h1>
             <p> <a href="https://github.com/CursedSeraphim/cg-project.git">https://github.com/CursedSeraphim/cg-project.git</a></p>
@@ -75,6 +41,9 @@
             </ul>
         </section>
     </main>
+
+    <!-- Link to the separated JS file -->
+    <script src="scripts.js" defer></script>
 </body>
 
 </html>

@@ -1,0 +1,82 @@
+/* style.css */
+
+/* Basic Reset */
+body, h1, p, ul, li, a {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline;
+}
+
+body {
+    background-color: #000;
+    font-family: 'Press Start 2P', cursive;
+    color: #FFD700; /* Gold color to simulate old game text */
+    text-align: center;
+    background-image: url('path_to_a_pixelated_bg.jpg'); /* Use a pixelated dungeon or game wallpaper */
+    background-repeat: no-repeat;
+    background-size: cover;
+}
+
+header {
+    padding: 10px 0;
+}
+
+a {
+    color: #FF4500; /* Retro Orange */
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+ul {
+    list-style-type: none;
+}
+
+li {
+    margin: 10px 0;
+}
+
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.9); /* semi-transparent black */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000; /* Make sure it's above everything else */
+}
+
+.loader-content {
+    text-align: center;
+    position: relative;  /* Added relative positioning for the parent */
+}
+
+.pixel-progress-bar {
+    position: absolute;  /* Set to absolute so we can fix its position within the parent */
+    left: 0;            /* Fixed position on the left edge */
+    width: 20px;            /* Start width will be 0 */
+    height: 20px;
+    border: 2px solid #FFFFFF;
+    background: #FF4500;
+    animation: loadingAnimation 3.1s infinite;
+}
+
+@keyframes loadingAnimation {
+    0% { width: 0; }
+    100% { width: 200px; }
+}
+
+.loading-text {
+    font-family: 'Press Start 2P', cursive;
+    color: #FFFFFF;
+    margin-top: 40px;
+}
