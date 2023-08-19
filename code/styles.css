@@ -135,6 +135,7 @@ header {
     background-color: rgba(0, 0, 0, 0.8); /* Slightly transparent black for differentiation */
     border-bottom: 3px solid #FF4500; /* Add a bottom border for visual separation */
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* A little shadow for depth */
+    padding-top: 10px;
 }
 
 
