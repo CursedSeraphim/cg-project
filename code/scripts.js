@@ -11,3 +11,6 @@ document.addEventListener("DOMContentLoaded", function() {
 // TODO click on the fallen to kill it with death animation and sound
 // TODO regular fallen sound with position of the sound relative to scroll position and fallen position
 // TODO reinforcement learning to learn the best way for the fallen to run away from the cursor
+// TODO button click sounds from diablo 2
+// TODO cursor from diablo 2
+// TODO retro music
