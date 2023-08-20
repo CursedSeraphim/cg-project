@@ -1,4 +1,3 @@
-console.log('in main.js')
 /**
  * @fileoverview gl-matrix - High performance matrix and vector operations
  * @author Brandon Jones
