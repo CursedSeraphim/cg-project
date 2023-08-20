@@ -89,12 +89,12 @@ a:hover {
 
 /* Active state */
 a:active {
-    color: #FFD700; /* Gold color when active */
-    text-shadow: 0 0 25px #FFD700, /* Stronger glow when clicked */
-                 0 0 35px #FFD700,
-                 0 0 45px #FFD700,
-                 0 0 55px #FFD700,
-                 0 0 65px #FFD700;
+    color: #FFF; /* White color when active */
+    text-shadow: 0 0 25px #FFF, /* Stronger glow when clicked */
+                 0 0 35px #FFF,
+                 0 0 45px #FFF,
+                 0 0 55px #FFF,
+                 0 0 65px #FFF;
 }
 
 
