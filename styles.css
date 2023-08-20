@@ -67,16 +67,36 @@ body::after {
     background-repeat: repeat;
 }
 
+/* Base style for links */
 a {
     color: #FF4500; /* Retro Orange */
     text-decoration: none;
-    transition: color 0.3s ease;
-    text-shadow: 1px 1px 5px rgba(255, 70, 0, 0.75);  /* Same orange color with some transparency */
+    letter-spacing: 2px; /* Increases spacing between letters */
+    transition: all 0.3s ease; /* Transition for all changes */
+    text-shadow: 1px 1px 5px rgba(255, 70, 0, 0.75); /* Initial text shadow */
 }
 
+/* Hover state */
 a:hover {
-    text-decoration: underline;
+    color: #FFF; /* White color on hover */
+    text-decoration: underline; /* Underline on hover */
+    text-shadow: 0 0 15px #FF4500, /* Inner glow */
+                 0 0 20px #FF4500, /* Middle glow */
+                 0 0 25px #FF4500, /* Outer glow */
+                 0 0 30px #FF4500, /* Very outer glow */
+                 0 0 35px #FF4500; /* Extreme outer glow */
 }
+
+/* Active state */
+a:active {
+    color: #FFD700; /* Gold color when active */
+    text-shadow: 0 0 25px #FFD700, /* Stronger glow when clicked */
+                 0 0 35px #FFD700,
+                 0 0 45px #FFD700,
+                 0 0 55px #FFD700,
+                 0 0 65px #FFD700;
+}
+
 
 ul {
     list-style-type: none;
