@@ -1,4 +1,4 @@
-
+console.log('in main.js')
 /*creates a diamond*/
 function makeDiamond() {
   var width = 1;

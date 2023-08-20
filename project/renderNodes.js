@@ -1,3 +1,4 @@
+console.log('in main.js')
 /**
  * a light node represents a light including light position and light properties (ambient, diffuse, specular)
  * the light position will be transformed according to the current model view matrix

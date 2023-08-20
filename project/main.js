@@ -1,3 +1,4 @@
+console.log('in main.js')
 'use strict';
 
 var gl = null;

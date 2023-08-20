@@ -1,3 +1,4 @@
+console.log('in main.js')
 /**
  * Created by Samuel Gratzl on 08.02.2016.
  */
