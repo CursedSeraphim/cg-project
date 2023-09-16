@@ -1,7 +1,29 @@
 /* style.css */
 
+
+/* color variables at the root level */
+:root {
+    --general-text-color: #F9F6F2;  /* Parchment white for a vintage feel */
+    --link-color: #F39C12;  /* Vivid Orange for links */
+    --hover-color: #E74C3C;  /* Strong red for hover states */
+    --active-color: #16A085;  /* Green-ish hue for active state */
+    --header-border-color: #d1b982;
+    --subtitle-color: #9B59B6;  /* A retro purple for subtitles */
+    --loading-text-color: #F9F6F2;
+    --text-shadow-color: rgba(0, 0, 0, 0.5);  /* Solid black but softer */
+    --hover-shadow-color: rgba(0, 0, 0, 0.7);  /* Darker shadow on hover */
+    --active-shadow-color: rgba(0, 0, 0, 0.7);  /* Darker shadow on active */
+    --progress-bar-color: #9B59B6;
+}
+
+
 /* Basic Reset */
-body, h1, p, ul, li, a {
+body,
+h1,
+p,
+ul,
+li,
+a {
     margin: 0;
     padding: 0;
     border: 0;
@@ -10,36 +32,79 @@ body, h1, p, ul, li, a {
     vertical-align: baseline;
 }
 
-@keyframes subtleShift {
-    0% { background-position: 0 0; }
-    50% { background-position: 20px 20px; }
-    100% { background-position: 0 0; }
+@keyframes shiftDown {
+    0% {
+        background-position: 48% 10%;
+    }
+
+    50% {
+        background-position: 52% 72%;
+    }
+
+    100% {
+        background-position: 48% 10%;
+    }
 }
 
 @keyframes colorChange {
-    0% { background-color: #000; }
-    50% { background-color: #111; }
-    100% { background-color: #000; }
+    0% {
+        background-color: rgba(0, 0, 0, 0.2);
+    }
+
+    50% {
+        background-color: rgba(0, 0, 0, 0.3);
+    }
+
+    100% {
+        background-color: rgba(0, 0, 0, 0.2);
+    }
 }
 
 @keyframes fadeImage {
-    0%, 100%   {opacity: 1;}
-    50%  {opacity: 0.7;}  /* Adjusted to a less drastic change */
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.7;
+    }
+
+    /* Adjusted to a less drastic change */
+}
+
+/* Define the noise animation */
+@keyframes noiseAnimation {
+    0% {
+        opacity: 0.05;
+    }
+    100% {
+        opacity: 0.15;
+    }
 }
 
 
 body {
-    background-color: #000;
+    background-color: rgba(0, 0, 0, 1.0);
     font-family: 'Press Start 2P', cursive;
-    color: #FFD700; /* Gold color to simulate old game text */
+    color: var(--general-text-color);
     text-align: center;
-    background-image: url('path_to_a_pixelated_bg.jpg');
-    background-repeat: repeat;
-    background-attachment: fixed; /* for a simple parallax effect */
-    animation: subtleShift 10s infinite, colorChange 11s infinite;
+    background-image: url('sotk.jpg');
+    background-attachment: fixed;
+    /* for a simple parallax effect */
+    animation: shiftDown 120s infinite;
+
+    background-size: 100% auto;
+    /* Set width to 90% of the container, height will be auto to maintain aspect ratio */
+    background-repeat: no-repeat;
+    /* Prevent tiling */
+
+    text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
 }
 
 body::before {
+    background-color: rgba(0, 0, 0, 0.2);
     content: "";
     position: fixed;
     top: 0;
@@ -47,9 +112,10 @@ body::before {
     height: 100%;
     width: 100%;
     z-index: -1;
-    background-image: url('path_to_semi_transparent_pixel_pattern.png');
+    background-image: url('semi_transparent_pixel_pattern.png');
     background-repeat: repeat;
-    animation: fadeImage 12s infinite; /* Adding the fadeImage animation here */
+    animation: fadeImage 12s infinite, colorChange 11s infinite;
+    /* Adding the fadeImage animation here */
 }
 
 
@@ -60,41 +126,41 @@ body::after {
     left: 0;
     height: 100%;
     width: 100%;
-    z-index: 999; /* Below the loading screen but above everything else */
-    background-image: url('path_to_transparent_noise.png');
+    z-index: 999;
+    /* Below the loading screen but above everything else */
+    background-image: url('transparent_noise.png');
     opacity: 0.1;
-    pointer-events: none;  /* Important so it doesn't interfere with clicks */
+    pointer-events: none;
+    /* Important so it doesn't interfere with clicks */
     background-repeat: repeat;
+    animation: noiseAnimation 5s infinite alternate; /* Apply the animation */
 }
 
 /* Base style for links */
 a {
-    color: #FF4500; /* Retro Orange */
+    color: var(--link-color);
     text-decoration: none;
-    letter-spacing: 2px; /* Increases spacing between letters */
-    transition: all 0.3s ease; /* Transition for all changes */
-    text-shadow: 1px 1px 5px rgba(255, 70, 0, 0.75); /* Initial text shadow */
+    letter-spacing: 2px;
+    /* Increases spacing between letters */
+    transition: all 0.3s ease;
+    /* Transition for all changes */
+    text-shadow: 1px 1px 5px var(--text-shadow-color); /* Initial text shadow */
 }
 
 /* Hover state */
 a:hover {
-    color: #FFF; /* White color on hover */
-    text-decoration: underline; /* Underline on hover */
-    text-shadow: 0 0 15px #FF4500, /* Inner glow */
-                 0 0 20px #FF4500, /* Middle glow */
-                 0 0 25px #FF4500, /* Outer glow */
-                 0 0 30px #FF4500, /* Very outer glow */
-                 0 0 35px #FF4500; /* Extreme outer glow */
+    color: var(--hover-color);
+    text-decoration: underline;
+    /* Underline on hover */
+    text-shadow: 1px 1px 5px var(--hover-shadow-color),  /* Additional layer of shadow for hover */
+    0 0 5px var(--hover-color);
 }
 
 /* Active state */
 a:active {
-    color: #FFF; /* White color when active */
-    text-shadow: 0 0 25px #FFF, /* Stronger glow when clicked */
-                 0 0 35px #FFF,
-                 0 0 45px #FFF,
-                 0 0 55px #FFF,
-                 0 0 65px #FFF;
+    color: var(--active-color);
+    text-shadow: 1px 1px 5px var(--active-shadow-color),  /* Additional layer of shadow for active */
+    0 0 5px var(--active-color);
 }
 
 
@@ -103,48 +169,61 @@ ul {
 }
 
 h1 {
-    font-size: 2.5em;  /* Make the main title more dominant */
-    margin-bottom: 10px;  /* Adjust the space beneath the main title */
+    font-size: 2.5em;
+    /* Make the main title more dominant */
+    margin-bottom: 10px;
+    /* Adjust the space beneath the main title */
 }
 
 h2 {
-    font-size: 1.5em;  /* Size for the subtitle */
-    margin-bottom: 20px;  /* Space beneath the subtitle */
-    color: #FFA500;  /* Slight change in color for distinction (this is a lighter shade of the gold color) */
-    text-shadow: 1px 1px 5px rgba(255, 165, 0, 0.75); /* Same style as links, but adjusted for this color */
+    font-size: 1.5em;
+    /* Size for the subtitle */
+    margin-bottom: 20px;
+    /* Space beneath the subtitle */
+    color: var(--subtitle-color);
+    /* Hot Pink, for a pastel neon look */
+    text-shadow: 2px 2px 4px var(--text-shadow-color);
 }
 
 header p {
     font-size: 1.1em;
-    margin: 0 auto;  /* Centering the text if the parent's width is restricted */
-    max-width: 800px;  /* Consistent with the other max-widths we set before */
-    padding-bottom: 30px;  /* A bit of space at the bottom for visual spacing */
+    margin: 0 auto;
+    /* Centering the text if the parent's width is restricted */
+    max-width: 800px;
+    /* Consistent with the other max-widths we set before */
+    padding-bottom: 30px;
+    /* A bit of space at the bottom for visual spacing */
 }
 
 /* For the main content sections, let's adjust spacing and alignment */
 main {
-    padding: 30px 0; /* Provide a consistent padding around the main content */
+    padding: 30px 0;
+    /* Provide a consistent padding around the main content */
     padding-bottom: 100vh;
 }
 
 section {
-    margin-bottom: 40px; /* Increase spacing between sections */
+    margin-bottom: 40px;
+    /* Increase spacing between sections */
 }
 
 /* Left align the section content for easier reading */
-section h1, 
-section p, 
+section h1,
+section p,
 section ul {
     text-align: left;
-    max-width: 800px; /* Setting a max width for optimal reading */
+    max-width: 800px;
+    /* Setting a max width for optimal reading */
     margin-left: auto;
     margin-right: auto;
 }
 
 /* Adjust list item for improved visuals */
 li {
-    margin: 15px 0; /* Increase the spacing a bit */
-    font-size: 1.1em; /* Slightly larger list items for readability */
+    margin: 15px 0;
+    /* Increase the spacing a bit */
+    font-size: 1.1em;
+    /* Slightly larger list items for readability */
 }
 
 /* Consider changing the color of the header to make it distinct */
@@ -152,9 +231,12 @@ header {
     position: sticky;
     top: 0;
     z-index: 10;
-    background-color: rgba(0, 0, 0, 0.8); /* Slightly transparent black for differentiation */
-    border-bottom: 3px solid #FF4500; /* Add a bottom border for visual separation */
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3); /* A little shadow for depth */
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Slightly transparent black for differentiation */
+    border-bottom: 3px solid var(--header-border-color);
+    /* Add a bottom border for visual separation */
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    /* A little shadow for depth */
     padding-top: 10px;
 }
 
@@ -165,35 +247,48 @@ header {
     left: 0;
     width: 100vw;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.9); /* semi-transparent black */
+    background-color: rgba(0, 0, 0, 0.8);
+    /* Make it a bit more transparent */
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1000; /* Make sure it's above everything else */
+    z-index: 1000;
+    /* Make sure it's above everything else */
 }
 
 .loader-content {
     text-align: center;
-    position: relative;  /* Added relative positioning for the parent */
+    position: relative;
+    /* Added relative positioning for the parent */
 }
 
 .pixel-progress-bar {
-    position: absolute;  /* Set to absolute so we can fix its position within the parent */
-    left: 0;            /* Fixed position on the left edge */
-    width: 20px;            /* Start width will be 0 */
+    position: absolute;
+    /* Set to absolute so we can fix its position within the parent */
+    left: 0;
+    /* Fixed position on the left edge */
+    width: 20px;
+    /* Start width will be 0 */
     height: 20px;
     border: 2px solid #FFFFFF;
-    background: #FF4500;
+    background: var(--progress-bar-color);
     animation: loadingAnimation 3.1s infinite;
 }
 
 @keyframes loadingAnimation {
-    0% { width: 0; }
-    100% { width: 275px; }
+    0% {
+        width: 0;
+    }
+
+    100% {
+        width: 275px;
+    }
 }
 
 .loading-text {
     font-family: 'Press Start 2P', cursive;
-    color: #FFFFFF;
+    color: var(--loading-text-color);
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    /* Pure Green to pop on dark loading screen */
     margin-top: 40px;
 }
