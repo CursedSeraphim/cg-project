@@ -39,7 +39,7 @@ a {
     }
 
     50% {
-        background-position: 52% 72%;
+        background-position: 52% 94.5%;
     }
 
     100% {
@@ -91,7 +91,7 @@ body {
     font-family: 'Press Start 2P', cursive;
     color: var(--general-text-color);
     text-align: center;
-    background-image: url('sotk.jpg');
+    background-image: url('sotk_cut.jpg');
     background-attachment: fixed;
     /* for a simple parallax effect */
     animation: shiftDown 120s infinite;
@@ -103,6 +103,7 @@ body {
 
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.5);
     overflow-y: auto;
+    overflow-x: hidden; 
 }
 
 body::before {
@@ -189,6 +190,7 @@ h2 {
 
 header p {
     font-size: 1.1em;
+    width: 100%;
     margin: 0 auto;
     /* Centering the text if the parent's width is restricted */
     max-width: 800px;
@@ -241,6 +243,27 @@ header {
     /* A little shadow for depth */
     padding-top: 10px;
 }
+
+@media only screen and (max-width: 768px) {
+    body h1 {
+        font-size: 1.5em !important; /* Adjust as needed */
+    }
+
+    body h2 {
+        font-size: 1em !important; /* Adjust as needed */
+    }
+
+    body p, body ul, body li, body a {
+        font-size: 0.8em !important; /* Adjust as needed */
+    }
+
+    /* If you want to adjust the header font size specifically */
+    header p {
+        font-size: 0.7em !important; /* Adjust as needed */
+    }
+}
+
+
 
 
 .loading-overlay {
