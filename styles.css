@@ -3,18 +3,19 @@
 
 /* color variables at the root level */
 :root {
-    --general-text-color: #F9F6F2;  /* Parchment white for a vintage feel */
-    --link-color: #F39C12;  /* Vivid Orange for links */
-    --hover-color: #E74C3C;  /* Strong red for hover states */
-    --active-color: #16A085;  /* Green-ish hue for active state */
-    --header-border-color: #d1b982;
-    --subtitle-color: #9B59B6;  /* A retro purple for subtitles */
-    --loading-text-color: #F9F6F2;
+    --general-text-color: #F4F1DE;  /* Creamier white for better contrast */
+    --link-color: #F4A261;  /* Soft muted orange for links */
+    --hover-color: #E76F51;  /* A more muted red for hover states */
+    --active-color: #2A9D8F;  /* A teal-ish green for active state */
+    --header-border-color: #BCA77E;  /* A rustic gold for header border */
+    --subtitle-color: #8E44AD;  /* A darker retro purple for subtitles */
+    --loading-text-color: #F4F1DE;  /* Same as general text to maintain consistency */
     --text-shadow-color: rgba(0, 0, 0, 0.5);  /* Solid black but softer */
-    --hover-shadow-color: rgba(0, 0, 0, 0.7);  /* Darker shadow on hover */
-    --active-shadow-color: rgba(0, 0, 0, 0.7);  /* Darker shadow on active */
-    --progress-bar-color: #9B59B6;
+    --hover-shadow-color: rgba(0, 0, 0, 0.6);  /* Slightly darker shadow on hover */
+    --active-shadow-color: rgba(0, 0, 0, 0.6);  /* Slightly darker shadow on active */
+    --progress-bar-color: #8E44AD;  /* Match with subtitle for consistency */
 }
+
 
 
 /* Basic Reset */
