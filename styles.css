@@ -200,7 +200,7 @@ header p {
 main {
     padding: 30px 0;
     /* Provide a consistent padding around the main content */
-    padding-bottom: 100vh;
+    padding-bottom: 0%; /* change this for scrollbar */
 }
 
 section {
