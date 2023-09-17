@@ -21,3 +21,5 @@ document.addEventListener("DOMContentLoaded", function() {
 // Blackbird by Tash Sultana
 
 // TODO show animation in the center of the screen instead of new tab, or still provide option of new tab for mobile users
+
+// TODO bug: noise image scales when scrolling
