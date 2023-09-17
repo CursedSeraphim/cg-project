@@ -12,5 +12,12 @@ document.addEventListener("DOMContentLoaded", function() {
 // TODO regular fallen sound with position of the sound relative to scroll position and fallen position
 // TODO reinforcement learning to learn the best way for the fallen to run away from the cursor
 // TODO button click sounds from diablo 2
-// TODO cursor from diablo 2
-// TODO retro music
+// TODO cursor from diablo 2?
+
+// TODO music (top left corner have a player with black background and white text showing artist and song name, , top right have credit to artist of background image)
+// Auriel's Ascension from Oddly Specific LoFi 
+// All that glitters is gold by Luke Wilson (project warlock)
+// Odissi by Hugo Kant
+// Blackbird by Tash Sultana
+
+// TODO show animation in the center of the screen instead of new tab, or still provide option of new tab for mobile users
